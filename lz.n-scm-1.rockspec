@@ -1,11 +1,9 @@
 -- NOTE: This rockspec is used for running busted tests only,
 -- not for publishing to LuaRocks.org
 
--- TODO: Rename this file
-
 local _MODREV, _SPECREV = 'scm', '-1'
 rockspec_format = '3.0'
-package = 'plugin-template.nvim' -- TODO: Set name
+package = 'lz.n'
 version = _MODREV .. _SPECREV
 
 dependencies = {
@@ -17,8 +15,7 @@ test_dependencies = {
 }
 
 source = {
-  -- TODO: Replace <user>
-  url = 'git://github.com/<user>/' .. package,
+  url = 'git://github.com/mrcjkb/' .. package,
 }
 
 build = {

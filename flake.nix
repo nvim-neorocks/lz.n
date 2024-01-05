@@ -1,5 +1,5 @@
 {
-  description = "Neovim Nix flake CI template for GitHub Actions"; # TODO: Set description
+  description = "Add laziness to your favourite plugin manager!";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
@@ -29,7 +29,7 @@
     neodev-nvim,
     ...
   }: let
-    name = "plugin-template.nvim"; # TODO: Choose a name
+    name = "lz.n";
 
     plugin-overlay = import ./nix/plugin-overlay.nix {
       inherit name self;
@@ -83,11 +83,6 @@
                       library =
                         nvim-api
                         ++ [
-                          # TODO: Add lua API dependencies here, e.g.
-                          # "${pkgs.lua51Packages.fzy}/share/lua/5.1"
-                          # "${pkgs.vimPlugins.telescope-nvim}/lua"
-                        ]
-                        ++ [
                           "\${3rd}/busted/library"
                           "\${3rd}/luassert/library"
                         ];
@@ -139,7 +134,7 @@
         };
 
         devShell = pkgs.nvim-nightly-tests.overrideAttrs (oa: {
-          name = "devShell"; # TODO: Choose a name
+          name = "lz.n devShell";
           inherit (pre-commit-check) shellHook;
           buildInputs = with pre-commit-hooks.packages.${system};
             [
@@ -159,8 +154,8 @@
         };
 
         packages = rec {
-          default = nvim-plugin;
-          inherit (pkgs.vimPlugins) nvim-plugin;
+          default = lz-n;
+          inherit (pkgs.vimPlugins) lz-n;
           inherit (pkgs) docgen;
         };
 

@@ -54,8 +54,7 @@ with final.stdenv; let
     ];
     text = ''
       mkdir -p doc
-      # TODO: Update this!
-      lemmy-help lua/rocks/{init,commands,config/init}.lua > doc/nvim-plugin.txt
+        lemmy-help lua/lz/n/{init,commands,config/init}.lua > doc/lz.n.txt
     '';
   };
 in {
