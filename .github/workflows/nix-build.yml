@@ -1,0 +1,11 @@
+name: "Nix build"
+on:
+  pull_request:
+  push:
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v20
+    - run: nix flake check -L
