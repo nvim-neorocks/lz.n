@@ -1,17 +1,11 @@
 # Add flake.nix test inputs as arguments here
 {
   self,
-  neodev-nvim,
   plugin-name,
 }: final: prev:
 with final.lib;
 with final.stdenv; let
   nvim-nightly = final.neovim-nightly;
-
-  neodev-plugin = final.pkgs.vimUtils.buildVimPlugin {
-    name = "neodev.nvim";
-    src = neodev-nvim;
-  };
 
   mkNeorocksTest = {
     name,
@@ -63,8 +57,5 @@ in {
     name = "neovim-nightly-tests";
     nvim = nvim-nightly;
   };
-  inherit
-    neodev-plugin
-    docgen
-    ;
+  inherit docgen;
 }
