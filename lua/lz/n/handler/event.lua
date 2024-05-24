@@ -13,8 +13,7 @@ local loader = require('lz.n.loader')
 
 ---@type LzEventHandler
 local M = {
-  active = {},
-  managed = {},
+  pending = {},
   type = 'event',
 }
 
@@ -121,27 +120,35 @@ local function trigger(opts)
 end
 
 ---@param event LzEvent
-function M.add(event)
+local function add_event(event)
   local done = false
   vim.api.nvim_create_autocmd(event.event, {
     group = M.group,
     once = true,
     pattern = event.pattern,
     callback = function(ev)
-      if done or not M.active[event.id] then
+      if done or not M.pending[event.id] then
         return
       end
       -- HACK: work-around for https://github.com/neovim/neovim/issues/25526
       done = true
       local state = get_state(ev.event, ev.buf, ev.data)
       -- load the plugins
-      loader.load(M.active[event.id])
+      loader.load(M.pending[event.id])
       -- check if any plugin created an event handler for this event and fire the group
       for _, s in ipairs(state) do
         trigger(s)
       end
     end,
   })
+end
+
+---@param plugin LzPlugin
+function M.add(plugin)
+  -- TODO add plugin to M.pending
+  for _, event in pairs(plugin.event or {}) do
+    add_event(event)
+  end
 end
 
 return M

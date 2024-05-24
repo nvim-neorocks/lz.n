@@ -4,8 +4,7 @@ local loader = require('lz.n.loader')
 
 ---@type LzKeysHandler
 local M = {
-  active = {},
-  managed = {},
+  pending = {},
   type = 'keys',
 }
 
@@ -74,17 +73,17 @@ local function del(keys)
 end
 
 ---@param keys LzKeys
-M.add = function(keys)
+local function add_keys(keys)
   local lhs = keys.lhs
   local opts = get_opts(keys)
 
   ---@param buf? number
   local function add(buf)
     vim.keymap.set(keys.mode, lhs, function()
-      local plugins = M.active[keys.id]
+      local plugins = M.pending[keys.id]
       -- always delete the mapping immediately to prevent recursive mappings
       del(keys)
-      M.active[keys.id] = nil
+      M.pending[keys.id] = nil
       if plugins then
         loader.load(plugins)
       end
@@ -111,7 +110,7 @@ M.add = function(keys)
     vim.api.nvim_create_autocmd('FileType', {
       pattern = keys.ft,
       callback = function(event)
-        if M.active[keys.id] then
+        if M.pending[keys.id] then
           add(event.buf)
         else
           -- Only create the mapping if its managed by lz.n
@@ -122,6 +121,14 @@ M.add = function(keys)
     })
   else
     add()
+  end
+end
+
+---@param plugin LzPlugin
+function M.add(plugin)
+  -- TODO add plugin to M.pending
+  for _, key in pairs(plugin.keys or {}) do
+    add_keys(key)
   end
 end
 

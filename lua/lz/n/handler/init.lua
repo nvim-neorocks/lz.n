@@ -1,7 +1,6 @@
 ---@class LzHandler
 ---@field type LzHandlerTypes
----@field active table<string,table<string,string>>
----@field managed table<string,string>
+---@field pending table<string, table<string, string>> -- key: plugin_name: plugin_name
 ---@field add fun(plugin: LzPlugin)
 ---@field del? fun(plugin: LzPlugin)
 

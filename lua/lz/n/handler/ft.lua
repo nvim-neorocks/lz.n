@@ -19,9 +19,9 @@ function M.parse(value)
   }
 end
 
----@param lz_event LzEvent
-function M.add(lz_event)
-  event.add(lz_event)
+---@param plugin LzPlugin
+function M.add(plugin)
+  event.add(plugin)
 end
 
 return M
