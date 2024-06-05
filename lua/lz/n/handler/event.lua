@@ -10,36 +10,36 @@ local loader = require('lz.n.loader')
 ---@class LzEventHandler: LzHandler
 ---@field events table<string,true>
 ---@field group number
+---@field parse fun(spec: LzEventSpec): LzEvent
 
 ---@type LzEventHandler
 local M = {
   pending = {},
+  events = {},
+  group = vim.api.nvim_create_augroup('lz_n_handler_event', { clear = true }),
   type = 'event',
-}
-
----@param spec LzEventSpec
----@return LzEvent
-function M.parse(spec)
-  local ret
-  if type(spec) == 'string' then
-    local event, pattern = spec:match('^(%w+)%s+(.*)$')
-    event = event or spec
-    return { id = spec, event = event, pattern = pattern }
-  elseif vim.tbl_islist(spec) then
-    ret = { id = table.concat(spec, '|'), event = spec }
-  else
-    ret = spec --[[@as LzEvent]]
-    if not ret.id then
-      ---@diagnostic disable-next-line: assign-type-mismatch, param-type-mismatch
-      ret.id = type(ret.event) == 'string' and ret.event or table.concat(ret.event, '|')
-      if ret.pattern then
+  parse = function(spec)
+    local ret
+    if type(spec) == 'string' then
+      local event, pattern = spec:match('^(%w+)%s+(.*)$')
+      event = event or spec
+      return { id = spec, event = event, pattern = pattern }
+    elseif vim.islist(spec) then
+      ret = { id = table.concat(spec, '|'), event = spec }
+    else
+      ret = spec --[[@as LzEvent]]
+      if not ret.id then
         ---@diagnostic disable-next-line: assign-type-mismatch, param-type-mismatch
-        ret.id = ret.id .. ' ' .. (type(ret.pattern) == 'string' and ret.pattern or table.concat(ret.pattern, ', '))
+        ret.id = type(ret.event) == 'string' and ret.event or table.concat(ret.event, '|')
+        if ret.pattern then
+          ---@diagnostic disable-next-line: assign-type-mismatch, param-type-mismatch
+          ret.id = ret.id .. ' ' .. (type(ret.pattern) == 'string' and ret.pattern or table.concat(ret.pattern, ', '))
+        end
       end
     end
-  end
-  return ret
-end
+    return ret
+  end,
+}
 
 -- Get all augroups for an event
 ---@param event string
@@ -113,6 +113,7 @@ local function trigger(opts)
     local skip = done[id] or (opts.exclude and vim.tbl_contains(opts.exclude, autocmd.group_name))
     done[id] = true
     if autocmd.group and not skip then
+      ---@diagnostic disable-next-line: assign-type-mismatch
       opts.group = autocmd.group_name
       _trigger(opts)
     end

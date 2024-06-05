@@ -44,7 +44,7 @@ error('Cannot import a meta module')
 ---@field keys? string|string[]|LzKeysSpec[]
 ---@field module? false
 
----@class LzKeysBase
+---@class LzKeysBase: vim.keymap.set.Opts
 ---@field desc? string
 ---@field noremap? boolean
 ---@field remap? boolean

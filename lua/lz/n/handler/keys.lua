@@ -6,29 +6,28 @@ local loader = require('lz.n.loader')
 local M = {
   pending = {},
   type = 'keys',
+  ---@param value string|LzKeysSpec
+  ---@param mode? string
+  ---@return LzKeys
+  parse = function(value, mode)
+    value = type(value) == 'string' and { value } or value --[[@as LzKeysSpec]]
+    local ret = vim.deepcopy(value) --[[@as LzKeys]]
+    ret.lhs = ret[1] or ''
+    ret.rhs = ret[2]
+    ret[1] = nil
+    ret[2] = nil
+    ret.mode = mode or 'n'
+    ret.id = vim.api.nvim_replace_termcodes(ret.lhs, true, true, true)
+    if ret.ft then
+      local ft = type(ret.ft) == 'string' and { ret.ft } or ret.ft --[[@as string[] ]]
+      ret.id = ret.id .. ' (' .. table.concat(ft, ', ') .. ')'
+    end
+    if ret.mode ~= 'n' then
+      ret.id = ret.id .. ' (' .. ret.mode .. ')'
+    end
+    return ret
+  end,
 }
-
----@param value string|LzKeysSpec
----@param mode? string
----@return LzKeys
-function M.parse(value, mode)
-  value = type(value) == 'string' and { value } or value --[[@as LzKeysSpec]]
-  local ret = vim.deepcopy(value) --[[@as LzKeys]]
-  ret.lhs = ret[1] or ''
-  ret.rhs = ret[2]
-  ret[1] = nil
-  ret[2] = nil
-  ret.mode = mode or 'n'
-  ret.id = vim.api.nvim_replace_termcodes(ret.lhs, true, true, true)
-  if ret.ft then
-    local ft = type(ret.ft) == 'string' and { ret.ft } or ret.ft --[[@as string[] ]]
-    ret.id = ret.id .. ' (' .. table.concat(ft, ', ') .. ')'
-  end
-  if ret.mode ~= 'n' then
-    ret.id = ret.id .. ' (' .. ret.mode .. ')'
-  end
-  return ret
-end
 
 local skip = { mode = true, id = true, ft = true, rhs = true, lhs = true }
 
@@ -51,6 +50,7 @@ end
 local function set(keys, buf)
   if keys.rhs then
     local opts = get_opts(keys)
+    ---@diagnostic disable-next-line: inject-field
     opts.buffer = buf
     vim.keymap.set(keys.mode, keys.lhs, keys.rhs, opts)
   end

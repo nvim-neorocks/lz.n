@@ -107,7 +107,7 @@ end
 ---@param spec LzSpec
 ---@param result table<string, LzPlugin>
 function M._normalize(spec, result)
-  if #spec > 1 or vim.tbl_islist(spec) then
+  if #spec > 1 or vim.islist(spec) then
     for _, sp in ipairs(spec) do
       M._normalize(sp, result)
     end
