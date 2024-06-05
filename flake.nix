@@ -66,10 +66,10 @@
         type-check-nightly = pre-commit-hooks.lib.${system}.run {
           src = self;
           hooks = {
-            lua-ls.enable = true;
-          };
-          settings = {
-            lua-ls.config = luarc;
+            lua-ls = {
+              enable = true;
+              settings.configuration = luarc;
+            };
           };
         };
 
@@ -102,7 +102,7 @@
 
         packages = rec {
           default = lz-n;
-          inherit (pkgs.vimPlugins) lz-n;
+          inherit (pkgs.lua51Packages) lz-n;
           inherit (pkgs) docgen;
         };
 
@@ -113,7 +113,6 @@
             ;
           inherit
             (pkgs)
-            nvim-stable-tests
             nvim-nightly-tests
             ;
         };

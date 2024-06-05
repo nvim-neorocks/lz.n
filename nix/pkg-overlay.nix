@@ -3,7 +3,7 @@
   self,
 }: final: prev: let
   packageOverrides = luaself: luaprev: {
-    lz-nvim = luaself.callPackage ({buildLuarocksPackage}:
+    lz-n = luaself.callPackage ({buildLuarocksPackage}:
       buildLuarocksPackage {
         pname = name;
         version = "scm-1";
