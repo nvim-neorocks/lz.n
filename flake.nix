@@ -92,7 +92,10 @@
           '';
           buildInputs =
             self.checks.${system}.pre-commit-check.enabledPackages
-            ++ oa.buildInputs;
+            ++ oa.buildInputs
+            ++ (with pkgs; [
+              lua-language-server
+            ]);
         });
       in {
         devShells = {
