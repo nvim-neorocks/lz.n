@@ -26,7 +26,7 @@
   }: let
     name = "lz.n";
 
-    plugin-overlay = import ./nix/plugin-overlay.nix {
+    pkg-overlay = import ./nix/pkg-overlay.nix {
       inherit name self;
     };
   in
@@ -54,7 +54,7 @@
             gen-luarc.overlays.default
             neorocks.overlays.default
             ci-overlay
-            plugin-overlay
+            pkg-overlay
           ];
         };
 
@@ -90,15 +90,8 @@
             ${pre-commit-check.shellHook}
             ln -fs ${pkgs.luarc-to-json luarc} .luarc.json
           '';
-          buildInputs = with pre-commit-hooks.packages.${system};
-            [
-              alejandra
-              lua-language-server
-              stylua
-              luacheck
-              editorconfig-checker
-              markdownlint-cli
-            ]
+          buildInputs =
+            self.checks.${system}.pre-commit-check.enabledPackages
             ++ oa.buildInputs;
         });
       in {
@@ -126,7 +119,7 @@
         };
       };
       flake = {
-        overlays.default = plugin-overlay;
+        overlays.default = pkg-overlay;
       };
     };
 }
