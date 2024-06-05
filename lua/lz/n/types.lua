@@ -1,5 +1,5 @@
 ---@meta
-error('Cannot import a meta module')
+error("Cannot import a meta module")
 
 ---@class VimGTable vim.g config table
 ---@field name? string Name of the vim.g config table, e.g. "rustaceanvim" for "vim.g.rustaceanvim". Defaults to the plugin name.
