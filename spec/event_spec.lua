@@ -1,3 +1,4 @@
+---@diagnostic disable: invisible
 local event = require("lz.n.handler.event")
 local state = require("lz.n.state")
 local loader = require("lz.n.loader")
@@ -76,5 +77,30 @@ describe("event", function()
         end
         itt({ event.parse("BufEnter"), event.parse("WinEnter") })
         itt({ event.parse("WinEnter"), event.parse("BufEnter") })
+    end)
+    it("Plugins' event handlers should be triggered", function()
+        ---@type LzPlugin
+        local plugin = {
+            name = "foo",
+            event = { event.parse("BufEnter") },
+            pattern = ".lua",
+        }
+        local triggered = false
+        local orig_load = loader._load
+        ---@diagnostic disable-next-line: duplicate-set-field
+        loader._load = function(...)
+            orig_load(...)
+            vim.api.nvim_create_autocmd("BufEnter", {
+                callback = function()
+                    triggered = true
+                end,
+                group = vim.api.nvim_create_augroup("foo", {}),
+            })
+        end
+        state.plugins[plugin.name] = plugin
+        event.add(plugin)
+        vim.api.nvim_exec_autocmds("BufEnter", {})
+        assert.True(triggered)
+        loader._load = orig_load
     end)
 end)
