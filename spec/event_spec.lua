@@ -1,5 +1,7 @@
 local event = require("lz.n.handler.event")
--- local loader = require("lz.n.loader")
+local state = require("lz.n.state")
+local loader = require("lz.n.loader")
+local spy = require("luassert.spy")
 
 describe("event", function()
     it("can parse from string", function()
@@ -39,14 +41,40 @@ describe("event", function()
             })
         )
     end)
-    it("integration", function()
+    it("Event should only load plugin once", function()
         ---@type LzPlugin
         local plugin = {
             name = "foo",
-            event = { { id = "BufEnter", event = "BufEnter" } },
+            event = { event.parse("BufEnter") },
             pattern = ".lua",
         }
+        local spy_load = spy.on(loader, "_load")
+        state.plugins[plugin.name] = plugin
         event.add(plugin)
-        -- TODO
+        vim.api.nvim_exec_autocmds("BufEnter", {})
+        vim.api.nvim_exec_autocmds("BufEnter", {})
+        assert.spy(spy_load).called(1)
+    end)
+    it("Multiple events should only load plugin once", function()
+        ---@param events LzEvent[]
+        local function itt(events)
+            ---@type LzPlugin
+            local plugin = {
+                name = "foo",
+                event = events,
+            }
+            local spy_load = spy.on(loader, "_load")
+            state.plugins[plugin.name] = plugin
+            event.add(plugin)
+            vim.api.nvim_exec_autocmds(events[1].event, {
+                pattern = ".lua",
+            })
+            vim.api.nvim_exec_autocmds(events[2].event, {
+                pattern = ".lua",
+            })
+            assert.spy(spy_load).called(1)
+        end
+        itt({ event.parse("BufEnter"), event.parse("WinEnter") })
+        itt({ event.parse("WinEnter"), event.parse("BufEnter") })
     end)
 end)
