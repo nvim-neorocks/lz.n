@@ -35,7 +35,10 @@ local M = {
                     ---@diagnostic disable-next-line: assign-type-mismatch, param-type-mismatch
                     ret.id = ret.id
                         .. " "
-                        .. (type(ret.pattern) == "string" and ret.pattern or table.concat(ret.pattern, ", "))
+                        .. (
+                            type(ret.pattern) == "string" and ret.pattern
+                            or table.concat(ret.pattern --[[@as table]], ", ")
+                        )
                 end
             end
         end
