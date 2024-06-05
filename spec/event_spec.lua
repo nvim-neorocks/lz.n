@@ -1,4 +1,5 @@
 local event = require("lz.n.handler.event")
+-- local loader = require("lz.n.loader")
 
 describe("event", function()
     it("can parse from string", function()
@@ -37,5 +38,15 @@ describe("event", function()
                 pattern = "*.lua",
             })
         )
+    end)
+    it("integration", function()
+        ---@type LzPlugin
+        local plugin = {
+            name = "foo",
+            event = { { id = "BufEnter", event = "BufEnter" } },
+            pattern = ".lua",
+        }
+        event.add(plugin)
+        -- TODO
     end)
 end)

@@ -31,11 +31,11 @@ error("Cannot import a meta module")
 ---@field after? fun(self:LzPlugin, opts:table)|true Will be executed when loading the plugin
 ---@field opts? PluginOpts
 
----@class LzPluginHandlers -- keys = plugin names
----@field event? table<string,LzEvent>
----@field ft? table<string,LzEvent>
----@field keys? table<string,LzKeys>
----@field cmd? table<string,string>
+---@class LzPluginHandlers
+---@field event? LzEvent[]
+---@field ft? LzEvent[]
+---@field keys? LzKeys[]
+---@field cmd? string[]
 
 ---@class LzPluginSpecHandlers
 ---@field event? string|LzEventSpec[]

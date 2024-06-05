@@ -151,8 +151,9 @@ end
 
 ---@param plugin LzPlugin
 function M.add(plugin)
-    -- TODO add plugin to M.pending
     for _, event in pairs(plugin.event or {}) do
+        M.pending[event.id] = M.pending[event.id] or {}
+        M.pending[event.id][plugin.name] = plugin.name
         add_event(event)
     end
 end
