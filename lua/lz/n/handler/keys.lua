@@ -126,8 +126,9 @@ end
 
 ---@param plugin LzPlugin
 function M.add(plugin)
-    -- TODO add plugin to M.pending
     for _, key in pairs(plugin.keys or {}) do
+        M.pending[key.id] = M.pending[key.id] or {}
+        M.pending[key.id][plugin.name] = plugin.name
         add_keys(key)
     end
 end
