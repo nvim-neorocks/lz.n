@@ -34,4 +34,24 @@ describe("keys", function()
         assert.spy(spy_load).called(1)
         --
     end)
+    it("Multiple keys only load plugin once", function()
+        ---@param lzkeys LzKeys[]
+        local function itt(lzkeys)
+            ---@type LzPlugin
+            local plugin = {
+                name = "foo",
+                keys = lzkeys,
+            }
+            local spy_load = spy.on(loader, "_load")
+            state.plugins[plugin.name] = plugin
+            keys.add(plugin)
+            local feed1 = vim.api.nvim_replace_termcodes("<Ignore>" .. lzkeys[1].lhs, true, true, true)
+            vim.api.nvim_feedkeys(feed1, "ix", false)
+            local feed2 = vim.api.nvim_replace_termcodes("<Ignore>" .. lzkeys[2].lhs, true, true, true)
+            vim.api.nvim_feedkeys(feed2, "ix", false)
+            assert.spy(spy_load).called(1)
+        end
+        itt({ keys.parse("<leader>tt"), keys.parse("<leader>ff") })
+        itt({ keys.parse("<leader>ff"), keys.parse("<leader>tt") })
+    end)
 end)

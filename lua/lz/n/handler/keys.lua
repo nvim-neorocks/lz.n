@@ -133,4 +133,11 @@ function M.add(plugin)
     end
 end
 
+---@param plugin LzPlugin
+function M.del(plugin)
+    for _, plugins in pairs(M.pending) do
+        plugins[plugin.name] = nil
+    end
+end
+
 return M
