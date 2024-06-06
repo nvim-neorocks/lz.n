@@ -42,7 +42,7 @@ describe("event", function()
             })
         )
     end)
-    it("Event should only load plugin once", function()
+    it("Event only loads plugin once", function()
         ---@type LzPlugin
         local plugin = {
             name = "foo",
@@ -56,7 +56,7 @@ describe("event", function()
         vim.api.nvim_exec_autocmds("BufEnter", {})
         assert.spy(spy_load).called(1)
     end)
-    it("Multiple events should only load plugin once", function()
+    it("Multiple events only load plugin once", function()
         ---@param events LzEvent[]
         local function itt(events)
             ---@type LzPlugin
@@ -78,7 +78,7 @@ describe("event", function()
         itt({ event.parse("BufEnter"), event.parse("WinEnter") })
         itt({ event.parse("WinEnter"), event.parse("BufEnter") })
     end)
-    it("Plugins' event handlers should be triggered", function()
+    it("Plugins' event handlers are triggered", function()
         ---@type LzPlugin
         local plugin = {
             name = "foo",
