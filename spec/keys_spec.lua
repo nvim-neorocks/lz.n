@@ -19,7 +19,7 @@ describe("keys", function()
         end
     end)
     it("Key only loads plugin once", function()
-        local lhs = "<C-h>k"
+        local lhs = "<leader>tt"
         ---@type LzPlugin
         local plugin = {
             name = "foo",
@@ -29,8 +29,8 @@ describe("keys", function()
         state.plugins[plugin.name] = plugin
         keys.add(plugin)
         local feed = vim.api.nvim_replace_termcodes("<Ignore>" .. lhs, true, true, true)
-        vim.api.nvim_feedkeys(feed, "i", false)
-        vim.api.nvim_feedkeys(feed, "i", false)
+        vim.api.nvim_feedkeys(feed, "ix", false)
+        vim.api.nvim_feedkeys(feed, "ix", false)
         assert.spy(spy_load).called(1)
         --
     end)
