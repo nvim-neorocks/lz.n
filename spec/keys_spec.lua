@@ -1,3 +1,4 @@
+---@diagnostic disable: invisible
 local keys = require("lz.n.handler.keys")
 local state = require("lz.n.state")
 local loader = require("lz.n.loader")
@@ -53,5 +54,29 @@ describe("keys", function()
         end
         itt({ keys.parse("<leader>tt"), keys.parse("<leader>ff") })
         itt({ keys.parse("<leader>ff"), keys.parse("<leader>tt") })
+    end)
+    it("Plugins' keymaps are triggered", function()
+        local lhs = "<leader>xy"
+        ---@type LzPlugin
+        local plugin = {
+            name = "baz",
+            keys = { keys.parse(lhs) },
+        }
+        local triggered = false
+        local orig_load = loader._load
+        ---@diagnostic disable-next-line: duplicate-set-field
+        loader._load = function(...)
+            vim.keymap.set("n", lhs, function()
+                triggered = true
+            end)
+            orig_load(...)
+        end
+        state.plugins[plugin.name] = plugin
+        keys.add(plugin)
+        local feed = vim.api.nvim_replace_termcodes("<Ignore>" .. lhs, true, true, true)
+        vim.api.nvim_feedkeys(feed, "ix", false)
+        vim.api.nvim_feedkeys(feed, "x", false)
+        assert.True(triggered)
+        loader._load = orig_load
     end)
 end)
