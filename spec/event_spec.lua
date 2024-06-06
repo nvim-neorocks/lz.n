@@ -47,7 +47,6 @@ describe("event", function()
         local plugin = {
             name = "foo",
             event = { event.parse("BufEnter") },
-            pattern = ".lua",
         }
         local spy_load = spy.on(loader, "_load")
         state.plugins[plugin.name] = plugin
@@ -83,7 +82,6 @@ describe("event", function()
         local plugin = {
             name = "foo",
             event = { event.parse("BufEnter") },
-            pattern = ".lua",
         }
         local triggered = false
         local orig_load = loader._load
