@@ -1,6 +1,8 @@
 ---@meta
 error("Cannot import a meta module")
 
+--- TODO Implement before/after config API
+
 ---@class VimGTable vim.g config table
 ---@field name? string Name of the vim.g config table, e.g. "rustaceanvim" for "vim.g.rustaceanvim". Defaults to the plugin name.
 ---@field type 'vim.g'
