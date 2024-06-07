@@ -4,7 +4,7 @@ local state = require("lz.n.state")
 local loader = require("lz.n.loader")
 local spy = require("luassert.spy")
 
-describe("keys", function()
+describe("handlers.keys", function()
     it("parses ids correctly", function()
         local tests = {
             { "<C-/>", "<c-/>", true },

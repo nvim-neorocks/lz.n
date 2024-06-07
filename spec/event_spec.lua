@@ -4,7 +4,7 @@ local state = require("lz.n.state")
 local loader = require("lz.n.loader")
 local spy = require("luassert.spy")
 
-describe("event", function()
+describe("handlers.event", function()
     it("can parse from string", function()
         assert.same({
             event = "VimEnter",

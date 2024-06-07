@@ -33,7 +33,6 @@ error("Cannot import a meta module")
 
 ---@class LzPluginHandlers
 ---@field event? LzEvent[]
----@field ft? LzEvent[]
 ---@field keys? LzKeys[]
 ---@field cmd? string[]
 

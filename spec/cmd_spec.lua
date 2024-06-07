@@ -4,7 +4,7 @@ local state = require("lz.n.state")
 local loader = require("lz.n.loader")
 local spy = require("luassert.spy")
 
-describe("cmd", function()
+describe("handlers.cmd", function()
     it("Command only loads plugin once and executes plugin command", function()
         ---@type LzPlugin
         local plugin = {
