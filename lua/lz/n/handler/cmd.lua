@@ -66,9 +66,12 @@ local function add_cmd(cmd)
     })
 end
 
----@param cmd string
-function M.del(cmd)
-    pcall(vim.api.nvim_del_user_command, cmd)
+---@param plugin LzPlugin
+function M.del(plugin)
+    pcall(vim.api.nvim_del_user_command, plugin.cmd)
+    for _, plugins in pairs(M.pending) do
+        plugins[plugin.name] = nil
+    end
 end
 
 ---@param plugin LzPlugin
