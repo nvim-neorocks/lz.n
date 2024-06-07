@@ -21,7 +21,7 @@ describe("handlers.keys", function()
     end)
     it("Key only loads plugin once", function()
         local lhs = "<leader>tt"
-        ---@type LzPlugin
+        ---@type lz.n.Plugin
         local plugin = {
             name = "foo",
             keys = { keys.parse(lhs) },
@@ -36,9 +36,9 @@ describe("handlers.keys", function()
         --
     end)
     it("Multiple keys only load plugin once", function()
-        ---@param lzkeys LzKeys[]
+        ---@param lzkeys lz.n.Keys[]
         local function itt(lzkeys)
-            ---@type LzPlugin
+            ---@type lz.n.Plugin
             local plugin = {
                 name = "foo",
                 keys = lzkeys,
@@ -57,7 +57,7 @@ describe("handlers.keys", function()
     end)
     it("Plugins' keymaps are triggered", function()
         local lhs = "<leader>xy"
-        ---@type LzPlugin
+        ---@type lz.n.Plugin
         local plugin = {
             name = "baz",
             keys = { keys.parse(lhs) },

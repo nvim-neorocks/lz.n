@@ -1,17 +1,17 @@
 local loader = require("lz.n.loader")
 
----@class LzKeysHandler: LzHandler
+---@class lz.n.KeysHandler: lz.n.Handler
 
----@type LzKeysHandler
+---@type lz.n.KeysHandler
 local M = {
     pending = {},
     type = "keys",
-    ---@param value string|LzKeysSpec
+    ---@param value string|lz.n.KeysSpec
     ---@param mode? string
-    ---@return LzKeys
+    ---@return lz.n.Keys
     parse = function(value, mode)
-        value = type(value) == "string" and { value } or value --[[@as LzKeysSpec]]
-        local ret = vim.deepcopy(value) --[[@as LzKeys]]
+        value = type(value) == "string" and { value } or value --[[@as lz.n.KeysSpec]]
+        local ret = vim.deepcopy(value) --[[@as lz.n.Keys]]
         ret.lhs = ret[1] or ""
         ret.rhs = ret[2]
         ret[1] = nil
@@ -31,10 +31,10 @@ local M = {
 
 local skip = { mode = true, id = true, ft = true, rhs = true, lhs = true }
 
----@param keys LzKeys
----@return LzKeysBase
+---@param keys lz.n.Keys
+---@return lz.n.KeysBase
 local function get_opts(keys)
-    ---@type LzKeysBase
+    ---@type lz.n.KeysBase
     local opts = {}
     for k, v in pairs(keys) do
         if type(k) ~= "number" and not skip[k] then
@@ -45,7 +45,7 @@ local function get_opts(keys)
 end
 
 -- Create a mapping if it is managed by lz.n
----@param keys LzKeys
+---@param keys lz.n.Keys
 ---@param buf integer?
 local function set(keys, buf)
     if keys.rhs then
@@ -58,7 +58,7 @@ end
 
 -- Delete a mapping and create the real global
 -- mapping when needed
----@param keys LzKeys
+---@param keys lz.n.Keys
 local function del(keys)
     pcall(vim.keymap.del, keys.mode, keys.lhs, {
         -- NOTE: for buffer-local mappings, we only delete the mapping for the current buffer
@@ -72,7 +72,7 @@ local function del(keys)
     end
 end
 
----@param keys LzKeys
+---@param keys lz.n.Keys
 local function add_keys(keys)
     local lhs = keys.lhs
     local opts = get_opts(keys)
@@ -124,7 +124,7 @@ local function add_keys(keys)
     end
 end
 
----@param plugin LzPlugin
+---@param plugin lz.n.Plugin
 function M.add(plugin)
     for _, key in pairs(plugin.keys or {}) do
         M.pending[key.id] = M.pending[key.id] or {}
@@ -133,7 +133,7 @@ function M.add(plugin)
     end
 end
 
----@param plugin LzPlugin
+---@param plugin lz.n.Plugin
 function M.del(plugin)
     for _, plugins in pairs(M.pending) do
         plugins[plugin.name] = nil

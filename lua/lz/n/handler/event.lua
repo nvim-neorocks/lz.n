@@ -1,18 +1,18 @@
 local loader = require("lz.n.loader")
 
----@class LzEventOpts
+---@class lz.n.EventOpts
 ---@field event string
 ---@field group? string
 ---@field exclude? string[] augroups to exclude
 ---@field data? unknown
 ---@field buffer? number
 
----@class LzEventHandler: LzHandler
+---@class lz.n.EventHandler: lz.n.Handler
 ---@field events table<string,true>
 ---@field group number
----@field parse fun(spec: LzEventSpec): LzEvent
+---@field parse fun(spec: lz.n.EventSpec): lz.n.Event
 
----@type LzEventHandler
+---@type lz.n.EventHandler
 local M = {
     pending = {},
     events = {},
@@ -27,7 +27,7 @@ local M = {
         elseif vim.islist(spec) then
             ret = { id = table.concat(spec, "|"), event = spec }
         else
-            ret = spec --[[@as LzEvent]]
+            ret = spec --[[@as lz.n.Event]]
             if not ret.id then
                 ---@diagnostic disable-next-line: assign-type-mismatch, param-type-mismatch
                 ret.id = type(ret.event) == "string" and ret.event or table.concat(ret.event, "|")
@@ -67,12 +67,12 @@ local event_triggers = {
 ---@param event string
 ---@param buf integer
 ---@param data unknown
----@return LzEventOpts[]
+---@return lz.n.EventOpts[]
 local function get_state(event, buf, data)
-    ---@type LzEventOpts[]
+    ---@type lz.n.EventOpts[]
     local state = {}
     while event do
-        ---@type LzEventOpts
+        ---@type lz.n.EventOpts
         local event_opts = {
             event = event,
             exclude = event ~= "FileType" and get_augroups(event) or nil,
@@ -87,7 +87,7 @@ local function get_state(event, buf, data)
 end
 
 -- Trigger an event
----@param opts LzEventOpts
+---@param opts lz.n.EventOpts
 local function _trigger(opts)
     xpcall(
         function()
@@ -106,7 +106,7 @@ end
 
 -- Trigger an event. When a group is given, only the events in that group will be triggered.
 -- When exclude is set, the events in those groups will be skipped.
----@param opts LzEventOpts
+---@param opts lz.n.EventOpts
 local function trigger(opts)
     if opts.group or opts.exclude == nil then
         return _trigger(opts)
@@ -125,7 +125,7 @@ local function trigger(opts)
     end
 end
 
----@param event LzEvent
+---@param event lz.n.Event
 local function add_event(event)
     local done = false
     vim.api.nvim_create_autocmd(event.event, {
@@ -149,7 +149,7 @@ local function add_event(event)
     })
 end
 
----@param plugin LzPlugin
+---@param plugin lz.n.Plugin
 function M.add(plugin)
     for _, event in pairs(plugin.event or {}) do
         M.pending[event.id] = M.pending[event.id] or {}
@@ -158,7 +158,7 @@ function M.add(plugin)
     end
 end
 
----@param plugin LzPlugin
+---@param plugin lz.n.Plugin
 function M.del(plugin)
     for _, plugins in pairs(M.pending) do
         plugins[plugin.name] = nil

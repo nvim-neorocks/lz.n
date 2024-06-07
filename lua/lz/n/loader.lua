@@ -7,7 +7,7 @@ local M = {}
 local DEFAULT_PRIORITY = 50
 
 ---@package
----@param plugin LzPlugin
+---@param plugin lz.n.Plugin
 function M._load(plugin)
     if plugin.enable == false or (type(plugin.enable) == "function" and not plugin.enable()) then
         return
@@ -16,7 +16,7 @@ function M._load(plugin)
     -- TODO: Load plugin
 end
 
----@param plugins table<string, LzPlugin>
+---@param plugins table<string, lz.n.Plugin>
 local function run_before_all(plugins)
     for _, plugin in pairs(plugins) do
         if plugin.beforeAll then
@@ -34,8 +34,8 @@ local function run_before_all(plugins)
     end
 end
 
----@param plugins table<string, LzPlugin>
----@return LzPlugin[]
+---@param plugins table<string, lz.n.Plugin>
+---@return lz.n.Plugin[]
 local function get_eager_plugins(plugins)
     local result = {}
     for _, plugin in pairs(plugins) do
@@ -44,15 +44,15 @@ local function get_eager_plugins(plugins)
         end
     end
     table.sort(result, function(a, b)
-        ---@cast a LzPlugin
-        ---@cast b LzPlugin
+        ---@cast a lz.n.Plugin
+        ---@cast b lz.n.Plugin
         return (a.priority or DEFAULT_PRIORITY) > (b.priority or DEFAULT_PRIORITY)
     end)
     return result
 end
 
 --- Loads startup plugins, removing loaded plugins from the table
----@param plugins table<string, LzPlugin>
+---@param plugins table<string, lz.n.Plugin>
 function M.load_startup_plugins(plugins)
     run_before_all(plugins)
     for _, plugin in pairs(get_eager_plugins(plugins)) do
@@ -61,10 +61,10 @@ function M.load_startup_plugins(plugins)
     end
 end
 
----@param plugins string | LzPlugin | string[] | LzPlugin[]
+---@param plugins string | lz.n.Plugin | string[] | lz.n.Plugin[]
 function M.load(plugins)
     plugins = (type(plugins) == "string" or plugins.name) and { plugins } or plugins
-    ---@cast plugins (string|LzPlugin)[]
+    ---@cast plugins (string|lz.n.Plugin)[]
     for _, plugin in pairs(plugins) do
         local loadable = true
         if type(plugin) == "string" then
@@ -74,7 +74,7 @@ function M.load(plugins)
                 vim.notify("Plugin " .. plugin .. " not found", vim.log.levels.ERROR, { title = "lz.n" })
                 loadable = false
             end
-            ---@cast plugin LzPlugin
+            ---@cast plugin lz.n.Plugin
         end
         if loadable then
             M._load(plugin)

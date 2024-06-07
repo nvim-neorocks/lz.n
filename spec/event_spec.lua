@@ -43,7 +43,7 @@ describe("handlers.event", function()
         )
     end)
     it("Event only loads plugin once", function()
-        ---@type LzPlugin
+        ---@type lz.n.Plugin
         local plugin = {
             name = "foo",
             event = { event.parse("BufEnter") },
@@ -56,9 +56,9 @@ describe("handlers.event", function()
         assert.spy(spy_load).called(1)
     end)
     it("Multiple events only load plugin once", function()
-        ---@param events LzEvent[]
+        ---@param events lz.n.Event[]
         local function itt(events)
-            ---@type LzPlugin
+            ---@type lz.n.Plugin
             local plugin = {
                 name = "foo",
                 event = events,
@@ -78,7 +78,7 @@ describe("handlers.event", function()
         itt({ event.parse("WinEnter"), event.parse("BufEnter") })
     end)
     it("Plugins' event handlers are triggered", function()
-        ---@type LzPlugin
+        ---@type lz.n.Plugin
         local plugin = {
             name = "foo",
             event = { event.parse("BufEnter") },

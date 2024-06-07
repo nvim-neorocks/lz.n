@@ -2,7 +2,7 @@
 
 local M = {}
 
----@type table<string, LzPlugin>
+---@type table<string, lz.n.Plugin>
 M.plugins = {}
 
 return M

@@ -6,7 +6,7 @@ local spy = require("luassert.spy")
 
 describe("handlers.cmd", function()
     it("Command only loads plugin once and executes plugin command", function()
-        ---@type LzPlugin
+        ---@type lz.n.Plugin
         local plugin = {
             name = "foo",
             cmd = { "Foo" },
@@ -40,7 +40,7 @@ describe("handlers.cmd", function()
                 vim.api.nvim_create_user_command("Foo", function() end, {})
                 vim.api.nvim_create_user_command("Bar", function() end, {})
             end
-            ---@type LzPlugin
+            ---@type lz.n.Plugin
             local plugin = {
                 name = "foo",
                 cmd = commands,

@@ -13,7 +13,7 @@ describe("handlers.ft", function()
         }, ft.parse("rust"))
     end)
     it("filetype event loads plugins", function()
-        ---@type LzPlugin
+        ---@type lz.n.Plugin
         local plugin = {
             name = "Foo",
             event = { ft.parse("rust") },

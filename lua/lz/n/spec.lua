@@ -1,7 +1,7 @@
 local M = {}
 
----@param spec LzSpecImport
----@param result table<string, LzPlugin>
+---@param spec lz.n.SpecImport
+---@param result table<string, lz.n.Plugin>
 local function import_spec(spec, result)
     if spec.import == "lz.n" then
         vim.schedule(function()
@@ -45,10 +45,10 @@ local function import_spec(spec, result)
     M._normalize(mod, result)
 end
 
----@param spec LzPluginSpec
----@return LzPlugin
+---@param spec lz.n.PluginSpec
+---@return lz.n.Plugin
 local function parse(spec)
-    ---@type LzPlugin
+    ---@type lz.n.Plugin
     ---@diagnostic disable-next-line: assign-type-mismatch
     local result = vim.deepcopy(spec)
     local event_spec = spec.event
@@ -57,25 +57,25 @@ local function parse(spec)
     end
     if type(event_spec) == "string" then
         local event = require("lz.n.handler.event").parse(event_spec)
-        result.event[event.id] = event
+        table.insert(result.event, event)
     elseif type(event_spec) == "table" then
-        ---@cast event_spec LzEventSpec[]
+        ---@cast event_spec lz.n.EventSpec[]
         for _, _event_spec in pairs(event_spec) do
             local event = require("lz.n.handler.event").parse(_event_spec)
-            result.ft[event.id] = event
+            table.insert(result.event, event)
         end
     end
     local ft_spec = spec.ft
     if ft_spec then
-        result.ft = {}
+        result.event = result.event or {}
     end
     if type(ft_spec) == "string" then
         local ft = require("lz.n.handler.ft").parse(ft_spec)
-        result[ft.id] = ft
+        table.insert(result.event, ft)
     elseif type(ft_spec) == "table" then
         for _, _ft_spec in pairs(ft_spec) do
             local ft = require("lz.n.handler.ft").parse(_ft_spec)
-            result.ft[ft.id] = ft
+            table.insert(result.event, ft)
         end
     end
     local keys_spec = spec.keys
@@ -84,12 +84,12 @@ local function parse(spec)
     end
     if type(keys_spec) == "string" then
         local keys = require("lz.n.handler.keys").parse(keys_spec)
-        result.keys[keys.id] = keys
+        table.insert(result.keys, keys)
     elseif type(keys_spec) == "table" then
-        ---@cast keys_spec string[] | LzKeysSpec[]
+        ---@cast keys_spec string[] | lz.n.KeysSpec[]
         for _, _keys_spec in pairs(keys_spec) do
             local keys = require("lz.n.handler.keys").parse(_keys_spec)
-            result.keys[keys.id] = keys
+            table.insert(result.keys, keys)
         end
     end
     local cmd_spec = spec.cmd
@@ -97,33 +97,33 @@ local function parse(spec)
         result.cmd = {}
     end
     if type(cmd_spec) == "string" then
-        result.cmd[cmd_spec] = cmd_spec
+        table.insert(result.cmd, cmd_spec)
     elseif type(cmd_spec) == "table" then
         for _, _cmd_spec in pairs(cmd_spec) do
-            result.cmd[_cmd_spec] = _cmd_spec
+            table.insert(result.cmd, _cmd_spec)
         end
     end
     return result
 end
 
 ---@private
----@param spec LzSpec
----@param result table<string, LzPlugin>
+---@param spec lz.n.Spec
+---@param result table<string, lz.n.Plugin>
 function M._normalize(spec, result)
     if #spec > 1 or vim.islist(spec) then
         for _, sp in ipairs(spec) do
             M._normalize(sp, result)
         end
     elseif spec.name then
-        ---@cast spec LzPluginSpec
+        ---@cast spec lz.n.PluginSpec
         result[spec.name] = parse(spec)
     elseif spec.import then
-        ---@cast spec LzSpecImport
+        ---@cast spec lz.n.SpecImport
         import_spec(spec, result)
     end
 end
 
----@param result table<string, LzPlugin>
+---@param result table<string, lz.n.Plugin>
 local function remove_disabled_plugins(result)
     for _, plugin in ipairs(result) do
         local disabled = plugin.enabled == false or (type(plugin.enabled) == "function" and not plugin.enabled())
@@ -133,8 +133,8 @@ local function remove_disabled_plugins(result)
     end
 end
 
----@param spec LzSpec
----@return table<string, LzPlugin>
+---@param spec lz.n.Spec
+---@return table<string, lz.n.Plugin>
 function M.parse(spec)
     local result = {}
     M._normalize(spec, result)

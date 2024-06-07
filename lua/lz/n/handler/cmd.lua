@@ -1,8 +1,8 @@
 local loader = require("lz.n.loader")
 
----@class LzCmdHandler: LzHandler
+---@class lz.n.CmdHandler: lz.n.Handler
 
----@type LzCmdHandler
+---@type lz.n.CmdHandler
 local M = {
     pending = {},
     type = "cmd",
@@ -66,7 +66,7 @@ local function add_cmd(cmd)
     })
 end
 
----@param plugin LzPlugin
+---@param plugin lz.n.Plugin
 function M.del(plugin)
     pcall(vim.api.nvim_del_user_command, plugin.cmd)
     for _, plugins in pairs(M.pending) do
@@ -74,7 +74,7 @@ function M.del(plugin)
     end
 end
 
----@param plugin LzPlugin
+---@param plugin lz.n.Plugin
 function M.add(plugin)
     if not plugin.cmd then
         return
