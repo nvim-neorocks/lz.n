@@ -115,7 +115,7 @@ require("lz.n").load(plugins)
 | **priority** | `number?` | Only useful for **start** plugins (not lazy-loaded) to force loading certain plugins first. Default priority is `50`. It's recommended to set this to a high number for colorschemes. | `priority` |
 <!-- markdownlint-enable MD013 -->
 
-[^1]: In contrast to `lazy.nvim`'s `name` field, `lz.n`'s `name` field *is not optional*.
+[^1]: In contrast to `lazy.nvim`'s `name` field, `lz.n`'s `name` *is not optional*.
       This is because `lz.n` does is not a plugin manager and needs to be told which
       plugins to load.
 
