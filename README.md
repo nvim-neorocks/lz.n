@@ -52,8 +52,8 @@ but reduced down to the very basics required for lazy-loading only.
 
 ### :zzz: Comparison with `lazy.nvim`
 
-- `lz.n` is **not a plugin manager**, but focuses **on lazy-loading only**,
-  and is intended to be used with (or by) a plugin manager.
+- `lz.n` is **not a plugin manager**, but focuses **on lazy-loading only**.
+  It is intended to be used with (or by) a plugin manager.
 - The feature set is minimal, to [reduce code complexity](https://grugbrain.dev/)
   and simplify the API.
   For example, the following `lazy.nvim` features are **out of scope**:
