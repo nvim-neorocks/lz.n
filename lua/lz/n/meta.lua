@@ -8,8 +8,6 @@ error("Cannot import a meta module")
 ---
 --- Whether to enable this plugin. Useful to disable plugins under certain conditions.
 --- @field enabled? boolean|(fun():boolean)
---- Whether to lazy-load this plugin. Defaults to `false`.
---- @field lazy? boolean
 ---
 --- Only useful for lazy=false plugins to force loading certain plugins first.
 --- Default priority is 50
@@ -62,6 +60,8 @@ error("Cannot import a meta module")
 --- @field name string
 
 --- @class lz.n.Plugin: lz.n.PluginBase,lz.n.PluginHandlers,lz.n.PluginHooks
+--- Whether to lazy-load this plugin. Defaults to `false`.
+--- @field lazy? boolean
 
 --- @class lz.n.PluginSpec: lz.n.PluginBase,lz.n.PluginSpecHandlers,lz.n.PluginHooks
 

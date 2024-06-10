@@ -65,6 +65,8 @@ local function parse(spec)
     local ft_spec = spec.ft
     if ft_spec then
         result.event = result.event or {}
+        ---@diagnostic disable-next-line: inject-field
+        result.ft = nil
     end
     if type(ft_spec) == "string" then
         local ft = require("lz.n.handler.ft").parse(ft_spec)
@@ -100,6 +102,7 @@ local function parse(spec)
             table.insert(result.cmd, _cmd_spec)
         end
     end
+    result.lazy = result.lazy or result.event ~= nil or result.keys ~= nil or result.cmd ~= nil
     return result
 end
 
