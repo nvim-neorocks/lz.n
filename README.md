@@ -59,13 +59,20 @@ but reduced down to the very basics required for lazy-loading only.
   For example, the following `lazy.nvim` features are **out of scope**:
   - Merging multiple plugin specs for a single plugin
     (primarily intended for use by Neovim distributions).
+  - `lazy.vim` completely disables and takes over Neovim's
+    built-in loading mechanisms, including
+    adding a plugin's API (`lua`, `autoload`, ...)
+    to the runtimepath.
+    `lz.n` doesn't.
+    Its only concern is plugin initialization, which is
+    the bulk of the startup overhead.
   - Automatic lazy-loading of Lua modules on `require`.
   - Automatic lazy-loading of colorschemes.
-    This library provides a `colorscheme` handler in the plugin spec.
+    `lz.n` provides a `colorscheme` handler in the plugin spec.
   - Heuristics for determining a `main` module and automatically calling
     a `setup()` function.
   - Abstractions for plugin configuration with an `opts` table.
-    This plugin provides simple hooks that you can use to specify
+    `lz.n` provides simple hooks that you can use to specify
     when to load configurations.
   - Features related to plugin management.
   - Profiling tools.
