@@ -4,7 +4,7 @@ A dead simple lazy-loading Lua library for Neovim plugins.
 
 It is intended to be used
 
-- by users or plugin managers that don't provide a convenient API for lazy-loading.
+- by users of plugin managers that don't provide a convenient API for lazy-loading.
 - by plugin managers, to provide a convenient API for lazy-loading.
 
 ![Neovim](https://img.shields.io/badge/NeoVim-%2357A143.svg?&style=for-the-badge&logo=neovim&logoColor=white)
