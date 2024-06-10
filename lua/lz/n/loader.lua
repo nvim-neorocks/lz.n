@@ -67,14 +67,17 @@ function M.load_startup_plugins(plugins)
     end
 end
 
+---@alias hook_key "before" | "after"
+
+---@param hook_key hook_key
 ---@param plugin lz.n.Plugin
-local function config(plugin)
-    if type(plugin.after) == "function" then
+local function hook(hook_key, plugin)
+    if type(plugin[hook_key]) == "function" then
         xpcall(
-            plugin.after,
+            plugin[hook_key],
             vim.schedule_wrap(function(err)
                 vim.notify(
-                    "Failed to run 'config' for " .. plugin.name .. ": " .. tostring(err or ""),
+                    "Failed to run '" .. hook_key .. "' hook for " .. plugin.name .. ": " .. tostring(err or ""),
                     vim.log.levels.ERROR
                 )
             end),
@@ -99,8 +102,9 @@ function M.load(plugins)
             ---@cast plugin lz.n.Plugin
         end
         if loadable then
+            hook("before", plugin)
             M._load(plugin)
-            config(plugin)
+            hook("after", plugin)
         end
     end
 end

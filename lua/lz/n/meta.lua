@@ -18,6 +18,7 @@ error("Cannot import a meta module")
 
 --- @class lz.n.PluginHooks
 --- @field beforeAll? fun(self:lz.n.Plugin) Will be run before loading any plugins
+--- @field before? fun(self:lz.n.Plugin) Will be run before loading this plugin
 --- @field after? fun(self:lz.n.Plugin) Will be executed after loading this plugin
 
 --- @class lz.n.PluginHandlers
