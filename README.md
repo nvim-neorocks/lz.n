@@ -34,7 +34,7 @@ It is intended to be used
   - `FileType` events
   - Key mappings
   - User commands
-  - Colorschemes
+  - Colorscheme events
 - Works with:
   - Neovim's built-in `:h packpath` (`:h packadd`)
   - Any plugin manager that supports manually lazy loading
