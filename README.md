@@ -69,7 +69,7 @@ require("lz.n").load(plugins)
 | **beforeAll** | `fun(lz.n.Plugin)?` | Always executed before any plugins are loaded. | `init` |
 | **before** | `fun(lz.n.Plugin)?` | Executed before a plugin is loaded. | - |
 | **after** | `fun(lz.n.Plugin)?` | Executed after a plugin is loaded. | `config` |
-| **event** | `string?` or `{event?:string\|string[], pattern?:string\|string[]}\|string[]` | Lazy-load on event. Events can be specified as `BufEnter` or with a pattern like `BufEnter *.lua`. | `event` |
+| **event** | `string?` or `{event?:string\|string[], pattern?:string\|string[]}\` or `string[]` | Lazy-load on event. Events can be specified as `BufEnter` or with a pattern like `BufEnter *.lua`. | `event` |
 | **cmd** | `string?` or `string[]` | Lazy-load on command. | `cmd` |
 | **ft** | `string?` or `string[]` | Lazy-load on filetype. | `ft` |
 | **keys** | `string?` or `string[]` or `lz.n.KeysSpec[]` | Lazy-load on key mapping. | `keys` |
