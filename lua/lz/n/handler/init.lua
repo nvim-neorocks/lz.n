@@ -26,13 +26,11 @@ local function enable(plugin)
     for _, handler in pairs(handlers) do
         handler.add(plugin)
     end
-    -- TODO: Change handler add implementations to take a lz.n.Plugin
 end
 
 function M.disable(plugin)
     for _, handler in pairs(handlers) do
         if type(handler.del) == "function" then
-            -- TODO: Change handler del implementations to take a lz.n.Plugin?
             handler.del(plugin)
         end
     end

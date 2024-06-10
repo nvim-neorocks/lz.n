@@ -76,3 +76,9 @@ error("Cannot import a meta module")
 ---@field import string spec module to import
 ---@field enabled? boolean|(fun():boolean)
 ---@field cond? boolean|(fun():boolean)
+
+---@class lz.n.Config
+---@field load? fun(name: string) Function to load a plugin. Takes the plugin name (not the module name). Defaults to |packadd| if not set.
+
+---@type lz.n.Config
+vim.g.lz_n = vim.g.lz_n

@@ -15,16 +15,11 @@ test_dependencies = {
 }
 
 source = {
-  url = 'git://github.com/mrcjkb/' .. package,
+  url = 'git://github.com/nvim-neorocks/' .. package,
 }
 
 build = {
   type = 'builtin',
-  -- TODO: Add runtime diretories here
-  -- copy_directories = {
-      -- 'doc',
-      -- "plugin",
-  -- },
 }
 
 

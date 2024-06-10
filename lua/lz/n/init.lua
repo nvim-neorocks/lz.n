@@ -2,8 +2,7 @@
 
 local M = {}
 
--- TODO: Is this necessary?
-if not vim.loader or vim.fn.has("nvim-0.9.1") ~= 1 then
+if vim.fn.has("nvim-0.9.1") ~= 1 then
     error("lz.n requires Neovim >= 0.9.1")
 end
 

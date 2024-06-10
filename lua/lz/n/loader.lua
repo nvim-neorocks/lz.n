@@ -13,7 +13,13 @@ function M._load(plugin)
         return
     end
     require("lz.n.handler").disable(plugin)
-    -- TODO: Load plugin
+    ---@type fun(name: string) | nil
+    local load_impl = vim.tbl_get(vim.g, "lz_n", "load")
+    if type(load_impl) == "function" then
+        load_impl(plugin.name)
+    else
+        vim.cmd.packadd(plugin.name)
+    end
 end
 
 ---@param plugins table<string, lz.n.Plugin>
