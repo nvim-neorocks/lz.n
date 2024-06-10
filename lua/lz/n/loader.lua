@@ -6,6 +6,8 @@ local M = {}
 
 local DEFAULT_PRIORITY = 50
 
+local DEFAULT_COLORSCHEME_PRIORITY = 1000
+
 ---@package
 ---@param plugin lz.n.Plugin
 function M._load(plugin)
@@ -40,6 +42,11 @@ local function run_before_all(plugins)
     end
 end
 
+---@param plugin lz.n.Plugin
+local function get_priority(plugin)
+    return plugin.priority or (plugin.colorscheme and DEFAULT_COLORSCHEME_PRIORITY) or DEFAULT_PRIORITY
+end
+
 ---@param plugins table<string, lz.n.Plugin>
 ---@return lz.n.Plugin[]
 local function get_eager_plugins(plugins)
@@ -52,7 +59,7 @@ local function get_eager_plugins(plugins)
     table.sort(result, function(a, b)
         ---@cast a lz.n.Plugin
         ---@cast b lz.n.Plugin
-        return (a.priority or DEFAULT_PRIORITY) > (b.priority or DEFAULT_PRIORITY)
+        return get_priority(a) > get_priority(b)
     end)
     return result
 end

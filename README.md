@@ -114,7 +114,7 @@ require("lz.n").load(plugins)
 | **ft** | `string?` or `string[]` | Lazy-load on filetype. | `ft` |
 | **keys** | `string?` or `string[]` or `lz.n.KeysSpec[]` | Lazy-load on key mapping. | `keys` |
 | **colorscheme** | `string?` or `string[]` | Lazy-load on colorscheme. | None. `lazy.nvim` lazy-loads colorschemes automatically[^2]. |
-| **priority** | `number?` | Only useful for **start** plugins (not lazy-loaded) to force loading certain plugins first. Default priority is `50`. It's recommended to set this to a high number for colorschemes. | `priority` |
+| **priority** | `number?` | Only useful for **start** plugins (not lazy-loaded) to force loading certain plugins first. Default priority is `50` (or `1000` if `colorscheme` is set). | `priority` |
 <!-- markdownlint-enable MD013 -->
 
 [^1]: In contrast to `lazy.nvim`'s `name` field, `lz.n`'s `name` *is not optional*.
@@ -147,7 +147,6 @@ require("lz.n").load {
         "sweetie.nvim",
         -- lazy-load when setting the `sweetie` colorscheme
         colorscheme = "sweetie",
-        priority = 1000,
     },
     {
         "vim-startuptime",
