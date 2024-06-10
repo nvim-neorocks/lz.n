@@ -2,8 +2,8 @@
 
 local M = {}
 
-if vim.fn.has("nvim-0.9.1") ~= 1 then
-    error("lz.n requires Neovim >= 0.9.1")
+if vim.fn.has("nvim-0.10.0") ~= 1 then
+    error("lz.n requires Neovim >= 0.10.0")
 end
 
 ---@param spec string | lz.n.Spec

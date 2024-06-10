@@ -46,7 +46,7 @@ but reduced down to the very basics required for lazy-loading only.
 
 ## :pencil: Requirements
 
-- `Neovim >= 0.9.1`
+- `Neovim >= 0.10.0`
 
 ## :books: Usage
 
