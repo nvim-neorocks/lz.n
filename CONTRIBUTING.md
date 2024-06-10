@@ -14,7 +14,7 @@ CI checks are run using [`nix`](https://nixos.org/download.html#download-nix).
 
 ### Dev environment
 
-I use the following tools:
+We use the following tools:
 
 #### Formatting
 
@@ -71,7 +71,7 @@ Or
 
 > [!NOTE]
 >
-> The Nix devShell sets up `luarocks test` to use Neovim as the interpreter.
+> The Nix devShell sets up `luarocks test` and `busted` to use Neovim as the interpreter.
 
 ### Running tests and checks with Nix
 
