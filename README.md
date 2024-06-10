@@ -147,6 +147,7 @@ require("lz.n").load {
         "sweetie.nvim",
         -- lazy-load when setting the `sweetie` colorscheme
         colorscheme = "sweetie",
+        priority = 1000,
     },
     {
         "vim-startuptime",
