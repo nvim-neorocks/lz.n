@@ -115,7 +115,7 @@ require("lz.n").load {
         event = "InsertEnter",
     },
     {
-        "monaqa/dial.nvim",
+        "dial.nvim",
         -- lazy-load on keys. -- Mode is `n` by default.
         keys = { "<C-a>", { "<C-x>", mode = "n" } },
     },
