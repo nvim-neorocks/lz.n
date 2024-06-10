@@ -40,6 +40,9 @@ but reduced down to the very basics required for lazy-loading only.
   - Automatic lazy-loading of colorschemes.
   - Heuristics for determining a `main` module and automatically calling
     a `setup()` function.
+  - Abstractions for plugin configuration with an `opts` table.
+    This plugin provides simple hooks that you can use to specify
+    when to load configurations.
   - Features related to plugin management.
   - Profiling tools.
   - UI.
