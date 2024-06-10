@@ -23,13 +23,13 @@ error("Cannot import a meta module")
 
 --- @class lz.n.PluginBase
 ---
---- Display name and name used for plugin config files, e.g. "neorg"
+--- The plugin name (not its main module), e.g. "sweetie.nvim"
 --- @field name string
 --- @field optsSpec? lz.n.PluginOptsSpec
---- @field enabled? boolean|(fun():boolean)
 ---
 --- Whether to enable this plugin. Useful to disable plugins under certain conditions.
---- @field enable? boolean|(fun():boolean)
+--- @field enabled? boolean|(fun():boolean)
+--- Whether to lazy-load this plugin. Defaults to `false`.
 --- @field lazy? boolean
 ---
 --- Only useful for lazy=false plugins to force loading certain plugins first.
@@ -39,25 +39,30 @@ error("Cannot import a meta module")
 --- @alias lz.n.Event {id:string, event:string[]|string, pattern?:string[]|string}
 --- @alias lz.n.EventSpec string|{event?:string|string[], pattern?:string|string[]}|string[]
 
---- @alias PluginOpts table|fun(self:lz.n.Plugin, opts:table):table?
-
 --- @class lz.n.PluginHooks
 --- @field beforeAll? fun(self:lz.n.Plugin) Will be run before loading any plugins
---- @field deactivate? fun(self:lz.n.Plugin) Unload/Stop a plugin
 --- @field after? fun(self:lz.n.Plugin, opts:table)|true Will be executed when loading the plugin
---- @field opts? PluginOpts
+--- @field opts? table
 
+--- @package
 --- @class lz.n.PluginHandlers
 --- @field event? lz.n.Event[]
 --- @field keys? lz.n.Keys[]
 --- @field cmd? string[]
 
 --- @class lz.n.PluginSpecHandlers
+---
+--- Load a plugin on one or more |autocmd-events|.
 --- @field event? string|lz.n.EventSpec[]
+---
+--- Load a plugin on one or more |user-commands|.
 --- @field cmd? string[]|string
+---
+--- Load a plugin on one or more |FileType| events.
 --- @field ft? string[]|string
+---
+--- Load a plugin on one or more |key-mapping|s.
 --- @field keys? string|string[]|lz.n.KeysSpec[]
---- @field module? false
 
 --- @class lz.n.KeysBase: vim.keymap.set.Opts
 --- @field desc? string
@@ -84,12 +89,11 @@ error("Cannot import a meta module")
 
 --- @class lz.n.PluginSpec: lz.n.PluginBase,lz.n.PluginSpecHandlers,lz.n.PluginHooks
 
---- @alias lz.n.Spec lz.n.PluginSpec|lz.n.SpecImport|lz.n.Spec[]
-
 --- @class lz.n.SpecImport
 --- @field import string spec module to import
 --- @field enabled? boolean|(fun():boolean)
---- @field cond? boolean|(fun():boolean)
+
+--- @alias lz.n.Spec lz.n.PluginSpec | lz.n.SpecImport | lz.n.Spec[]
 
 --- @class lz.n.Config
 ---

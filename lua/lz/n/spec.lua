@@ -18,9 +18,6 @@ local function import_spec(spec, result)
         end)
         return
     end
-    if spec.cond == false or (type(spec.cond) == "function" and not spec.cond()) then
-        return
-    end
     if spec.enabled == false or (type(spec.enabled) == "function" and not spec.enabled()) then
         return
     end

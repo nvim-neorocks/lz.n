@@ -9,7 +9,7 @@ local DEFAULT_PRIORITY = 50
 ---@package
 ---@param plugin lz.n.Plugin
 function M._load(plugin)
-    if plugin.enable == false or (type(plugin.enable) == "function" and not plugin.enable()) then
+    if plugin.enabled == false or (type(plugin.enabled) == "function" and not plugin.enabled()) then
         return
     end
     require("lz.n.handler").disable(plugin)
