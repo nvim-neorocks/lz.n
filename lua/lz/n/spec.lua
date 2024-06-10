@@ -48,6 +48,8 @@ local function parse(spec)
     ---@type lz.n.Plugin
     ---@diagnostic disable-next-line: assign-type-mismatch
     local result = vim.deepcopy(spec)
+    result.name = spec[1]
+    result[1] = nil
     local event_spec = spec.event
     if event_spec then
         result.event = {}
@@ -110,13 +112,14 @@ end
 ---@param spec lz.n.Spec
 ---@param result table<string, lz.n.Plugin>
 function M._normalize(spec, result)
-    if #spec > 1 or vim.islist(spec) then
+    if #spec > 1 or vim.islist(spec) and #spec > 1 then
+        ---@cast spec lz.n.Spec[]
         for _, sp in ipairs(spec) do
             M._normalize(sp, result)
         end
-    elseif spec.name then
+    elseif spec[1] then
         ---@cast spec lz.n.PluginSpec
-        result[spec.name] = parse(spec)
+        result[spec[1]] = parse(spec)
     elseif spec.import then
         ---@cast spec lz.n.SpecImport
         import_spec(spec, result)

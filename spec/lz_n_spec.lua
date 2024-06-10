@@ -7,14 +7,14 @@ describe("lz.n", function()
         local spy_load = spy.on(loader, "_load")
         lz.load({
             {
-                name = "neorg",
+                "neorg",
             },
             {
-                name = "crates.nvim",
+                "crates.nvim",
                 ft = { "toml", "rust" },
             },
             {
-                name = "telescope.nvim",
+                "telescope.nvim",
                 keys = "<leader>tt",
                 cmd = "Telescope",
             },

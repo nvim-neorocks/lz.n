@@ -3,9 +3,6 @@ error("Cannot import a meta module")
 
 --- @class lz.n.PluginBase
 ---
---- The plugin name (not its main module), e.g. "sweetie.nvim"
---- @field name string
----
 --- Whether to enable this plugin. Useful to disable plugins under certain conditions.
 --- @field enabled? boolean|(fun():boolean)
 ---
@@ -61,10 +58,15 @@ error("Cannot import a meta module")
 --- @field name string
 
 --- @class lz.n.Plugin: lz.n.PluginBase,lz.n.PluginHandlers,lz.n.PluginHooks
+--- The plugin name (not its main module), e.g. "sweetie.nvim"
+--- @field name string
+---
 --- Whether to lazy-load this plugin. Defaults to `false`.
 --- @field lazy? boolean
 
 --- @class lz.n.PluginSpec: lz.n.PluginBase,lz.n.PluginSpecHandlers,lz.n.PluginHooks
+--- The plugin name (not its main module), e.g. "sweetie.nvim"
+--- @field [1] string
 
 --- @class lz.n.SpecImport
 --- @field import string spec module to import
