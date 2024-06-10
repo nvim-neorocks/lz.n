@@ -29,3 +29,8 @@ jobs:
         with:
           version: ${{ env.LUAROCKS_VERSION }}
           test_interpreters: ""
+          detailed_description: |
+            It is intended to be used
+
+              - by users or plugin managers that don't provide a convenient API for lazy-loading.
+              - by plugin managers, to provide a convenient API for lazy-loading.
