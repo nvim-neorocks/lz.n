@@ -107,7 +107,7 @@ require("lz.n").load(plugins)
 | **[1]** | `string` | The plugin's name (not the module name). | `name`[^1] |
 | **enabled** | `boolean?` or `fun():boolean` | When `false`, or if the `function` returns false, then this plugin will not be included in the spec. | `enabled` |
 | **beforeAll** | `fun(lz.n.Plugin)?` | Always executed before any plugins are loaded. | `init` |
-| **before** | `fun(lz.n.Plugin)?` | Executed before a plugin is loaded. | - |
+| **before** | `fun(lz.n.Plugin)?` | Executed before a plugin is loaded. | None |
 | **after** | `fun(lz.n.Plugin)?` | Executed after a plugin is loaded. | `config` |
 | **event** | `string?` or `{event?:string\|string[], pattern?:string\|string[]}\` or `string[]` | Lazy-load on event. Events can be specified as `BufEnter` or with a pattern like `BufEnter *.lua`. | `event` |
 | **cmd** | `string?` or `string[]` | Lazy-load on command. | `cmd` |
