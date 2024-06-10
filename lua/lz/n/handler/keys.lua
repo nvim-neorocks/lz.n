@@ -66,7 +66,7 @@ local function del(keys)
         buffer = keys.ft and true or nil,
     })
     -- make sure to create global mappings when needed
-    -- buffer-local mappings are managed by lazy
+    -- buffer-local mappings are managed by lz.n
     if not keys.ft then
         set(keys)
     end
