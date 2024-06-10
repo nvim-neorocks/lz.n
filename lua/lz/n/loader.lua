@@ -67,6 +67,21 @@ function M.load_startup_plugins(plugins)
     end
 end
 
+---@param plugin lz.n.Plugin
+local function config(plugin)
+    if type(plugin.config) == "function" then
+        xpcall(
+            plugin.config,
+            vim.schedule_wrap(function(err)
+                vim.notify(
+                    "Failed to run 'config' for " .. plugin.name .. ": " .. tostring(err or ""),
+                    vim.log.levels.ERROR
+                )
+            end)
+        )
+    end
+end
+
 ---@param plugins string | lz.n.Plugin | string[] | lz.n.Plugin[]
 function M.load(plugins)
     plugins = (type(plugins) == "string" or plugins.name) and { plugins } or plugins
@@ -84,6 +99,7 @@ function M.load(plugins)
         end
         if loadable then
             M._load(plugin)
+            config(plugin)
         end
     end
 end

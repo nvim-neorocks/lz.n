@@ -8,10 +8,10 @@ end
 
 ---@param spec string | lz.n.Spec
 function M.load(spec)
-    if vim.g.lzn_did_load then
+    if vim.g.lz_n_did_load then
         return vim.notify("lz.n has already loaded your plugins.", vim.log.levels.WARN, { title = "lz.n" })
     end
-    vim.g.lzn_did_load = true
+    vim.g.lz_n_did_load = true
 
     if type(spec) == "string" then
         spec = { import = spec }

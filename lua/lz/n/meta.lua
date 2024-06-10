@@ -1,31 +1,10 @@
 ---@meta
 error("Cannot import a meta module")
 
---- TODO Implement before/after config API
-
---- @class VimGTable vim.g config table
----
---- Name of the vim.g config table, e.g. "rustaceanvim" for "vim.g.rustaceanvim".
---- Defaults to the plugin name.
---- @field name? string
---- @field type 'vim.g'
-
---- @class ConfigFunction Lua function
----
---- Module name containing the function. Defaults to the plugin name.
---- @field module? string
---- Name of the config function.
---- Defaults to 'setup', the most common in the Neovim plugin community.
---- @field name? string
---- @field type 'func'
-
---- @alias lz.n.PluginOptsSpec VimGTable | ConfigFunction How a plugin accepts its options
-
 --- @class lz.n.PluginBase
 ---
 --- The plugin name (not its main module), e.g. "sweetie.nvim"
 --- @field name string
---- @field optsSpec? lz.n.PluginOptsSpec
 ---
 --- Whether to enable this plugin. Useful to disable plugins under certain conditions.
 --- @field enabled? boolean|(fun():boolean)
@@ -43,6 +22,7 @@ error("Cannot import a meta module")
 --- @field beforeAll? fun(self:lz.n.Plugin) Will be run before loading any plugins
 --- @field after? fun(self:lz.n.Plugin, opts:table)|true Will be executed when loading the plugin
 --- @field opts? table
+--- @field config? fun() Will be executed when loading the plugin
 
 --- @package
 --- @class lz.n.PluginHandlers
