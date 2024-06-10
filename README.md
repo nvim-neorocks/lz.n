@@ -37,7 +37,7 @@ It is intended to be used
   - Colorscheme events
 - Works with:
   - Neovim's built-in `:h packpath` (`:h packadd`)
-  - Any plugin manager that supports manually lazy loading
+  - Any plugin manager that supports manually lazy-loading
     plugins by name
 - Configurable in multiple files
 
