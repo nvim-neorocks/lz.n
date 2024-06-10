@@ -80,6 +80,48 @@ require("lz.n").load(plugins)
       This is because `lz.n` does is not a plugin manager and needs to be told which
       plugins to load.
 
+#### Example
+
+```lua
+require("lz.n").load {
+    {
+        "neo-tree.nvim",
+        keys = {
+            -- Create a key mapping and lazy-load when it is used
+            { "<leader>ft", "<CMD>Neotree toggle<CR>", desc = "NeoTree toggle" },
+        },
+        after = function()
+            require("neo-tree").setup()
+        end,
+    },
+    {
+        "crates.nvim",
+        -- lazy-load when opening a toml file
+        ft = "toml",
+    },
+    {
+        "vim-startuptime",
+        cmd = "StartupTime",
+        before = function()
+            -- Configuration for plugins that don't force you to call a `setup` function
+            -- for initialization should typically go in a `before`
+            --- or `beforeAll` function.
+            vim.g.startuptime_tries = 10
+        end,
+    },
+    {
+        "nvim-cmp",
+        -- load cmp on InsertEnter
+        event = "InsertEnter",
+    },
+    {
+        "monaqa/dial.nvim",
+        -- lazy-load on keys. -- Mode is `n` by default.
+        keys = { "<C-a>", { "<C-x>", mode = "n" } },
+    },
+}
+```
+
 ### Structuring Your Plugins
 
 As is the case with `lazy.nvim`, you can also split your plugin specs
