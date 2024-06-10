@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: google-github-actions/release-please-action@v3
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
         with:
           release-type: simple
           package-name: lz.n
