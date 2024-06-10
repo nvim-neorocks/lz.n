@@ -175,5 +175,5 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## :book: License
 
-This template is [licensed](./LICENSE) according to GPL version 2
+This library is [licensed](./LICENSE) according to GPL version 2
 or (at your option) any later version.
