@@ -36,6 +36,7 @@ but reduced down to the very basics required for lazy-loading only.
   - Merging multiple plugin specs for a single plugin
     (primarily intended for use by Neovim distributions).
   - Automatic lazy-loading of Lua modules on `require`.
+  - Automatic lazy-loading of colorschemes.
   - Heuristics for determining a `main` module and automatically calling
     a `setup()` function.
   - Features related to plugin management.
@@ -101,7 +102,7 @@ require("lz.n").load("plugins")
 
 ```lua
 return {
-  { "sweetie.nvim", lazy = true },
+  { "sweetie.nvim" },
   { "telescope.nvim", cmd = "Telescope" },
 }
 ```
