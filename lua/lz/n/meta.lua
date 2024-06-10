@@ -22,6 +22,7 @@ error("Cannot import a meta module")
 --- @field event? lz.n.Event[]
 --- @field keys? lz.n.Keys[]
 --- @field cmd? string[]
+--- @field colorscheme? string[]
 
 --- @class lz.n.PluginSpecHandlers
 ---
@@ -36,6 +37,9 @@ error("Cannot import a meta module")
 ---
 --- Load a plugin on one or more |key-mapping|s.
 --- @field keys? string|string[]|lz.n.KeysSpec[]
+---
+--- Load a plugin on one or more |colorscheme| events.
+--- @field colorscheme? string[]|string
 
 --- @class lz.n.KeysBase: vim.keymap.set.Opts
 --- @field desc? string

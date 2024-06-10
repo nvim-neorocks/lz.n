@@ -104,7 +104,22 @@ local function parse(spec)
             table.insert(result.cmd, _cmd_spec)
         end
     end
-    result.lazy = result.lazy or result.event ~= nil or result.keys ~= nil or result.cmd ~= nil
+    local colorscheme_spec = spec.colorscheme
+    if colorscheme_spec then
+        result.colorscheme = {}
+    end
+    if type(colorscheme_spec) == "string" then
+        table.insert(result.colorscheme, colorscheme_spec)
+    elseif type(colorscheme_spec) == "table" then
+        for _, _colorscheme_spec in pairs(colorscheme_spec) do
+            table.insert(result.cmd, _colorscheme_spec)
+        end
+    end
+    result.lazy = result.lazy
+        or result.event ~= nil
+        or result.keys ~= nil
+        or result.cmd ~= nil
+        or result.colorscheme ~= nil
     return result
 end
 

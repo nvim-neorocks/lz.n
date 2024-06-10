@@ -61,6 +61,7 @@ but reduced down to the very basics required for lazy-loading only.
     (primarily intended for use by Neovim distributions).
   - Automatic lazy-loading of Lua modules on `require`.
   - Automatic lazy-loading of colorschemes.
+    This library provides a `colorscheme` handler in the plugin spec.
   - Heuristics for determining a `main` module and automatically calling
     a `setup()` function.
   - Abstractions for plugin configuration with an `opts` table.
@@ -112,12 +113,16 @@ require("lz.n").load(plugins)
 | **cmd** | `string?` or `string[]` | Lazy-load on command. | `cmd` |
 | **ft** | `string?` or `string[]` | Lazy-load on filetype. | `ft` |
 | **keys** | `string?` or `string[]` or `lz.n.KeysSpec[]` | Lazy-load on key mapping. | `keys` |
+| **colorscheme** | `string?` or `string[]` | Lazy-load on colorscheme. | None. `lazy.nvim` lazy-loads colorschemes automatically[^2]. |
 | **priority** | `number?` | Only useful for **start** plugins (not lazy-loaded) to force loading certain plugins first. Default priority is `50`. It's recommended to set this to a high number for colorschemes. | `priority` |
 <!-- markdownlint-enable MD013 -->
 
 [^1]: In contrast to `lazy.nvim`'s `name` field, `lz.n`'s `name` *is not optional*.
       This is because `lz.n` does is not a plugin manager and needs to be told which
       plugins to load.
+[^2]: The reason this library doesn't lazy-load colorschemes automatically is that
+      it would have to know where the plugin is installed in order to determine
+      which plugin to load.
 
 #### Example
 
@@ -137,6 +142,11 @@ require("lz.n").load {
         "crates.nvim",
         -- lazy-load when opening a toml file
         ft = "toml",
+    },
+    {
+        "sweetie.nvim",
+        -- lazy-load when setting the `sweetie` colorscheme
+        colorscheme = "sweetie",
     },
     {
         "vim-startuptime",

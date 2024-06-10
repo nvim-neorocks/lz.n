@@ -12,6 +12,7 @@ M.types = {
     event = "event",
     ft = "ft",
     keys = "keys",
+    colorscheme = "colorscheme",
 }
 
 local handlers = {
@@ -19,6 +20,7 @@ local handlers = {
     event = require("lz.n.handler.event"),
     ft = require("lz.n.handler.ft"),
     keys = require("lz.n.handler.keys"),
+    colorscheme = require("lz.n.handler.colorscheme"),
 }
 
 ---@param plugin lz.n.Plugin
