@@ -69,15 +69,16 @@ end
 
 ---@param plugin lz.n.Plugin
 local function config(plugin)
-    if type(plugin.config) == "function" then
+    if type(plugin.after) == "function" then
         xpcall(
-            plugin.config,
+            plugin.after,
             vim.schedule_wrap(function(err)
                 vim.notify(
                     "Failed to run 'config' for " .. plugin.name .. ": " .. tostring(err or ""),
                     vim.log.levels.ERROR
                 )
-            end)
+            end),
+            plugin
         )
     end
 end

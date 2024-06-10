@@ -20,11 +20,8 @@ error("Cannot import a meta module")
 
 --- @class lz.n.PluginHooks
 --- @field beforeAll? fun(self:lz.n.Plugin) Will be run before loading any plugins
---- @field after? fun(self:lz.n.Plugin, opts:table)|true Will be executed when loading the plugin
---- @field opts? table
---- @field config? fun() Will be executed when loading the plugin
+--- @field after? fun(self:lz.n.Plugin) Will be executed after loading this plugin
 
---- @package
 --- @class lz.n.PluginHandlers
 --- @field event? lz.n.Event[]
 --- @field keys? lz.n.Keys[]
@@ -64,7 +61,6 @@ error("Cannot import a meta module")
 --- @field id string
 --- @field name string
 
---- @package
 --- @class lz.n.Plugin: lz.n.PluginBase,lz.n.PluginHandlers,lz.n.PluginHooks
 
 --- @class lz.n.PluginSpec: lz.n.PluginBase,lz.n.PluginSpecHandlers,lz.n.PluginHooks
