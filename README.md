@@ -14,7 +14,8 @@ A dead simple lazy-loading Lua library for Neovim plugins.
   - User commands
 - Works with:
   - Neovim's built-in `:h packpath` (`:h packadd`)
-  - Any plugin manager that supports manual lazy loading
+  - Any plugin manager that supports manually lazy loading
+    plugins by name
 - Configurable in multiple files
 
 ## :moon: Introduction
@@ -47,6 +48,18 @@ but reduced down to the very basics required for lazy-loading only.
 ## :pencil: Requirements
 
 - `Neovim >= 0.10.0`
+
+## :wrench: Configuration
+
+You can override the function used to load plugins.
+`lz.n` has the following default:
+
+```lua
+vim.g.lz_n = {
+    ---@type fun(string: name)
+    load = vim.cmd.packadd,
+}
+```
 
 ## :books: Usage
 
