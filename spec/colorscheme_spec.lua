@@ -1,3 +1,6 @@
+vim.g.lz_n = {
+    load = function() end,
+}
 local colorscheme = require("lz.n.handler.colorscheme")
 local state = require("lz.n.state")
 local loader = require("lz.n.loader")

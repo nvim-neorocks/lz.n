@@ -1,4 +1,7 @@
 ---@diagnostic disable: invisible
+vim.g.lz_n = {
+    load = function() end,
+}
 local event = require("lz.n.handler.event")
 local state = require("lz.n.state")
 local loader = require("lz.n.loader")

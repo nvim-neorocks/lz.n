@@ -1,4 +1,7 @@
 local lz = require("lz.n")
+vim.g.lz_n = {
+    load = function() end,
+}
 local loader = require("lz.n.loader")
 local spy = require("luassert.spy")
 
