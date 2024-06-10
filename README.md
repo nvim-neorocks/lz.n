@@ -103,7 +103,7 @@ require("lz.n").load(plugins)
 <!-- markdownlint-disable MD013 -->
 | Property         | Type | Description | `lazy.nvim` eqivalent |
 |------------------|------|-------------|-----------------------|
-| **[1]** | `string` | The plugin's name (not the module name) | `name`[^1] |
+| **[1]** | `string` | The plugin's name (not the module name). | `name`[^1] |
 | **enabled** | `boolean?` or `fun():boolean` | When `false`, or if the `function` returns false, then this plugin will not be included in the spec. | `enabled` |
 | **beforeAll** | `fun(lz.n.Plugin)?` | Always executed before any plugins are loaded. | `init` |
 | **before** | `fun(lz.n.Plugin)?` | Executed before a plugin is loaded. | - |
