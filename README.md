@@ -1,4 +1,4 @@
-# lz.n
+# :sleeping_bed: lz.n
 
 A dead simple lazy-loading Lua library for Neovim plugins.
 
