@@ -2,8 +2,30 @@
 
 A dead simple lazy-loading Lua library for Neovim plugins.
 
+It is intended to be used
+
+- by users or plugin managers that don't provide a convenient API for lazy-loading.
+- by plugin managers, to provide a convenient API for lazy-loading.
+
 ![Neovim](https://img.shields.io/badge/NeoVim-%2357A143.svg?&style=for-the-badge&logo=neovim&logoColor=white)
 ![Lua](https://img.shields.io/badge/lua-%232C2D72.svg?style=for-the-badge&logo=lua&logoColor=white)
+
+> [!NOTE]
+>
+> **Should I lazy-load plugins?**
+>
+> It should be a plugin author's responsibility to ensure their plugin doesn't
+> unnecessarily impact startup time, not yours!
+>
+> See [our "DO's and DONT's" guide for plugin developers](https://github.com/nvim-neorocks/nvim-best-practices?tab=readme-ov-file#sleeping_bed-lazy-loading).
+>
+> Regardless, the current status quo is horrible, and some authors may
+> not have the will or capacity to improve their plugins' startup impact.
+>
+> If you find a plugin that takes too long to load,
+> or worse, forces you to load it manually at startup with a
+> call to a heavy `setup` function,
+> consider opening an issue on the plugin's issue tracker.
 
 ## :star2: Features
 
