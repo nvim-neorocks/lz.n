@@ -215,7 +215,9 @@ return {
 ```
 
 - `lz.n` will automatically merge any Lua file in `~/.config/nvim/lua/plugins/*.lua`
-  with the main plugin spec.
+  with the main plugin spec[^4].
+
+[^4]: It *does not* merge multiple specs for the same plugin from different files.
 
 ## :green_heart: Contributing
 
