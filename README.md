@@ -209,8 +209,8 @@ require("lz.n").load("plugins")
 
 ```lua
 return {
-  { "sweetie.nvim" },
-  { "telescope.nvim", cmd = "Telescope" },
+    { "sweetie.nvim" },
+    { "telescope.nvim", cmd = "Telescope" },
 }
 ```
 
