@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/nvim-neorocks/lz.n/compare/v1.0.0...v1.1.0) (2024-06-15)
+
+
+### Features
+
+* add `DeferredUIEnter` user event ([0a3b2c5](https://github.com/nvim-neorocks/lz.n/commit/0a3b2c5e12ced350aec9b6dd797b824e7e34e76a))
+
 ## 1.0.0 (2024-06-10)
 
 
