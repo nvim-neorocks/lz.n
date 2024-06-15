@@ -6,6 +6,14 @@ if vim.fn.has("nvim-0.10.0") ~= 1 then
     error("lz.n requires Neovim >= 0.10.0")
 end
 
+local deferred_ui_enter = vim.schedule_wrap(function()
+    if vim.v.exiting ~= vim.NIL then
+        return
+    end
+    vim.g.lz_n_did_deferred_ui_enter = true
+    vim.api.nvim_exec_autocmds("User", { pattern = "DeferredUIEnter", modeline = false })
+end)
+
 ---@param spec string | lz.n.Spec
 function M.load(spec)
     if vim.g.lz_n_did_load then
@@ -21,6 +29,14 @@ function M.load(spec)
     require("lz.n.loader").load_startup_plugins(plugins)
     require("lz.n.state").plugins = plugins
     require("lz.n.handler").init(plugins)
+    if vim.v.vim_did_enter == 1 then
+        deferred_ui_enter()
+    else
+        vim.api.nvim_create_autocmd("UIEnter", {
+            once = true,
+            callback = deferred_ui_enter,
+        })
+    end
 end
 
 return M

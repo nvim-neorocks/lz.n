@@ -132,6 +132,14 @@ require("lz.n").load(plugins)
       it would have to know where the plugin is installed in order to determine
       which plugin to load.
 
+### User events
+
+- `DeferredUIEnter`: Triggered when `load()` is done and after `UIEnter`.
+  Can be used as an `event` to lazy-load plugins that are not immediately needed
+  for the initial UI[^3].
+
+[^3]: This is equivalent to `lazy.nvim`'s `VeryLazy` event.
+
 #### Example
 
 ```lua
