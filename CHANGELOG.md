@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/nvim-neorocks/lz.n/compare/v1.2.1...v1.2.2) (2024-06-16)
+
+
+### Bug Fixes
+
+* spdx license identifier in release rockspec ([5c71d03](https://github.com/nvim-neorocks/lz.n/commit/5c71d03bfad28298b1a9cf11f7ce134b5ad6318a))
+
 ## [1.2.1](https://github.com/nvim-neorocks/lz.n/compare/v1.2.0...v1.2.1) (2024-06-16)
 
 
