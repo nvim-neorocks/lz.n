@@ -39,6 +39,13 @@ function M.load(spec)
     if is_single_plugin_spec then
         state.plugins = vim.tbl_deep_extend("force", state.plugins, plugins)
     else
+        if state.plugins[spec[1]] then
+            return vim.notify(
+                ("Plugin %s has already been registered for lazy loading"):format(spec[1]),
+                vim.log.levels.WARN,
+                { title = "lz.n" }
+            )
+        end
         state.plugins = plugins
     end
     require("lz.n.handler").init(plugins)
