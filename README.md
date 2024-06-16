@@ -150,7 +150,7 @@ require("lz.n").load(plugins)
 
 [^3]: This is equivalent to `lazy.nvim`'s `VeryLazy` event.
 
-#### Example
+#### Examples
 
 ```lua
 require("lz.n").load {
@@ -196,6 +196,34 @@ require("lz.n").load {
     },
 }
 ```
+
+<!-- markdownlint-disable -->
+<details>
+  <summary>
+    <b>With <a href="https://github.com/savq/paq-nvim">paq-nvim</a></b>
+  </summary>
+
+  ```lua
+  require "paq" {
+      { "nvim-telescope/telescope.nvim", opt = true }
+      { "NTBBloodBatch/sweetie.nvim", opt = true }
+  }
+
+  require("lz.n").load {
+      {
+          "telescope.nvim",
+          cmd = "Telescope",
+      },
+      {
+          "sweetie.nvim",
+          colorscheme = "sweetie",
+      },
+  }
+  ```
+
+</details>
+
+<!-- markdownlint-restore -->
 
 ### Structuring Your Plugins
 
