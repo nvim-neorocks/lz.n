@@ -91,7 +91,7 @@ You can override the function used to load plugins.
 
 ```lua
 vim.g.lz_n = {
-    ---@type fun(string: name)
+    ---@type fun(name: string)
     load = vim.cmd.packadd,
 }
 ```
