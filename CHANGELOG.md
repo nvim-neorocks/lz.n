@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/nvim-neorocks/lz.n/compare/v1.2.0...v1.2.1) (2024-06-16)
+
+
+### Bug Fixes
+
+* ensure individual plugins can only be registered once ([47a10af](https://github.com/nvim-neorocks/lz.n/commit/47a10afe2c4eae2d5429864acaba536073f6e089))
+
 ## [1.2.0](https://github.com/nvim-neorocks/lz.n/compare/v1.1.0...v1.2.0) (2024-06-16)
 
 
