@@ -200,7 +200,7 @@ require("lz.n").load {
 <!-- markdownlint-disable -->
 <details>
   <summary>
-    <b>With <a href="https://github.com/savq/paq-nvim">paq-nvim</a></b>
+    <b><a href="https://github.com/savq/paq-nvim">paq-nvim</a> example</b>
   </summary>
 
   ```lua
@@ -223,6 +223,43 @@ require("lz.n").load {
 
 </details>
 
+<details>
+  <summary>
+    <b><a href="https://wiki.nixos.org/wiki/Neovim">Nix (Home Manager) example</a></b>
+  </summary>
+
+  ```nix
+  programs.neovim = {
+    enable = true;
+    plugins = with pkgs.vimPlugins [
+      lz-n
+      {
+        plugin = pkgs.vimPlugins.telescope-nvim;
+        config = ''
+          require("lz.n").load {
+            "telescope.nvim",
+            cmd = "Telescope",
+          }
+        '';
+        type = "lua";
+        optional = true;
+      }
+      {
+        plugin = pkgs.vimPlugins.sweetie-nvim;
+        config = ''
+          require("lz.n").load {
+            "sweetie.nvim",
+            colorscheme = "sweetie",
+          }
+        '';
+        type = "lua";
+        optional = true;
+      }
+    ];
+  };
+  ```
+
+</details>
 <!-- markdownlint-restore -->
 
 ### Structuring Your Plugins
