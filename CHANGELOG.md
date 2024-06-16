@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.3](https://github.com/nvim-neorocks/lz.n/compare/v1.2.2...v1.2.3) (2024-06-16)
+
+
+### Bug Fixes
+
+* colorscheme lists inserted into wrong table ([9fe735e](https://github.com/nvim-neorocks/lz.n/commit/9fe735e6ca5e835f953ab284188cd31322804e43))
+
 ## [1.2.2](https://github.com/nvim-neorocks/lz.n/compare/v1.2.1...v1.2.2) (2024-06-16)
 
 
