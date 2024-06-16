@@ -1,15 +1,15 @@
 # :sloth: lz.n
 
+[![Neovim][neovim-shield]][neovim-url]
+[![Lua][lua-shield]][lua-url]
+[![LuaRocks][luarocks-shield]][luarocks-url]
+
 A dead simple lazy-loading Lua library for Neovim plugins.
 
 It is intended to be used
 
 - by users of plugin managers that don't provide a convenient API for lazy-loading.
 - by plugin managers, to provide a convenient API for lazy-loading.
-
-![Neovim](https://img.shields.io/badge/NeoVim-%2357A143.svg?&style=for-the-badge&logo=neovim&logoColor=white)
-![Lua](https://img.shields.io/badge/lua-%232C2D72.svg?style=for-the-badge&logo=lua&logoColor=white)
-[![LuaRocks][luarocks-shield]][luarocks-url]
 
 > [!NOTE]
 >
@@ -240,5 +240,9 @@ This library is [licensed](./LICENSE) according to GPL version 2
 or (at your option) any later version.
 
 <!-- MARKDOWN LINKS & IMAGES -->
+[neovim-shield]: https://img.shields.io/badge/NeoVim-%2357A143.svg?&style=for-the-badge&logo=neovim&logoColor=white
+[neovim-url]: https://neovim.io/
+[lua-shield]: https://img.shields.io/badge/lua-%232C2D72.svg?style=for-the-badge&logo=lua&logoColor=white
+[lua-url]: https://www.lua.org/
 [luarocks-shield]: https://img.shields.io/luarocks/v/neorocks/lz.n?logo=lua&color=purple&style=for-the-badge
 [luarocks-url]: https://luarocks.org/modules/neorocks/lz.n
