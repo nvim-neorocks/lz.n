@@ -9,6 +9,7 @@ It is intended to be used
 
 ![Neovim](https://img.shields.io/badge/NeoVim-%2357A143.svg?&style=for-the-badge&logo=neovim&logoColor=white)
 ![Lua](https://img.shields.io/badge/lua-%232C2D72.svg?style=for-the-badge&logo=lua&logoColor=white)
+[![LuaRocks][luarocks-shield]][luarocks-url]
 
 > [!NOTE]
 >
@@ -237,3 +238,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 This library is [licensed](./LICENSE) according to GPL version 2
 or (at your option) any later version.
+
+<!-- MARKDOWN LINKS & IMAGES -->
+[luarocks-shield]: https://img.shields.io/luarocks/v/neorocks/lz.n?logo=lua&color=purple&style=for-the-badge
+[luarocks-url]: https://luarocks.org/modules/neorocks/lz.n
