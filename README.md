@@ -131,7 +131,7 @@ require("lz.n").load(plugins)
 | **keys** | `string?` or `string[]` or `lz.n.KeysSpec[]` | Lazy-load on key mapping. | `keys` |
 | **colorscheme** | `string?` or `string[]` | Lazy-load on colorscheme. | None. `lazy.nvim` lazy-loads colorschemes automatically[^2]. |
 | **priority** | `number?` | Only useful for **start** plugins (not lazy-loaded) to force loading certain plugins first. Default priority is `50` (or `1000` if `colorscheme` is set). | `priority` |
-| **load** | `fun(string)?` | Can be used to override the `load()` function for an individual plugin. | None. |
+| **load** | `fun(string)?` | Can be used to override the `vim.g.lz_n.load()` function for an individual plugin. | None. |
 <!-- markdownlint-enable MD013 -->
 
 [^1]: In contrast to `lazy.nvim`'s `name` field, a `lz.n.PluginSpec`'s `name` *is not optional*.
