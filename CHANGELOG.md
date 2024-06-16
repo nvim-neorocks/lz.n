@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/nvim-neorocks/lz.n/compare/v1.1.0...v1.2.0) (2024-06-16)
+
+
+### Features
+
+* register individual plugin specs for lazy loading ([b9c03c1](https://github.com/nvim-neorocks/lz.n/commit/b9c03c1ed2fd95abd657a7310310aeee039cd3ec))
+
 ## [1.1.0](https://github.com/nvim-neorocks/lz.n/compare/v1.0.0...v1.1.0) (2024-06-15)
 
 
