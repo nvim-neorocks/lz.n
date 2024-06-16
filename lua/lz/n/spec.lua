@@ -123,16 +123,28 @@ local function parse(spec)
     return result
 end
 
+---@param spec lz.n.Spec
+---@return boolean
+function M.is_spec_list(spec)
+    return #spec > 1 or vim.islist(spec) and #spec > 1
+end
+
+---@param spec lz.n.Spec
+---@return boolean
+function M.is_single_plugin_spec(spec)
+    return type(spec[1]) == "string"
+end
+
 ---@private
 ---@param spec lz.n.Spec
 ---@param result table<string, lz.n.Plugin>
 function M._normalize(spec, result)
-    if #spec > 1 or vim.islist(spec) and #spec > 1 then
+    if M.is_spec_list(spec) then
         ---@cast spec lz.n.Spec[]
         for _, sp in ipairs(spec) do
             M._normalize(sp, result)
         end
-    elseif spec[1] then
+    elseif M.is_single_plugin_spec(spec) then
         ---@cast spec lz.n.PluginSpec
         result[spec[1]] = parse(spec)
     elseif spec.import then

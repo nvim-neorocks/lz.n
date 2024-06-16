@@ -9,6 +9,10 @@ error("Cannot import a meta module")
 --- Only useful for lazy=false plugins to force loading certain plugins first.
 --- Default priority is 50
 --- @field priority? number
+---
+--- Set this to override the `load` function for an individual plugin.
+--- Defaults to `vim.g.lz_n.load()`, see |lz.n.Config|.
+--- @field load? fun(name: string)
 
 --- @alias lz.n.Event {id:string, event:string[]|string, pattern?:string[]|string}
 --- @alias lz.n.EventSpec string|{event?:string|string[], pattern?:string|string[]}|string[]

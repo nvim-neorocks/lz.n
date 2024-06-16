@@ -16,26 +16,40 @@ end)
 
 ---@param spec string | lz.n.Spec
 function M.load(spec)
-    if vim.g.lz_n_did_load then
-        return vim.notify("lz.n has already loaded your plugins.", vim.log.levels.WARN, { title = "lz.n" })
-    end
-    vim.g.lz_n_did_load = true
-
     if type(spec) == "string" then
         spec = { import = spec }
     end
-    ---@cast spec lz.n.Spec
-    local plugins = require("lz.n.spec").parse(spec)
+    --- @cast spec lz.n.Spec
+    local spec_mod = require("lz.n.spec")
+    local is_single_plugin_spec = spec_mod.is_single_plugin_spec(spec)
+    if not is_single_plugin_spec then
+        if vim.g.lz_n_did_load then
+            return vim.notify(
+                "lz.n.load() should only be called on a list of plugin specs once.",
+                vim.log.levels.WARN,
+                { title = "lz.n" }
+            )
+        end
+        vim.g.lz_n_did_load = true
+    end
+    local plugins = spec_mod.parse(spec)
     require("lz.n.loader").load_startup_plugins(plugins)
-    require("lz.n.state").plugins = plugins
+
+    local state = require("lz.n.state")
+    if is_single_plugin_spec then
+        state.plugins = vim.tbl_deep_extend("force", state.plugins, plugins)
+    else
+        state.plugins = plugins
+    end
     require("lz.n.handler").init(plugins)
     if vim.v.vim_did_enter == 1 then
         deferred_ui_enter()
-    else
+    elseif not vim.g.lz_n_did_create_deferred_ui_enter_autocmd then
         vim.api.nvim_create_autocmd("UIEnter", {
             once = true,
             callback = deferred_ui_enter,
         })
+        vim.g.lz_n_did_create_deferred_ui_enter_autocmd = true
     end
 end
 

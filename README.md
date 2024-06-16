@@ -103,9 +103,17 @@ require("lz.n").load(plugins)
 ```
 
 - **plugins**: this should be a `table` or a `string`
-  - `table`: a list with your [Plugin Spec](#plugin-spec)
+  - `table`:
+    - A list with your [Plugin Specs](#plugin-spec)
+    - Or a single plugin spec.
   - `string`: a Lua module name that contains your [Plugin Spec](#plugin-spec).
     See [Structuring Your Plugins](#structuring-your-plugins)
+
+> [!TIP]
+>
+> You can call `load()` as you would call `lazy.nvim`'s `setup()`.
+> Or, you can also use it to register individual plugin specs for lazy
+> loading.
 
 ### Plugin spec
 
@@ -123,6 +131,7 @@ require("lz.n").load(plugins)
 | **keys** | `string?` or `string[]` or `lz.n.KeysSpec[]` | Lazy-load on key mapping. | `keys` |
 | **colorscheme** | `string?` or `string[]` | Lazy-load on colorscheme. | None. `lazy.nvim` lazy-loads colorschemes automatically[^2]. |
 | **priority** | `number?` | Only useful for **start** plugins (not lazy-loaded) to force loading certain plugins first. Default priority is `50` (or `1000` if `colorscheme` is set). | `priority` |
+| **load** | `fun(string)?` | Can be used to override the `load()` function for an individual plugin. | None. |
 <!-- markdownlint-enable MD013 -->
 
 [^1]: In contrast to `lazy.nvim`'s `name` field, a `lz.n.PluginSpec`'s `name` *is not optional*.

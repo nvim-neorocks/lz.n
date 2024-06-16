@@ -16,7 +16,7 @@ function M._load(plugin)
     end
     require("lz.n.handler").disable(plugin)
     ---@type fun(name: string) | nil
-    local load_impl = vim.tbl_get(vim.g, "lz_n", "load")
+    local load_impl = plugin.load or vim.tbl_get(vim.g, "lz_n", "load")
     if type(load_impl) == "function" then
         load_impl(plugin.name)
     else
