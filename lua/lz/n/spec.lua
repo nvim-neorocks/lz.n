@@ -112,7 +112,7 @@ local function parse(spec)
         table.insert(result.colorscheme, colorscheme_spec)
     elseif type(colorscheme_spec) == "table" then
         for _, _colorscheme_spec in pairs(colorscheme_spec) do
-            table.insert(result.cmd, _colorscheme_spec)
+            table.insert(result.colorscheme, _colorscheme_spec)
         end
     end
     result.lazy = result.lazy
