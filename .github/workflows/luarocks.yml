@@ -29,6 +29,7 @@ jobs:
         with:
           version: ${{ env.LUAROCKS_VERSION }}
           test_interpreters: ""
+          license: GPL-2+
           detailed_description: |
             It is intended to be used
 
