@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.4](https://github.com/nvim-neorocks/lz.n/compare/v1.2.3...v1.2.4) (2024-06-17)
+
+
+### Bug Fixes
+
+* actually support importing plugin specs from files ([5553dc5](https://github.com/nvim-neorocks/lz.n/commit/5553dc52fa696f1e8162329a91e9055ff71020d6))
+
 ## [1.2.3](https://github.com/nvim-neorocks/lz.n/compare/v1.2.2...v1.2.3) (2024-06-16)
 
 
