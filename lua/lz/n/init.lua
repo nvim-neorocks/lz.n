@@ -14,7 +14,8 @@ local deferred_ui_enter = vim.schedule_wrap(function()
     vim.api.nvim_exec_autocmds("User", { pattern = "DeferredUIEnter", modeline = false })
 end)
 
----@param spec string | lz.n.Spec
+---@overload fun(spec: lz.n.Spec)
+---@overload fun(import: string)
 function M.load(spec)
     if type(spec) == "string" then
         spec = { import = spec }
