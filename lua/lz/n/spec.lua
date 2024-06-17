@@ -1,5 +1,28 @@
 local M = {}
 
+---@param modname string
+---@param result table<string, lz.n.Plugin>
+local function import_modname(modname, result)
+    local ok, mod = pcall(require, modname)
+    if not ok then
+        vim.schedule(function()
+            local err = type(mod) == "string" and ": " .. mod or ""
+            vim.notify("Failed to load module '" .. modname .. err, vim.log.levels.ERROR)
+        end)
+        return
+    end
+    if type(mod) ~= "table" then
+        vim.schedule(function()
+            vim.notify(
+                "Invalid plugin spec module '" .. modname .. "' of type '" .. type(mod) .. "'",
+                vim.log.levels.ERROR
+            )
+        end)
+        return
+    end
+    M._normalize(mod, result)
+end
+
 ---@param spec lz.n.SpecImport
 ---@param result table<string, lz.n.Plugin>
 local function import_spec(spec, result)
@@ -21,25 +44,27 @@ local function import_spec(spec, result)
     if spec.enabled == false or (type(spec.enabled) == "function" and not spec.enabled()) then
         return
     end
-    local modname = "plugin." .. spec.import
-    local ok, mod = pcall(require, modname)
-    if not ok then
-        vim.schedule(function()
-            local err = type(mod) == "string" and ": " .. mod or ""
-            vim.notify("Failed to load module '" .. modname .. err, vim.log.levels.ERROR)
-        end)
-        return
+    local modname = spec.import
+    local import_root = vim.api.nvim_get_runtime_file(vim.fs.joinpath("lua", modname .. ".lua"), true)
+    if #import_root == 1 then
+        import_modname(modname, result)
     end
-    if type(mod) ~= table then
-        vim.schedule(function()
-            vim.notify(
-                "Invalid plugin spec module '" .. modname .. "' of type '" .. type(mod) .. "'",
-                vim.log.levels.ERROR
-            )
-        end)
-        return
+    local import_dir = vim.api.nvim_get_runtime_file(vim.fs.joinpath("lua", modname), true)
+    if #import_dir == 1 then
+        local dir = import_dir[1]
+        local handle = vim.uv.fs_scandir(dir)
+        while handle do
+            local name, ty = vim.uv.fs_scandir_next(handle)
+            local path = vim.fs.joinpath(dir, name)
+            ty = ty or vim.uv.fs_stat(path).type
+            if not name then
+                break
+            elseif ty == "file" then
+                local submodname = vim.fn.fnamemodify(name, ":r")
+                import_modname(modname .. "." .. submodname, result)
+            end
+        end
     end
-    M._normalize(mod, result)
 end
 
 ---@param spec lz.n.PluginSpec
