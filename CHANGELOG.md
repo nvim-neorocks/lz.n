@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0](https://github.com/nvim-neorocks/lz.n/compare/v1.2.4...v1.3.0) (2024-06-18)
+
+
+### Features
+
+* support importing `init.lua` submodules ([5c3c2a1](https://github.com/nvim-neorocks/lz.n/commit/5c3c2a1eb4df0260f9ed738ec321aa85ecf8e0f9))
+* support loading plugin spec lists and imports more than once ([d911029](https://github.com/nvim-neorocks/lz.n/commit/d9110299475823eff784a6ccf6aa3f63dea9b295))
+
 ## [1.2.4](https://github.com/nvim-neorocks/lz.n/compare/v1.2.3...v1.2.4) (2024-06-17)
 
 
