@@ -294,6 +294,27 @@ return {
 
 [^4]: It *does not* merge multiple specs for the same plugin from different files.
 
+Example structure:
+
+```sh
+── nvim
+  ├── lua
+  │  └── plugins # Your plugin specs go here.
+  │     └── init.lua # Optional top-level module returning a list of specs
+  │     └── neorg.lua # Single spec
+  │     └── telescope/init.lua # Single spec
+  ├── init.lua
+```
+
+Or
+
+```sh
+── nvim
+  ├── lua
+  │  └── plugins.lua # Optional top-level module returning a list of specs
+  ├── init.lua
+```
+
 ## :green_heart: Contributing
 
 All contributions are welcome!

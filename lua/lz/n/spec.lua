@@ -59,7 +59,7 @@ local function import_spec(spec, result)
             ty = ty or vim.uv.fs_stat(path).type
             if not name then
                 break
-            elseif ty == "file" then
+            elseif ty == "file" or ty == "directory" then
                 local submodname = vim.fn.fnamemodify(name, ":r")
                 import_modname(modname .. "." .. submodname, result)
             end
