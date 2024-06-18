@@ -4,7 +4,6 @@ vim.g.lz_n = {
 }
 local loader = require("lz.n.loader")
 local spy = require("luassert.spy")
-vim.g.lz_n_did_load = false
 
 describe("lz.n", function()
     describe("load", function()

@@ -12,7 +12,6 @@ local spy = require("luassert.spy")
 describe("lz.n", function()
     describe("load", function()
         it("import", function()
-            vim.g.lz_n_did_load = false
             local plugin_config_content = [[
 return {
   "telescope.nvim",
@@ -31,7 +30,6 @@ return {
             vim.system({ "rm", spec_file }):wait()
         end)
         it("import root file", function()
-            vim.g.lz_n_did_load = false
             local plugin_config_content = [[
 return {
     { "sweetie.nvim" },
@@ -51,7 +49,6 @@ return {
             vim.system({ "rm", spec_file }):wait()
         end)
         it("import plugin specs and spec file", function()
-            vim.g.lz_n_did_load = false
             local plugin_config_content = [[
 return {
   "telescope.nvim",

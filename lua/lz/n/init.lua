@@ -23,29 +23,27 @@ function M.load(spec)
     --- @cast spec lz.n.Spec
     local spec_mod = require("lz.n.spec")
     local is_single_plugin_spec = spec_mod.is_single_plugin_spec(spec)
-    if not is_single_plugin_spec then
-        if vim.g.lz_n_did_load then
-            return vim.notify(
-                "lz.n.load() should only be called on a list of plugin specs once.",
-                vim.log.levels.WARN,
-                { title = "lz.n" }
-            )
-        end
-        vim.g.lz_n_did_load = true
-    end
     local plugins = spec_mod.parse(spec)
     require("lz.n.loader").load_startup_plugins(plugins)
 
     local state = require("lz.n.state")
     if is_single_plugin_spec then
-        state.plugins = vim.tbl_deep_extend("force", state.plugins, plugins)
+        local ok, updated_plugins = pcall(vim.tbl_deep_extend, "error", state.plugins, plugins)
+        if not ok then
+            return vim.schedule(function()
+                vim.notify("Cannot load the same plugin specs more than once", vim.log.levels.ERROR, { title = "lz.n" })
+            end)
+        end
+        state.plugins = updated_plugins
     else
         if state.plugins[spec[1]] then
-            return vim.notify(
-                ("Plugin %s has already been registered for lazy loading"):format(spec[1]),
-                vim.log.levels.WARN,
-                { title = "lz.n" }
-            )
+            return vim.schedule(function()
+                vim.notify(
+                    ("Plugin %s has already been registered for lazy loading"):format(spec[1]),
+                    vim.log.levels.ERROR,
+                    { title = "lz.n" }
+                )
+            end)
         end
         state.plugins = plugins
     end
