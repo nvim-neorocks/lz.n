@@ -16,9 +16,20 @@
     inherit packageOverrides;
   };
   lua51Packages = final.lua5_1.pkgs;
+
+  vimPlugins =
+    prev.vimPlugins
+    // {
+      lz-n = final.neovimUtils.buildNeovimPlugin {
+        pname = name;
+        version = "dev";
+        src = self;
+      };
+    };
 in {
   inherit
     lua5_1
     lua51Packages
+    vimPlugins
     ;
 }
