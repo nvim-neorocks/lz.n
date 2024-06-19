@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/nvim-neorocks/lz.n/compare/v1.3.0...v1.3.1) (2024-06-19)
+
+
+### Bug Fixes
+
+* support /nix/store links ([fa625dd](https://github.com/nvim-neorocks/lz.n/commit/fa625dd86414dc830c6c9b7188fe4cd583e664c4))
+
 ## [1.3.0](https://github.com/nvim-neorocks/lz.n/compare/v1.2.4...v1.3.0) (2024-06-18)
 
 
