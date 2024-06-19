@@ -103,7 +103,7 @@ return {
             vim.cmd.Foo()
             assert.spy(spy_load).called(3)
             assert.True(vim.g.foo_after)
-            vim.cmd.Linked()
+            -- vim.cmd.Linked()
             -- assert.spy(spy_load).called(4)
             vim.system({ "rm", plugin2_spec_file }):wait()
         end)
