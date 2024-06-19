@@ -36,8 +36,8 @@ return {
     { "telescope.nvim", cmd = "Telescope" },
 }
 ]]
-            local spec_file = vim.fs.joinpath(tempdir, "lua", "plugins.lua")
-            local fh = assert(io.open(spec_file, "w"), "Could not open config file for writing")
+            local plugin1_spec_file = vim.fs.joinpath(tempdir, "lua", "plugins.lua")
+            local fh = assert(io.open(plugin1_spec_file, "w"), "Could not open config file for writing")
             fh:write(plugin_config_content)
             fh:close()
             vim.opt.runtimepath:append(tempdir)
@@ -46,10 +46,10 @@ return {
             assert.spy(spy_load).called(1)
             vim.cmd.Telescope()
             assert.spy(spy_load).called(2)
-            vim.system({ "rm", spec_file }):wait()
+            vim.system({ "rm", plugin1_spec_file }):wait()
         end)
         it("import plugin specs and spec file", function()
-            local plugin_config_content = [[
+            local plugin1_config_content = [[
 return {
   "telescope.nvim",
   cmd = "Telescope",
@@ -57,7 +57,19 @@ return {
 ]]
             local spec_file = vim.fs.joinpath(tempdir, "lua", "plugins", "telescope.lua")
             local fh = assert(io.open(spec_file, "w"), "Could not open config file for writing")
-            fh:write(plugin_config_content)
+            fh:write(plugin1_config_content)
+            fh:close()
+            local plugin2_config_content = [[
+return {
+  "foo.nvim",
+  cmd = "Foo",
+}
+]]
+            local plugin2_dir = vim.fs.joinpath(tempdir, "lua", "plugins", "foo")
+            vim.system({ "mkdir", "-p", plugin2_dir }):wait()
+            local plugin2_spec_file = vim.fs.joinpath(plugin2_dir, "init.lua")
+            fh = assert(io.open(plugin2_spec_file, "w"), "Could not open config file for writing")
+            fh:write(plugin2_config_content)
             fh:close()
             vim.opt.runtimepath:append(tempdir)
             local spy_load = spy.on(loader, "_load")
@@ -68,7 +80,9 @@ return {
             assert.spy(spy_load).called(1)
             vim.cmd.Telescope()
             assert.spy(spy_load).called(2)
-            vim.system({ "rm", spec_file }):wait()
+            vim.cmd.Foo()
+            assert.spy(spy_load).called(3)
+            vim.system({ "rm", plugin2_spec_file }):wait()
         end)
     end)
 end)
