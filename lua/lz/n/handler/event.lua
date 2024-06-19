@@ -12,14 +12,24 @@ local loader = require("lz.n.loader")
 ---@field group number
 ---@field parse fun(spec: lz.n.EventSpec): lz.n.Event
 
+local lz_n_events = {
+    DeferredUIEnter = { id = "DeferredUIEnter", event = "User", pattern = "DeferredUIEnter" },
+}
+
+lz_n_events["User DeferredUIEnter"] = lz_n_events.DeferredUIEnter
+
 ---@type lz.n.EventHandler
 local M = {
     pending = {},
     events = {},
     group = vim.api.nvim_create_augroup("lz_n_handler_event", { clear = true }),
     type = "event",
+    ---@param spec lz.n.EventSpec
     parse = function(spec)
-        local ret
+        local ret = lz_n_events[spec]
+        if ret then
+            return ret
+        end
         if type(spec) == "string" then
             local event, pattern = spec:match("^(%w+)%s+(.*)$")
             event = event or spec

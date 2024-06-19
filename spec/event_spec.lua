@@ -104,4 +104,16 @@ describe("handlers.event", function()
         assert.True(triggered)
         loader._load = orig_load
     end)
+    it("DeferredUIEnter", function()
+        ---@type lz.n.Plugin
+        local plugin = {
+            name = "bla",
+            event = { event.parse("DeferredUIEnter") },
+        }
+        local spy_load = spy.on(loader, "_load")
+        state.plugins[plugin.name] = plugin
+        event.add(plugin)
+        vim.api.nvim_exec_autocmds("User", { pattern = "DeferredUIEnter", modeline = false })
+        assert.spy(spy_load).called(1)
+    end)
 end)
