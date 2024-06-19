@@ -59,9 +59,13 @@ local function import_spec(spec, result)
             ty = ty or vim.uv.fs_stat(path).type
             if not name then
                 break
-            elseif ty == "file" or ty == "directory" then
-                local submodname = vim.fn.fnamemodify(name, ":r")
+            -- XXX: "link" is required to support Nix.
+            -- It seems to break in tests with with local symlinks
+            elseif (ty == "file" or ty == "link") and name:sub(-4) == ".lua" then
+                local submodname = name:sub(1, -5)
                 import_modname(modname .. "." .. submodname, result)
+            elseif ty == "directory" and vim.uv.fs_stat(vim.fs.joinpath(path, "init.lua")) then
+                import_modname(modname .. "." .. name, result)
             end
         end
     end

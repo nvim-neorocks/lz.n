@@ -49,6 +49,7 @@ describe("lz.n", function()
             vim.system({ "rm", plugin1_spec_file }):wait()
         end)
         it("import plugin specs and spec file", function()
+            local plugins_dir = vim.fs.joinpath(tempdir, "lua", "plugins")
             local plugin1_config_content = [[
 return {
   "telescope.nvim",
@@ -58,7 +59,7 @@ return {
   end,
 }
 ]]
-            local spec_file = vim.fs.joinpath(tempdir, "lua", "plugins", "telescope.lua")
+            local spec_file = vim.fs.joinpath(plugins_dir, "telescope.lua")
             local fh = assert(io.open(spec_file, "w"), "Could not open config file for writing")
             fh:write(plugin1_config_content)
             fh:close()
@@ -71,12 +72,24 @@ return {
   end,
 }
 ]]
-            local plugin2_dir = vim.fs.joinpath(tempdir, "lua", "plugins", "foo")
+            local plugin2_dir = vim.fs.joinpath(plugins_dir, "foo")
             vim.system({ "mkdir", "-p", plugin2_dir }):wait()
             local plugin2_spec_file = vim.fs.joinpath(plugin2_dir, "init.lua")
             fh = assert(io.open(plugin2_spec_file, "w"), "Could not open config file for writing")
             fh:write(plugin2_config_content)
             fh:close()
+            -- FIXME: This fails here, but works with Nix links
+            --             local plugin3_config_content = [[
+            -- return {
+            --   "linked.nvim",
+            --   cmd = "Linked",
+            -- }
+            -- ]]
+            -- local plugin3_spec_file = vim.fs.joinpath(tempdir, "linked.lua")
+            -- fh = assert(io.open(spec_file, "w"), "Could not open config file for writing")
+            -- fh:write(plugin3_config_content)
+            -- fh:close()
+            -- vim.uv.fs_symlink(plugin3_spec_file, vim.fs.joinpath(plugins_dir, "linked.lua"))
             vim.opt.runtimepath:append(tempdir)
             local spy_load = spy.on(loader, "_load")
             lz.load({
@@ -90,6 +103,8 @@ return {
             vim.cmd.Foo()
             assert.spy(spy_load).called(3)
             assert.True(vim.g.foo_after)
+            vim.cmd.Linked()
+            -- assert.spy(spy_load).called(4)
             vim.system({ "rm", plugin2_spec_file }):wait()
         end)
     end)
