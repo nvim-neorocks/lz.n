@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/nvim-neorocks/lz.n/compare/v1.3.1...v1.3.2) (2024-06-19)
+
+
+### Bug Fixes
+
+* **event:** broken `DeferredUIEnter` event ([cf11ec2](https://github.com/nvim-neorocks/lz.n/commit/cf11ec2b1696dddd5620a055244cc0860f982677))
+
 ## [1.3.1](https://github.com/nvim-neorocks/lz.n/compare/v1.3.0...v1.3.1) (2024-06-19)
 
 
