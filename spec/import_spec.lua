@@ -13,29 +13,29 @@ describe("lz.n", function()
     describe("load", function()
         it("import", function()
             local plugin_config_content = [[
-return {
-  "telescope.nvim",
-  cmd = "Telescope",
-}
-]]
-            local spec_file = vim.fs.joinpath(tempdir, "lua", "plugins", "telescope.lua")
+        return {
+          "baz.nvim",
+          cmd = "Baz",
+        }
+        ]]
+            local spec_file = vim.fs.joinpath(tempdir, "lua", "plugins", "baz.lua")
             local fh = assert(io.open(spec_file, "w"), "Could not open config file for writing")
             fh:write(plugin_config_content)
             fh:close()
             vim.opt.runtimepath:append(tempdir)
             local spy_load = spy.on(loader, "_load")
             lz.load("plugins")
-            vim.cmd.Telescope()
+            vim.cmd.Baz()
             assert.spy(spy_load).called(1)
             vim.system({ "rm", spec_file }):wait()
         end)
         it("import root file", function()
             local plugin_config_content = [[
-return {
-    { "sweetie.nvim" },
-    { "telescope.nvim", cmd = "Telescope" },
-}
-]]
+        return {
+            { "sweetie.nvim" },
+            { "bat.nvim", cmd = "Bat" },
+        }
+        ]]
             local plugin1_spec_file = vim.fs.joinpath(tempdir, "lua", "plugins.lua")
             local fh = assert(io.open(plugin1_spec_file, "w"), "Could not open config file for writing")
             fh:write(plugin_config_content)
@@ -44,7 +44,7 @@ return {
             local spy_load = spy.on(loader, "_load")
             lz.load("plugins")
             assert.spy(spy_load).called(1)
-            vim.cmd.Telescope()
+            vim.cmd.Bat()
             assert.spy(spy_load).called(2)
             vim.system({ "rm", plugin1_spec_file }):wait()
         end)
@@ -53,6 +53,9 @@ return {
 return {
   "telescope.nvim",
   cmd = "Telescope",
+  after = function()
+    vim.g.telescope_after = true
+  end,
 }
 ]]
             local spec_file = vim.fs.joinpath(tempdir, "lua", "plugins", "telescope.lua")
@@ -63,6 +66,9 @@ return {
 return {
   "foo.nvim",
   cmd = "Foo",
+  after = function()
+    vim.g.foo_after = true
+  end,
 }
 ]]
             local plugin2_dir = vim.fs.joinpath(tempdir, "lua", "plugins", "foo")
@@ -80,8 +86,10 @@ return {
             assert.spy(spy_load).called(1)
             vim.cmd.Telescope()
             assert.spy(spy_load).called(2)
+            assert.True(vim.g.telescope_after)
             vim.cmd.Foo()
             assert.spy(spy_load).called(3)
+            assert.True(vim.g.foo_after)
             vim.system({ "rm", plugin2_spec_file }):wait()
         end)
     end)
