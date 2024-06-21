@@ -5,7 +5,7 @@ local loader = require("lz.n.loader")
 ---@type lz.n.KeysHandler
 local M = {
     pending = {},
-    type = "keys",
+    spec_field = "keys",
     ---@param value string|lz.n.KeysSpec
     ---@param mode? string
     ---@return lz.n.Keys

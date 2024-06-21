@@ -23,7 +23,7 @@ local M = {
     pending = {},
     events = {},
     group = vim.api.nvim_create_augroup("lz_n_handler_event", { clear = true }),
-    type = "event",
+    spec_field = "event",
     ---@param spec lz.n.EventSpec
     parse = function(spec)
         local ret = lz_n_events[spec]

@@ -14,6 +14,12 @@ local deferred_ui_enter = vim.schedule_wrap(function()
     vim.api.nvim_exec_autocmds("User", { pattern = "DeferredUIEnter", modeline = false })
 end)
 
+---@type fun(handler: lz.n.Handler): boolean
+M.register_handler = require("lz.n.handler").register_handler
+
+---@type fun(plugins: string | lz.n.Plugin | string[] | lz.n.Plugin[])
+M.trigger_load = require("lz.n.loader").load
+
 ---@overload fun(spec: lz.n.Spec)
 ---@overload fun(import: string)
 function M.load(spec)

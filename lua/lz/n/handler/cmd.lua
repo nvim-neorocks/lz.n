@@ -5,7 +5,7 @@ local loader = require("lz.n.loader")
 ---@type lz.n.CmdHandler
 local M = {
     pending = {},
-    type = "cmd",
+    spec_field = "cmd",
 }
 
 ---@param cmd string

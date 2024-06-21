@@ -144,11 +144,7 @@ local function parse(spec)
             table.insert(result.colorscheme, _colorscheme_spec)
         end
     end
-    result.lazy = result.lazy
-        or result.event ~= nil
-        or result.keys ~= nil
-        or result.cmd ~= nil
-        or result.colorscheme ~= nil
+    result.lazy = require("lz.n.handler").is_lazy(spec)
     return result
 end
 
