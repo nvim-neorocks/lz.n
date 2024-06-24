@@ -6,8 +6,8 @@ local loader = require("lz.n.loader")
 ---@type lz.n.ColorschemeHandler
 local M = {
     pending = {},
-    type = "colorscheme",
     augroup = nil,
+    spec_field = "colorscheme",
 }
 
 ---@param plugin lz.n.Plugin

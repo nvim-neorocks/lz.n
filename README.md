@@ -315,6 +315,42 @@ Or
   ├── init.lua
 ```
 
+### Custom Handlers
+
+You may register your own handlers to lazy-load plugins via
+other triggers not already covered by the plugin spec.
+
+You should register all handlers before calling `require('lz.n').load`,
+because they will not be retroactively applied to
+the `load` calls that occur before they are registered.
+
+The `register_handler` function returns a boolean that indicates success.
+
+`require("lz.n").register_handler(handler: lz.n.Handler): boolean`
+
+#### lz.n.Handler
+
+<!-- markdownlint-disable MD013 -->
+| Property | Type | Description |
+|----------|------|-------------|
+| spec_field | `string` | the `lz.n.PluginSpec` field defined by the handler |
+| add | `fun(plugin: lz.n.Plugin)` | adds a plugin to the handler |
+| del | `fun(plugin: lz.n.Plugin)?` | removes a plugin from the handler |
+<!-- markdownlint-enable MD013 -->
+
+When writing custom handlers,
+you can load the plugin and run the hooks from
+the spec with the following function:
+
+```lua
+  ---@type fun(plugins: string | lz.n.Plugin | string[] | lz.n.Plugin[])
+  require('lz.n').trigger_load
+```
+
+The function accepts plugin names or parsed plugin specs.
+It will call the handler's `del` function (if it exists) after the `before` hooks,
+and before `load` of the plugin's spec.
+
 ## :green_heart: Contributing
 
 All contributions are welcome!

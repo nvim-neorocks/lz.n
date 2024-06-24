@@ -88,5 +88,10 @@ error("Cannot import a meta module")
 --- Takes the plugin name (not the module name). Defaults to |packadd| if not set.
 --- @field load? fun(name: string)
 
+--- @class lz.n.Handler
+--- @field spec_field string
+--- @field add fun(plugin: lz.n.Plugin)
+--- @field del? fun(plugin: lz.n.Plugin)
+
 --- @type lz.n.Config
 vim.g.lz_n = vim.g.lz_n

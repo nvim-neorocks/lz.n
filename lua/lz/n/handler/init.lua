@@ -1,19 +1,4 @@
----@class lz.n.Handler
----@field type lz.n.HandlerTypes
----@field pending table<string, table<string, string>> -- key: plugin_name: plugin_name
----@field add fun(plugin: lz.n.Plugin)
----@field del? fun(plugin: lz.n.Plugin)
-
 local M = {}
-
----@enum lz.n.HandlerTypes
-M.types = {
-    cmd = "cmd",
-    event = "event",
-    ft = "ft",
-    keys = "keys",
-    colorscheme = "colorscheme",
-}
 
 local handlers = {
     cmd = require("lz.n.handler.cmd"),
@@ -22,6 +7,31 @@ local handlers = {
     keys = require("lz.n.handler.keys"),
     colorscheme = require("lz.n.handler.colorscheme"),
 }
+
+---@param spec lz.n.PluginSpec
+---@return boolean
+function M.is_lazy(spec)
+    ---@diagnostic disable-next-line: undefined-field
+    return spec.lazy or vim.iter(handlers):any(function(spec_field, _)
+        return spec[spec_field] ~= nil
+    end)
+end
+
+---@param handler lz.n.Handler
+---@return boolean success
+function M.register_handler(handler)
+    if handlers[handler.spec_field] == nil then
+        handlers[handler.spec_field] = handler
+        return true
+    else
+        vim.notify(
+            "Handler already exists for " .. handler.spec_field .. ". Refusing to register new handler.",
+            vim.log.levels.ERROR,
+            { title = "lz.n" }
+        )
+        return false
+    end
+end
 
 ---@param plugin lz.n.Plugin
 local function enable(plugin)
@@ -32,7 +42,7 @@ end
 
 function M.disable(plugin)
     for _, handler in pairs(handlers) do
-        if type(handler.del) == "function" then
+        if handler.del then
             handler.del(plugin)
         end
     end

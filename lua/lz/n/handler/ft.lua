@@ -6,7 +6,7 @@ local event = require("lz.n.handler.event")
 ---@type lz.n.FtHandler
 local M = {
     pending = {},
-    type = "ft",
+    spec_field = "ft",
     ---@param value string
     ---@return lz.n.Event
     parse = function(value)
