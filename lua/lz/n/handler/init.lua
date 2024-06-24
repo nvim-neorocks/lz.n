@@ -35,22 +35,25 @@ end
 
 ---@param plugin lz.n.Plugin
 local function enable(plugin)
-    for _, handler in pairs(handlers) do
+    ---@param handler lz.n.Handler
+    vim.iter(handlers):each(function(_, handler)
         handler.add(plugin)
-    end
+    end)
 end
 
 function M.disable(plugin)
-    for _, handler in pairs(handlers) do
+    ---@param handler lz.n.Handler
+    vim.iter(handlers):each(function(_, handler)
         if handler.del then
             handler.del(plugin)
         end
-    end
+    end)
 end
 
 ---@param plugins table<string, lz.n.Plugin>
 function M.init(plugins)
-    for _, plugin in pairs(plugins) do
+    ---@param plugin lz.n.Plugin
+    vim.iter(plugins):each(function(_, plugin)
         xpcall(
             enable,
             vim.schedule_wrap(function(err)
@@ -58,7 +61,7 @@ function M.init(plugins)
             end),
             plugin
         )
-    end
+    end)
 end
 
 return M

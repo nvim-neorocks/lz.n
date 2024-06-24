@@ -87,11 +87,11 @@ local function parse(spec)
         local event = require("lz.n.handler.event").parse(event_spec)
         table.insert(result.event, event)
     elseif type(event_spec) == "table" then
-        ---@cast event_spec lz.n.EventSpec[]
-        for _, _event_spec in pairs(event_spec) do
-            local event = require("lz.n.handler.event").parse(_event_spec)
+        ---@param ev lz.n.EventSpec[]
+        vim.iter(event_spec):each(function(ev)
+            local event = require("lz.n.handler.event").parse(ev)
             table.insert(result.event, event)
-        end
+        end)
     end
     local ft_spec = spec.ft
     if ft_spec then
@@ -103,10 +103,11 @@ local function parse(spec)
         local ft = require("lz.n.handler.ft").parse(ft_spec)
         table.insert(result.event, ft)
     elseif type(ft_spec) == "table" then
-        for _, _ft_spec in pairs(ft_spec) do
-            local ft = require("lz.n.handler.ft").parse(_ft_spec)
+        ---@param ft_spec_ string
+        vim.iter(ft_spec):each(function(ft_spec_)
+            local ft = require("lz.n.handler.ft").parse(ft_spec_)
             table.insert(result.event, ft)
-        end
+        end)
     end
     local keys_spec = spec.keys
     if keys_spec then
@@ -116,11 +117,11 @@ local function parse(spec)
         local keys = require("lz.n.handler.keys").parse(keys_spec)
         table.insert(result.keys, keys)
     elseif type(keys_spec) == "table" then
-        ---@cast keys_spec string[] | lz.n.KeysSpec[]
-        for _, _keys_spec in pairs(keys_spec) do
-            local keys = require("lz.n.handler.keys").parse(_keys_spec)
+        ---@param keys_spec_ string | lz.n.KeysSpec
+        vim.iter(keys_spec):each(function(keys_spec_)
+            local keys = require("lz.n.handler.keys").parse(keys_spec_)
             table.insert(result.keys, keys)
-        end
+        end)
     end
     local cmd_spec = spec.cmd
     if cmd_spec then
@@ -129,9 +130,10 @@ local function parse(spec)
     if type(cmd_spec) == "string" then
         table.insert(result.cmd, cmd_spec)
     elseif type(cmd_spec) == "table" then
-        for _, _cmd_spec in pairs(cmd_spec) do
-            table.insert(result.cmd, _cmd_spec)
-        end
+        ---@param cmd_spec_ string
+        vim.iter(cmd_spec):each(function(cmd_spec_)
+            table.insert(result.cmd, cmd_spec_)
+        end)
     end
     local colorscheme_spec = spec.colorscheme
     if colorscheme_spec then
@@ -140,9 +142,10 @@ local function parse(spec)
     if type(colorscheme_spec) == "string" then
         table.insert(result.colorscheme, colorscheme_spec)
     elseif type(colorscheme_spec) == "table" then
-        for _, _colorscheme_spec in pairs(colorscheme_spec) do
-            table.insert(result.colorscheme, _colorscheme_spec)
-        end
+        ---@param colorscheme_spec_ string
+        vim.iter(colorscheme_spec):each(function(colorscheme_spec_)
+            table.insert(result.colorscheme, colorscheme_spec_)
+        end)
     end
     result.lazy = require("lz.n.handler").is_lazy(spec)
     return result
@@ -165,10 +168,10 @@ end
 ---@param result table<string, lz.n.Plugin>
 function M._normalize(spec, result)
     if M.is_spec_list(spec) then
-        ---@cast spec lz.n.Spec[]
-        for _, sp in ipairs(spec) do
+        ---@param sp lz.n.Spec
+        vim.iter(spec):each(function(sp)
             M._normalize(sp, result)
-        end
+        end)
     elseif M.is_single_plugin_spec(spec) then
         ---@cast spec lz.n.PluginSpec
         result[spec[1]] = parse(spec)
@@ -180,12 +183,13 @@ end
 
 ---@param result table<string, lz.n.Plugin>
 local function remove_disabled_plugins(result)
-    for _, plugin in ipairs(result) do
+    ---@param plugin lz.n.Plugin
+    vim.iter(result):each(function(_, plugin)
         local disabled = plugin.enabled == false or (type(plugin.enabled) == "function" and not plugin.enabled())
         if disabled then
             result[plugin.name] = nil
         end
-    end
+    end)
 end
 
 ---@param spec lz.n.Spec

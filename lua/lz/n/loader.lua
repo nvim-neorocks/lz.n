@@ -26,7 +26,8 @@ end
 
 ---@param plugins table<string, lz.n.Plugin>
 local function run_before_all(plugins)
-    for _, plugin in pairs(plugins) do
+    ---@param plugin lz.n.Plugin
+    vim.iter(plugins):each(function(plugin)
         if plugin.beforeAll then
             xpcall(
                 plugin.beforeAll,
@@ -39,7 +40,7 @@ local function run_before_all(plugins)
                 plugin
             )
         end
-    end
+    end)
 end
 
 ---@param plugin lz.n.Plugin
@@ -50,12 +51,17 @@ end
 ---@param plugins table<string, lz.n.Plugin>
 ---@return lz.n.Plugin[]
 local function get_eager_plugins(plugins)
-    local result = {}
-    for _, plugin in pairs(plugins) do
-        if plugin.lazy == false then
-            table.insert(result, plugin)
-        end
-    end
+    ---@type lz.n.Plugin[]
+    local result = vim
+        .iter(plugins)
+        ---@param plugin lz.n.Plugin
+        :filter(function(_, plugin)
+            return plugin.lazy ~= true
+        end)
+        :fold({}, function(acc, _, v)
+            table.insert(acc, v)
+            return acc
+        end)
     table.sort(result, function(a, b)
         ---@cast a lz.n.Plugin
         ---@cast b lz.n.Plugin
@@ -68,10 +74,11 @@ end
 ---@param plugins table<string, lz.n.Plugin>
 function M.load_startup_plugins(plugins)
     run_before_all(plugins)
-    for _, plugin in pairs(get_eager_plugins(plugins)) do
+    ---@param plugin lz.n.Plugin
+    vim.iter(get_eager_plugins(plugins)):each(function(plugin)
         M.load(plugin)
         plugins[plugin.name] = nil
-    end
+    end)
 end
 
 ---@alias hook_key "before" | "after"
@@ -96,8 +103,8 @@ end
 ---@param plugins string | lz.n.Plugin | string[] | lz.n.Plugin[]
 function M.load(plugins)
     plugins = (type(plugins) == "string" or plugins.name) and { plugins } or plugins
-    ---@cast plugins (string|lz.n.Plugin)[]
-    for _, plugin in pairs(plugins) do
+    ---@param plugin string|lz.n.Plugin
+    vim.iter(plugins):each(function(plugin)
         local loadable = true
         if type(plugin) == "string" then
             if state.plugins[plugin] then
@@ -113,7 +120,7 @@ function M.load(plugins)
             M._load(plugin)
             hook("after", plugin)
         end
-    end
+    end)
 end
 
 return M

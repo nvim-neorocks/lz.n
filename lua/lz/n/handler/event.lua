@@ -58,15 +58,16 @@ local M = {
 
 -- Get all augroups for an event
 ---@param event string
+---@return string[]
 local function get_augroups(event)
-    ---@type string[]
-    local groups = {}
-    for _, autocmd in ipairs(vim.api.nvim_get_autocmds({ event = event })) do
-        if autocmd.group_name then
-            table.insert(groups, autocmd.group_name)
-        end
-    end
-    return groups
+    return vim.iter(vim.api.nvim_get_autocmds({ event = event }))
+        :filter(function(autocmd)
+            return autocmd.group_name ~= nil
+        end)
+        :map(function(autocmd)
+            return autocmd.group_name
+        end)
+        :totable()
 end
 
 local event_triggers = {
@@ -123,7 +124,7 @@ local function trigger(opts)
     end
     ---@type table<string,true>
     local done = {}
-    for _, autocmd in ipairs(vim.api.nvim_get_autocmds({ event = opts.event })) do
+    vim.iter(vim.api.nvim_get_autocmds({ event = opts.event })):each(function(autocmd)
         local id = autocmd.event .. ":" .. (autocmd.group or "") ---@type string
         local skip = done[id] or (opts.exclude and vim.tbl_contains(opts.exclude, autocmd.group_name))
         done[id] = true
@@ -132,7 +133,7 @@ local function trigger(opts)
             opts.group = autocmd.group_name
             _trigger(opts)
         end
-    end
+    end)
 end
 
 ---@param event lz.n.Event
@@ -152,27 +153,29 @@ local function add_event(event)
             -- load the plugins
             loader.load(M.pending[event.id])
             -- check if any plugin created an event handler for this event and fire the group
-            for _, s in ipairs(state) do
+            ---@param s lz.n.EventOpts
+            vim.iter(state):each(function(s)
                 trigger(s)
-            end
+            end)
         end,
     })
 end
 
 ---@param plugin lz.n.Plugin
 function M.add(plugin)
-    for _, event in pairs(plugin.event or {}) do
+    ---@param event lz.n.Event
+    vim.iter(plugin.event or {}):each(function(event)
         M.pending[event.id] = M.pending[event.id] or {}
         M.pending[event.id][plugin.name] = plugin.name
         add_event(event)
-    end
+    end)
 end
 
 ---@param plugin lz.n.Plugin
 function M.del(plugin)
-    for _, plugins in pairs(M.pending) do
+    vim.iter(M.pending):each(function(_, plugins)
         plugins[plugin.name] = nil
-    end
+    end)
 end
 
 return M

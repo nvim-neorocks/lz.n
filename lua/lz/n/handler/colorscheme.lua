@@ -12,9 +12,9 @@ local M = {
 
 ---@param plugin lz.n.Plugin
 function M.del(plugin)
-    for _, plugins in pairs(M.pending) do
+    vim.iter(M.pending):each(function(_, plugins)
         plugins[plugin.name] = nil
-    end
+    end)
 end
 
 ---@param name string
@@ -44,10 +44,11 @@ function M.add(plugin)
         return
     end
     init()
-    for _, colorscheme in pairs(plugin.colorscheme) do
+    ---@param colorscheme string
+    vim.iter(plugin.colorscheme):each(function(colorscheme)
         M.pending[colorscheme] = M.pending[colorscheme] or {}
         M.pending[colorscheme][plugin.name] = plugin.name
-    end
+    end)
 end
 
 return M

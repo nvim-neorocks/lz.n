@@ -35,13 +35,12 @@ local skip = { mode = true, id = true, ft = true, rhs = true, lhs = true }
 ---@return lz.n.KeysBase
 local function get_opts(keys)
     ---@type lz.n.KeysBase
-    local opts = {}
-    for k, v in pairs(keys) do
+    return vim.iter(keys):fold({}, function(acc, k, v)
         if type(k) ~= "number" and not skip[k] then
-            opts[k] = v
+            acc[k] = v
         end
-    end
-    return opts
+        return acc
+    end)
 end
 
 -- Create a mapping if it is managed by lz.n
@@ -126,18 +125,19 @@ end
 
 ---@param plugin lz.n.Plugin
 function M.add(plugin)
-    for _, key in pairs(plugin.keys or {}) do
+    ---@param key lz.n.Keys
+    vim.iter(plugin.keys or {}):each(function(key)
         M.pending[key.id] = M.pending[key.id] or {}
         M.pending[key.id][plugin.name] = plugin.name
         add_keys(key)
-    end
+    end)
 end
 
 ---@param plugin lz.n.Plugin
 function M.del(plugin)
-    for _, plugins in pairs(M.pending) do
+    vim.iter(M.pending):each(function(_, plugins)
         plugins[plugin.name] = nil
-    end
+    end)
 end
 
 return M

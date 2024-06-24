@@ -69,9 +69,9 @@ end
 ---@param plugin lz.n.Plugin
 function M.del(plugin)
     pcall(vim.api.nvim_del_user_command, plugin.cmd)
-    for _, plugins in pairs(M.pending) do
+    vim.iter(M.pending):each(function(_, plugins)
         plugins[plugin.name] = nil
-    end
+    end)
 end
 
 ---@param plugin lz.n.Plugin
@@ -79,11 +79,12 @@ function M.add(plugin)
     if not plugin.cmd then
         return
     end
-    for _, cmd in pairs(plugin.cmd) do
+    ---@param cmd string
+    vim.iter(plugin.cmd):each(function(cmd)
         M.pending[cmd] = M.pending[cmd] or {}
         M.pending[cmd][plugin.name] = plugin.name
         add_cmd(cmd)
-    end
+    end)
 end
 
 return M
