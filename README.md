@@ -324,11 +324,15 @@ You should register all handlers before calling `require('lz.n').load`,
 because they will not be retroactively applied to
 the `load` calls that occur before they are registered.
 
-The `register_handler` function returns a boolean that indicates success.
+The `register_handler` function returns a `boolean` that indicates success.
 
-`require("lz.n").register_handler(handler: lz.n.Handler): boolean`
+```lua
+---@param handler lz.n.Handler
+---@return boolean success
+require("lz.n").register_handler(handler)
+```
 
-#### lz.n.Handler
+#### `lz.n.Handler`
 
 <!-- markdownlint-disable MD013 -->
 | Property | Type | Description |
