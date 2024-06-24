@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/nvim-neorocks/lz.n/compare/v1.3.2...v1.4.0) (2024-06-24)
+
+
+### Features
+
+* extend lz.n with custom handlers ([#17](https://github.com/nvim-neorocks/lz.n/issues/17)) ([d61186f](https://github.com/nvim-neorocks/lz.n/commit/d61186fc231797e07986e4dc59f789d8660dc822))
+
 ## [1.3.2](https://github.com/nvim-neorocks/lz.n/compare/v1.3.1...v1.3.2) (2024-06-19)
 
 
