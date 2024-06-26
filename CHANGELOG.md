@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/nvim-neorocks/lz.n/compare/v1.4.0...v1.4.1) (2024-06-26)
+
+
+### Bug Fixes
+
+* odd intermittent issue with load function ([#21](https://github.com/nvim-neorocks/lz.n/issues/21)) ([1ac92ff](https://github.com/nvim-neorocks/lz.n/commit/1ac92fff5da1212174956b20383a75b6268c56a7))
+
 ## [1.4.0](https://github.com/nvim-neorocks/lz.n/compare/v1.3.2...v1.4.0) (2024-06-24)
 
 
