@@ -103,8 +103,10 @@ end
 ---@param plugins string | lz.n.Plugin | string[] | lz.n.Plugin[]
 function M.load(plugins)
     plugins = (type(plugins) == "string" or plugins.name) and { plugins } or plugins
-    ---@param plugin string|lz.n.Plugin
-    vim.iter(plugins):each(function(plugin)
+    ---@cast plugins (string|lz.n.Plugin)[]
+    for _, plugin in pairs(plugins) do
+        -- NOTE: do not make this loop into vim.iter
+        -- https://github.com/nvim-neorocks/lz.n/pull/21
         local loadable = true
         if type(plugin) == "string" then
             if state.plugins[plugin] then
@@ -120,7 +122,7 @@ function M.load(plugins)
             M._load(plugin)
             hook("after", plugin)
         end
-    end)
+    end
 end
 
 return M
