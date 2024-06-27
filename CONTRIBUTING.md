@@ -33,7 +33,7 @@ We use the following tools:
 
 ### Nix devShell
 
-- Requires [flakes](https://nixos.wiki/wiki/Flakes) to be enabled.
+- Requires [flakes](https://wiki.nixos.org/wiki/Flakes) to be enabled.
 
 This project provides a `flake.nix` that can
 bootstrap all of the above development tools.
