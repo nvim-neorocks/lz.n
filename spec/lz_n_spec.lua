@@ -19,7 +19,7 @@ describe("lz.n", function()
                 },
                 {
                     "telescope.nvim",
-                    keys = "<leader>tt",
+                    keys = { { "<leader>tt", mode = { "n", "v" } } },
                     cmd = "Telescope",
                 },
             })
@@ -44,7 +44,10 @@ describe("lz.n", function()
                 name = "telescope.nvim",
                 lazy = true,
                 cmd = { "Telescope" },
-                keys = { require("lz.n.handler.keys").parse("<leader>tt") },
+                keys = {
+                    { id = "\\tt", lhs = "<leader>tt", mode = "n" },
+                    { id = "\\tt (v)", lhs = "<leader>tt", mode = "v" },
+                },
             })
         end)
         it("individual plugin specs", function()
