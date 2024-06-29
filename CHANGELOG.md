@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/nvim-neorocks/lz.n/compare/v1.4.1...v1.4.2) (2024-06-29)
+
+
+### Bug Fixes
+
+* **keys:** don't ignore modes that aren't `'n'` ([#28](https://github.com/nvim-neorocks/lz.n/issues/28)) ([8886765](https://github.com/nvim-neorocks/lz.n/commit/8886765a2fcc9b9550dbd2e8d9bb5535f1de290d))
+
 ## [1.4.1](https://github.com/nvim-neorocks/lz.n/compare/v1.4.0...v1.4.1) (2024-06-26)
 
 
