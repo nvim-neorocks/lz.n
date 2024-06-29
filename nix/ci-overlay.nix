@@ -40,22 +40,10 @@ with final.stdenv; let
         cp -r tests $out
       '';
     };
-
-  docgen = final.writeShellApplication {
-    name = "docgen";
-    runtimeInputs = with final; [
-      lemmy-help
-    ];
-    text = ''
-      mkdir -p doc
-        lemmy-help lua/lz/n/{init,commands,config/init}.lua > doc/lz.n.txt
-    '';
-  };
 in {
   nvim-stable-tests = mkNeorocksTest {name = "neovim-stable-tests";};
   nvim-nightly-tests = mkNeorocksTest {
     name = "neovim-nightly-tests";
     nvim = nvim-nightly;
   };
-  inherit docgen;
 }

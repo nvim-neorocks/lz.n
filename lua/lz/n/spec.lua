@@ -115,12 +115,12 @@ local function parse(spec)
     end
     if type(keys_spec) == "string" then
         local keys = require("lz.n.handler.keys").parse(keys_spec)
-        table.insert(result.keys, keys)
+        vim.list_extend(result.keys, keys)
     elseif type(keys_spec) == "table" then
         ---@param keys_spec_ string | lz.n.KeysSpec
         vim.iter(keys_spec):each(function(keys_spec_)
             local keys = require("lz.n.handler.keys").parse(keys_spec_)
-            table.insert(result.keys, keys)
+            vim.list_extend(result.keys, keys)
         end)
     end
     local cmd_spec = spec.cmd

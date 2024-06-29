@@ -16,9 +16,9 @@ describe("handlers.keys", function()
         }
         for _, test in ipairs(tests) do
             if test[3] then
-                assert.same(keys.parse(test[1]).id, keys.parse(test[2]).id)
+                assert.same(keys.parse(test[1])[1].id, keys.parse(test[2])[1].id)
             else
-                assert.is_not.same(keys.parse(test[1]).id, keys.parse(test[2]).id)
+                assert.is_not.same(keys.parse(test[1])[1].id, keys.parse(test[2])[1].id)
             end
         end
     end)
@@ -27,7 +27,7 @@ describe("handlers.keys", function()
         ---@type lz.n.Plugin
         local plugin = {
             name = "foo",
-            keys = { keys.parse(lhs) },
+            keys = keys.parse(lhs),
         }
         local spy_load = spy.on(loader, "_load")
         state.plugins[plugin.name] = plugin
@@ -55,15 +55,15 @@ describe("handlers.keys", function()
             vim.api.nvim_feedkeys(feed2, "ix", false)
             assert.spy(spy_load).called(1)
         end
-        itt({ keys.parse("<leader>tt"), keys.parse("<leader>ff") })
-        itt({ keys.parse("<leader>ff"), keys.parse("<leader>tt") })
+        itt({ keys.parse("<leader>tt")[1], keys.parse("<leader>ff")[1] })
+        itt({ keys.parse("<leader>ff")[1], keys.parse("<leader>tt")[1] })
     end)
     it("Plugins' keymaps are triggered", function()
         local lhs = "<leader>xy"
         ---@type lz.n.Plugin
         local plugin = {
             name = "baz",
-            keys = { keys.parse(lhs) },
+            keys = keys.parse(lhs),
         }
         local triggered = false
         local orig_load = loader._load
