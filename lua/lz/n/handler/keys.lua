@@ -7,23 +7,23 @@ local M = {
     pending = {},
     spec_field = "keys",
     ---@param value string|lz.n.KeysSpec
-    ---@param mode? string
     ---@return lz.n.Keys
-    parse = function(value, mode)
+    parse = function(value)
         value = type(value) == "string" and { value } or value --[[@as lz.n.KeysSpec]]
         local ret = vim.deepcopy(value) --[[@as lz.n.Keys]]
         ret.lhs = ret[1] or ""
         ret.rhs = ret[2]
         ret[1] = nil
         ret[2] = nil
-        ret.mode = mode or "n"
+        ret.mode = ret.mode or "n"
         ret.id = vim.api.nvim_replace_termcodes(ret.lhs, true, true, true)
         if ret.ft then
             local ft = type(ret.ft) == "string" and { ret.ft } or ret.ft --[[@as string[] ]]
             ret.id = ret.id .. " (" .. table.concat(ft, ", ") .. ")"
         end
         if ret.mode ~= "n" then
-            ret.id = ret.id .. " (" .. ret.mode .. ")"
+            local mode = type(ret.mode) == "string" and { ret.mode } or ret.mode --[[@as string[] ]]
+            ret.id = ret.id .. " (" .. table.concat(mode, ", ") .. ")"
         end
         return ret
     end,
@@ -90,7 +90,7 @@ local function add_keys(keys)
             if keys.ft then
                 set(keys, buf)
             end
-            if keys.mode:sub(-1) == "a" then
+            if type(keys.mode) == "string" and keys.mode:sub(-1) == "a" then
                 lhs = lhs .. "<C-]>"
             end
             local feed = vim.api.nvim_replace_termcodes("<Ignore>" .. lhs, true, true, true)
