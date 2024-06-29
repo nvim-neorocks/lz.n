@@ -61,7 +61,6 @@
 
         luarc = pkgs.mk-luarc {
           nvim = pkgs.neovim-nightly;
-          neodev-types = "nightly";
         };
 
         type-check-nightly = pre-commit-hooks.lib.${system}.run {
@@ -90,7 +89,7 @@
           };
         };
 
-        devShell = pkgs.nvim-nightly-tests.overrideAttrs (oa: {
+        devShell = pkgs.mkShell {
           name = "lz.n devShell";
           shellHook = ''
             ${pre-commit-check.shellHook}
@@ -98,11 +97,11 @@
           '';
           buildInputs =
             self.checks.${system}.pre-commit-check.enabledPackages
-            ++ oa.buildInputs
             ++ (with pkgs; [
               lua-language-server
+              busted-nlua
             ]);
-        });
+        };
       in {
         devShells = {
           default = devShell;
