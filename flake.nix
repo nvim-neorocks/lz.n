@@ -112,7 +112,6 @@
           default = lz-n-vimPlugin;
           lz-n-luaPackage = pkgs.lua51Packages.lz-n;
           lz-n-vimPlugin = pkgs.vimPlugins.lz-n;
-          inherit (pkgs) docgen;
         };
 
         checks = {
