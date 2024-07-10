@@ -81,5 +81,22 @@ describe("lz.n", function()
             vim.api.nvim_feedkeys(feed, "ix", false)
             assert.True(loaded)
         end)
+        it("list with a single plugin spec", function()
+            local spy_load = spy.on(loader, "_load")
+            lz.load({
+                {
+                    "single.nvim",
+                    cmd = "Single",
+                },
+            })
+            assert.spy(spy_load).called(0)
+            pcall(vim.cmd.Single)
+            assert.spy(spy_load).called(1)
+            assert.spy(spy_load).called_with({
+                name = "single.nvim",
+                lazy = true,
+                cmd = { "Single" },
+            })
+        end)
     end)
 end)
