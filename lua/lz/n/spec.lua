@@ -154,7 +154,7 @@ end
 ---@param spec lz.n.Spec
 ---@return boolean
 function M.is_spec_list(spec)
-    return #spec > 1 or vim.islist(spec) and #spec > 1
+    return #spec > 1 or vim.islist(spec) and #spec == 1
 end
 
 ---@param spec lz.n.Spec
