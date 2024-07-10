@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.3](https://github.com/nvim-neorocks/lz.n/compare/v1.4.2...v1.4.3) (2024-07-10)
+
+
+### Bug Fixes
+
+* spec list with a single plugin spec ignored ([#34](https://github.com/nvim-neorocks/lz.n/issues/34)) ([e0831fe](https://github.com/nvim-neorocks/lz.n/commit/e0831fee3109a56705a6eea896e1d7d5d157a04d))
+
 ## [1.4.2](https://github.com/nvim-neorocks/lz.n/compare/v1.4.1...v1.4.2) (2024-06-29)
 
 
