@@ -151,10 +151,18 @@ local function parse(spec)
     return result
 end
 
+---XXX: This is unsafe because we assume a prior `vim.islist` check
+---
+---@param spec lz.n.Spec
+---@return boolean
+local function is_list_with_single_spec_unsafe(spec)
+    return #spec == 1 and type(spec[1]) == "table"
+end
+
 ---@param spec lz.n.Spec
 ---@return boolean
 function M.is_spec_list(spec)
-    return #spec > 1 or vim.islist(spec) and #spec > 1
+    return #spec > 1 or vim.islist(spec) and #spec > 1 or is_list_with_single_spec_unsafe(spec)
 end
 
 ---@param spec lz.n.Spec
