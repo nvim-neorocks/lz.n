@@ -15,13 +15,13 @@ jobs:
       - name: Update flake.lock
         uses: DeterminateSystems/update-flake-lock@main
         with:
-          token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
+          token: ${{ secrets.PAT }}
           pr-title: "chore: update flake.lock" # Title of PR to be created
           pr-labels: |                  # Labels to be set on the PR
             dependencies
             automated
       - uses: reitermarkus/automerge@v2
         with:
-          token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
+          token: ${{ secrets.PAT }}
           merge-method: squash
           pull-request: ${{ github.event.inputs.pull-request }}
