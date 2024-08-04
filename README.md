@@ -357,11 +357,11 @@ and before `load` of the plugin's spec.
 
 ### Extensions
 
-Here are some examples for extending lz.n:
+Here are some examples for extending `lz.n`:
 
 - [lzn-auto-require](https://github.com/horriblename/lzn-auto-require)
-  A lua module loader that searches opt plugins
-  and call lz.n hooks to ensure proper
+  A module loader that searches opt plugins
+  and call `lz.n` hooks to ensure proper
   plugin initialisation.
 - [A custom `lz.n.Handler`](https://github.com/BirdeeHub/birdeeSystems/blob/a38a1c2d9b8d4b44382eba094d3504817c8a3296/common/birdeevim/lua/birdee/on_require.lua)
   that auto-loads on `require`, allowing users
