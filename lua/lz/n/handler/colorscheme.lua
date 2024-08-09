@@ -19,10 +19,12 @@ end
 
 ---@param name string
 local function on_colorscheme(name)
-    if vim.tbl_contains(vim.fn.getcompletion("", "color"), name) then
+    local pending = M.pending[name] or {}
+    if vim.tbl_isempty(pending) then
+        -- already loaded
         return
     end
-    loader.load(vim.tbl_values(M.pending[name]))
+    loader.load(vim.tbl_values(pending))
 end
 
 local function init()
