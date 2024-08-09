@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.4](https://github.com/nvim-neorocks/lz.n/compare/v1.4.3...v1.4.4) (2024-08-09)
+
+
+### Bug Fixes
+
+* colorscheme handler broken for `start` plugins ([#41](https://github.com/nvim-neorocks/lz.n/issues/41)) ([7ba8692](https://github.com/nvim-neorocks/lz.n/commit/7ba8692a5f88c04de5791232887823e0f40f9525))
+
 ## [1.4.3](https://github.com/nvim-neorocks/lz.n/compare/v1.4.2...v1.4.3) (2024-07-10)
 
 
