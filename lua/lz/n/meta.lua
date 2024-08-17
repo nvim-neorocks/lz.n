@@ -92,6 +92,7 @@ error("Cannot import a meta module")
 --- @field spec_field string
 --- @field add fun(plugin: lz.n.Plugin)
 --- @field del? fun(plugin: lz.n.Plugin)
+--- @field after_load? fun(plugin: lz.n.Plugin)
 
 --- @type lz.n.Config
 vim.g.lz_n = vim.g.lz_n

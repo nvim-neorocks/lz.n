@@ -339,8 +339,13 @@ require("lz.n").register_handler(handler)
 |----------|------|-------------|
 | spec_field | `string` | the `lz.n.PluginSpec` field defined by the handler |
 | add | `fun(plugin: lz.n.Plugin)` | adds a plugin to the handler |
-| del | `fun(plugin: lz.n.Plugin)?` | removes a plugin from the handler |
+| del | `fun(plugin: lz.n.Plugin)?` | called before the `load` function for the plugin, should remove a plugin from the handler (unless `after_load` is used) |
+| after_load | `fun(plugin: lz.n.Plugin)?` | called AFTER the `load` function for the plugin, if used should delete the plugin from the handler instead of `del` |
 <!-- markdownlint-enable MD013 -->
+
+Once registered, the fields in custom handlers
+are called by lz.n with the plugin spec provided
+when plugins are added or loaded.
 
 When writing custom handlers,
 you can load the plugin and run the hooks from
@@ -352,8 +357,16 @@ the spec with the following function:
 ```
 
 The function accepts plugin names or parsed plugin specs.
+
 It will call the handler's `del` function (if it exists) after the `before` hooks,
-and before `load` of the plugin's spec.
+and before `load` of the plugin's spec. It should delete the plugin
+from the handler's state unless making use of `after_load`.
+
+It will likewise call the handler's `after_load` function (if it exists)
+after `load` and before `after` of the plugin's spec.
+The `after_load` function can be used to perform additional automatic
+loading logic from a handler after the main load function has been called.
+If used, should delete the plugin from the handler's state instead of del
 
 ### Extensions
 
@@ -363,7 +376,7 @@ Here are some examples for extending `lz.n`:
   A module loader that searches opt plugins
   and call `lz.n` hooks to ensure proper
   plugin initialisation.
-- [A custom `lz.n.Handler`](https://github.com/BirdeeHub/birdeeSystems/blob/a38a1c2d9b8d4b44382eba094d3504817c8a3296/common/birdeevim/lua/birdee/on_require.lua)
+- [A custom `lz.n.Handler`](https://github.com/nvim-neorocks/lz.n/discussions/25)
   that auto-loads on `require`, allowing users
   to specify modules.
 

@@ -50,6 +50,15 @@ function M.disable(plugin)
     end)
 end
 
+function M.extra_load(plugin)
+    ---@param handler lz.n.Handler
+    vim.iter(handlers):each(function(_, handler)
+        if handler.after_load then
+            handler.after_load(plugin)
+        end
+    end)
+end
+
 ---@param plugins table<string, lz.n.Plugin>
 function M.init(plugins)
     ---@param plugin lz.n.Plugin

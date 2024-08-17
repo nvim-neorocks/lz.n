@@ -22,6 +22,7 @@ function M._load(plugin)
     else
         vim.cmd.packadd(plugin.name)
     end
+    require("lz.n.handler").extra_load(plugin)
 end
 
 ---@param plugins table<string, lz.n.Plugin>
