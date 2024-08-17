@@ -30,8 +30,9 @@ function M.load(spec)
     local spec_mod = require("lz.n.spec")
     local is_single_plugin_spec = spec_mod.is_single_plugin_spec(spec)
     local plugins = spec_mod.parse(spec)
-    require("lz.n.loader").load_startup_plugins(plugins)
 
+    -- add to state before loading anything, to prevent multiple loads being called
+    -- from within other eager plugin specs
     local state = require("lz.n.state")
     if is_single_plugin_spec then
         local ok, updated_plugins = pcall(vim.tbl_deep_extend, "error", state.plugins, plugins)
@@ -53,7 +54,17 @@ function M.load(spec)
         end
         state.plugins = plugins
     end
+
+    -- calls handler add functions
     require("lz.n.handler").init(plugins)
+
+    -- because this calls the handler's del functions,
+    -- this should be ran after the handlers are given the plugin.
+    -- even if the plugin isnt supposed to have been added to any of them
+    require("lz.n.loader").load_startup_plugins(plugins)
+    -- in addition, this allows even startup plugins to call
+    -- require('lz.n').trigger_load('someplugin') safely
+
     if vim.v.vim_did_enter == 1 then
         deferred_ui_enter()
     elseif not vim.g.lz_n_did_create_deferred_ui_enter_autocmd then
