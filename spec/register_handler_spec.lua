@@ -44,4 +44,8 @@ describe("handlers.custom", function()
             lazy = true,
         })
     end)
+    it("trigger_load can only occur once per plugin", function()
+        lz_n.trigger_load("testplugin")
+        assert.spy(delspy).called(1)
+    end)
 end)

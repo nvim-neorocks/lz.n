@@ -32,7 +32,7 @@ describe("lz.n", function()
         it("import root file", function()
             local plugin_config_content = [[
         return {
-            { "sweetie.nvim" },
+            { "cuteify.nvim" },
             { "bat.nvim", cmd = "Bat" },
         }
         ]]

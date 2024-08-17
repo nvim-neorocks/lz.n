@@ -36,6 +36,8 @@ describe("handlers.keys", function()
         vim.api.nvim_feedkeys(feed, "ix", false)
         vim.api.nvim_feedkeys(feed, "ix", false)
         assert.spy(spy_load).called(1)
+        assert.True(state.loaded[plugin.name])
+        state.loaded[plugin.name] = false
         --
     end)
     it("Multiple keys only load plugin once", function()
@@ -54,6 +56,8 @@ describe("handlers.keys", function()
             local feed2 = vim.api.nvim_replace_termcodes("<Ignore>" .. lzkeys[2].lhs, true, true, true)
             vim.api.nvim_feedkeys(feed2, "ix", false)
             assert.spy(spy_load).called(1)
+            assert.True(state.loaded[plugin.name])
+            state.loaded[plugin.name] = false
         end
         itt({ keys.parse("<leader>tt")[1], keys.parse("<leader>ff")[1] })
         itt({ keys.parse("<leader>ff")[1], keys.parse("<leader>tt")[1] })
@@ -81,5 +85,7 @@ describe("handlers.keys", function()
         vim.api.nvim_feedkeys(feed, "x", false)
         assert.True(triggered)
         loader._load = orig_load
+        assert.True(state.loaded[plugin.name])
+        state.loaded[plugin.name] = false
     end)
 end)

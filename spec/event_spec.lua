@@ -57,6 +57,8 @@ describe("handlers.event", function()
         vim.api.nvim_exec_autocmds("BufEnter", {})
         vim.api.nvim_exec_autocmds("BufEnter", {})
         assert.spy(spy_load).called(1)
+        assert.True(state.loaded[plugin.name])
+        state.loaded[plugin.name] = false
     end)
     it("Multiple events only load plugin once", function()
         ---@param events lz.n.Event[]
@@ -76,6 +78,8 @@ describe("handlers.event", function()
                 pattern = ".lua",
             })
             assert.spy(spy_load).called(1)
+            assert.True(state.loaded[plugin.name])
+            state.loaded[plugin.name] = false
         end
         itt({ event.parse("BufEnter"), event.parse("WinEnter") })
         itt({ event.parse("WinEnter"), event.parse("BufEnter") })
@@ -103,6 +107,8 @@ describe("handlers.event", function()
         vim.api.nvim_exec_autocmds("BufEnter", {})
         assert.True(triggered)
         loader._load = orig_load
+        assert.True(state.loaded[plugin.name])
+        state.loaded[plugin.name] = false
     end)
     it("DeferredUIEnter", function()
         ---@type lz.n.Plugin
@@ -115,5 +121,7 @@ describe("handlers.event", function()
         event.add(plugin)
         vim.api.nvim_exec_autocmds("User", { pattern = "DeferredUIEnter", modeline = false })
         assert.spy(spy_load).called(1)
+        assert.True(state.loaded[plugin.name])
+        state.loaded[plugin.name] = false
     end)
 end)

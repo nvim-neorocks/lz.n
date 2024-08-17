@@ -32,6 +32,8 @@ describe("handlers.cmd", function()
         assert.spy(spy_load).called(1)
         assert.same(2, counter)
         loader._load = orig_load
+        assert.True(state.loaded[plugin.name])
+        state.loaded[plugin.name] = false
     end)
     it("Multiple commands only load plugin once", function()
         ---@param commands string[]
@@ -55,6 +57,8 @@ describe("handlers.cmd", function()
             vim.cmd[commands[2]]()
             assert.spy(spy_load).called(1)
             loader._load = orig_load
+            assert.True(state.loaded[plugin.name])
+            state.loaded[plugin.name] = false
         end
         itt({ "Foo", "Bar" })
         itt({ "Bar", "Foo" })

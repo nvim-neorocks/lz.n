@@ -111,12 +111,26 @@ function M.load(plugins)
         if type(plugin) == "string" then
             if state.plugins[plugin] then
                 plugin = state.plugins[plugin]
+                if state.loaded[plugin.name] then
+                    loadable = false
+                else
+                    state.loaded[plugin.name] = true
+                end
             else
                 vim.notify("Plugin " .. plugin .. " not found", vim.log.levels.ERROR, { title = "lz.n" })
                 loadable = false
             end
-            ---@cast plugin lz.n.Plugin
+        else
+            if state.plugins[plugin.name] and state.loaded[plugin.name] then
+                loadable = false
+            elseif state.plugins[plugin.name] then
+                state.loaded[plugin.name] = true
+            else
+                state.plugins[plugin.name] = plugin
+                state.loaded[plugin.name] = true
+            end
         end
+        ---@cast plugin lz.n.Plugin
         if loadable then
             hook("before", plugin)
             M._load(plugin)
