@@ -3,7 +3,6 @@ vim.g.lz_n = {
     load = function() end,
 }
 local cmd = require("lz.n.handler.cmd")
-local state = require("lz.n.state")
 local loader = require("lz.n.loader")
 local spy = require("luassert.spy")
 
@@ -15,7 +14,6 @@ describe("handlers.cmd", function()
             cmd = { "Foo" },
         }
         local spy_load = spy.on(loader, "_load")
-        state.plugins[plugin.name] = plugin
         cmd.add(plugin)
         assert.is_not_nil(vim.cmd.Foo)
         local counter = 0
@@ -49,7 +47,6 @@ describe("handlers.cmd", function()
                 cmd = commands,
             }
             local spy_load = spy.on(loader, "_load")
-            state.plugins[plugin.name] = plugin
             cmd.add(plugin)
             vim.cmd[commands[1]]()
             vim.cmd[commands[2]]()

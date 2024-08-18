@@ -15,10 +15,21 @@ local deferred_ui_enter = vim.schedule_wrap(function()
 end)
 
 ---@type fun(handler: lz.n.Handler): boolean
-M.register_handler = require("lz.n.handler").register_handler
+M.register_handler = function(...)
+    return require("lz.n.handler").register_handler(...)
+end
 
----@type fun(plugins: string | lz.n.Plugin | string[] | lz.n.Plugin[])
-M.trigger_load = require("lz.n.loader").load
+--- Accepts plugin names (`string | string[]`, when called in another
+--- plugin's hook), or |lz.n.Plugin| items (when called by a |lz.n.Handler|).
+--- If called with a plugin name, it will use the registered
+--- handlers' `lookup` functions to search for a plugin to load
+--- (loading the first one it finds).
+--- Once a plugin has been loaded, it will be removed from all handlers (via `del`).
+--- As a result, calling `trigger_load` with a plugin name is idempotent.
+---@param plugins string | lz.n.Plugin | string[] | lz.n.Plugin[]
+M.trigger_load = function(plugins)
+    require("lz.n.loader").load(plugins, M.lookup)
+end
 
 ---@overload fun(spec: lz.n.Spec)
 ---@overload fun(import: string)
@@ -28,42 +39,17 @@ function M.load(spec)
     end
     --- @cast spec lz.n.Spec
     local spec_mod = require("lz.n.spec")
-    local is_single_plugin_spec = spec_mod.is_single_plugin_spec(spec)
     local plugins = spec_mod.parse(spec)
-
-    -- add to state before loading anything, to prevent multiple loads being called
-    -- from within other eager plugin specs
-    local state = require("lz.n.state")
-    if is_single_plugin_spec then
-        local ok, updated_plugins = pcall(vim.tbl_deep_extend, "error", state.plugins, plugins)
-        if not ok then
-            return vim.schedule(function()
-                vim.notify("Cannot load the same plugin specs more than once", vim.log.levels.ERROR, { title = "lz.n" })
-            end)
-        end
-        state.plugins = updated_plugins
-    else
-        if state.plugins[spec[1]] then
-            return vim.schedule(function()
-                vim.notify(
-                    ("Plugin %s has already been registered for lazy loading"):format(spec[1]),
-                    vim.log.levels.ERROR,
-                    { title = "lz.n" }
-                )
-            end)
-        end
-        state.plugins = plugins
-    end
 
     -- calls handler add functions
     require("lz.n.handler").init(plugins)
 
-    -- because this calls the handler's del functions,
-    -- this should be ran after the handlers are given the plugin.
-    -- even if the plugin isnt supposed to have been added to any of them
+    -- Because this calls the handlers' `del` functions,
+    -- this should be ran after the plugins are registered with the handlers.
+    -- even if an eager plugin isn't supposed to have been added to any of them
+    -- This allows even startup plugins to call
+    -- `require('lz.n').trigger_load()` safely
     require("lz.n.loader").load_startup_plugins(plugins)
-    -- in addition, this allows even startup plugins to call
-    -- require('lz.n').trigger_load('someplugin') safely
 
     if vim.v.vim_did_enter == 1 then
         deferred_ui_enter()
@@ -74,6 +60,13 @@ function M.load(spec)
         })
         vim.g.lz_n_did_create_deferred_ui_enter_autocmd = true
     end
+end
+
+---Lookup a plugin that is pending to be loaded by name.
+---@param name string
+---@return lz.n.Plugin?
+function M.lookup(name)
+    return require("lz.n.handler").lookup(name)
 end
 
 return M

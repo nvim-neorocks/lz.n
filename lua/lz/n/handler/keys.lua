@@ -25,6 +25,7 @@ end
 
 ---@type lz.n.KeysHandler
 local M = {
+    ---@type table<string, table<string, lz.n.Plugin[]>>
     pending = {},
     spec_field = "keys",
     ---@param value string|lz.n.KeysSpec
@@ -42,6 +43,12 @@ local M = {
             :totable()
     end,
 }
+
+---@param name string
+---@return lz.n.Plugin?
+function M.lookup(name)
+    return require("lz.n.handler.extra").lookup(M.pending, name)
+end
 
 local skip = { mode = true, id = true, ft = true, rhs = true, lhs = true }
 
@@ -142,7 +149,7 @@ function M.add(plugin)
     ---@param key lz.n.Keys
     vim.iter(plugin.keys or {}):each(function(key)
         M.pending[key.id] = M.pending[key.id] or {}
-        M.pending[key.id][plugin.name] = plugin.name
+        M.pending[key.id][plugin.name] = plugin
         add_keys(key)
     end)
 end

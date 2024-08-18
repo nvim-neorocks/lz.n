@@ -20,6 +20,7 @@ lz_n_events["User DeferredUIEnter"] = lz_n_events.DeferredUIEnter
 
 ---@type lz.n.EventHandler
 local M = {
+    ---@type table<string, table<string, lz.n.Plugin[]>>
     pending = {},
     events = {},
     group = vim.api.nvim_create_augroup("lz_n_handler_event", { clear = true }),
@@ -55,6 +56,12 @@ local M = {
         return ret
     end,
 }
+
+---@param name string
+---@return lz.n.Plugin?
+function M.lookup(name)
+    return require("lz.n.handler.extra").lookup(M.pending, name)
+end
 
 -- Get all augroups for an event
 ---@param event string
@@ -166,7 +173,7 @@ function M.add(plugin)
     ---@param event lz.n.Event
     vim.iter(plugin.event or {}):each(function(event)
         M.pending[event.id] = M.pending[event.id] or {}
-        M.pending[event.id][plugin.name] = plugin.name
+        M.pending[event.id][plugin.name] = plugin
         add_event(event)
     end)
 end

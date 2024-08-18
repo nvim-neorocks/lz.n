@@ -315,7 +315,9 @@ Or
   ├── init.lua
 ```
 
-### Custom Handlers
+## :electric_plug: API
+
+### Custom handlers
 
 You may register your own handlers to lazy-load plugins via
 other triggers not already covered by the plugin spec.
@@ -335,25 +337,67 @@ require("lz.n").register_handler(handler)
 #### `lz.n.Handler`
 
 <!-- markdownlint-disable MD013 -->
-| Property | Type | Description |
-|----------|------|-------------|
-| spec_field | `string` | the `lz.n.PluginSpec` field defined by the handler |
-| add | `fun(plugin: lz.n.Plugin)` | adds a plugin to the handler |
-| del | `fun(plugin: lz.n.Plugin)?` | removes a plugin from the handler |
+| Property   | Type                                | Description                                               |
+| ---        | ---                                 | ---                                                       |
+| spec_field | `string`                            | the `lz.n.PluginSpec` field used to configure the handler |
+| add        | `fun(plugin: lz.n.Plugin)`          | adds a plugin to the handler                              |
+| del        | `fun(plugin: lz.n.Plugin)`          | removes a plugin from the handler                         |
+| lookup     | `fun(name: string):lz.n.Plugin?`    | lookup a plugin managed by this handler by name           |
 <!-- markdownlint-enable MD013 -->
 
-When writing custom handlers,
-you can load the plugin and run the hooks from
-the spec with the following function:
+### Lua API
+
+The following Lua functions are part of the public API.
+
+> [!WARNING]
+>
+> If you use internal functions or modules that are not listed here,
+> things may break without a major version bump.
+
+#### `trigger_load`
+
+You can manually load a plugin (and run the hooks from the spec)
+with the following function:
 
 ```lua
-  ---@type fun(plugins: string | lz.n.Plugin | string[] | lz.n.Plugin[])
+  ---@type fun(plugins: string | string[] | lz.n.Plugin | lz.n.Plugin[])
   require('lz.n').trigger_load
 ```
 
-The function accepts plugin names or parsed plugin specs.
-It will call the handler's `del` function (if it exists) after the `before` hooks,
-and before `load` of the plugin's spec.
+The function accepts plugin names (`string | string[]`, when called in another
+plugin's hook), or `lz.n.Plugin` items (when called by a `lz.n.Handler`).
+If called with a plugin name, it will use the registered
+handlers' `lookup` functions to search for a plugin to load
+(loading the first one it finds).
+Once a plugin has been loaded, it will be removed from all handlers (via `del`).
+As a result, calling `trigger_load` with a plugin name is idempotent.
+
+> [!IMPORTANT]
+>
+> This can be used to influence the order in which plugins are lazy-loaded,
+> for example when a plugin depends on another one.
+>
+> However, we strongly recommend you consider alternatives before doing so.
+> lz.n was designed with automatic dependency management in mind and hence
+> **does not provide an API** to declare dependencies in the `lz.n.PluginSpec`.
+> Plugin dependencies are usually just Lua libraries, which can be added to the
+> `package.path` without any noticeable impact on startup time.
+>
+> If a plugin relies on another plugin's `plugin/` or `after/plugin/` scripts
+> having been sourced before it is loaded, we consider this a bug, as this is not
+> supported by Neovim's built-in loading mechanisms.
+>
+> Similarly, requiring users to worry about *the order in which they configure*
+> plugins is bad design and defeats the purpose of automatic dependency management.
+
+#### `lookup`
+
+To lookup a plugin that is pending to be loaded by name, use:
+
+```lua
+  ---@type fun(name: string):lz.n.Plugin?
+  require('lz.n').lookup
+```
 
 ### Extensions
 

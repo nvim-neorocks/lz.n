@@ -5,10 +5,17 @@ local loader = require("lz.n.loader")
 
 ---@type lz.n.ColorschemeHandler
 local M = {
+    ---@type table<string, table<string, lz.n.Plugin[]>>
     pending = {},
     augroup = nil,
     spec_field = "colorscheme",
 }
+
+---@param name string
+---@return lz.n.Plugin?
+function M.lookup(name)
+    return require("lz.n.handler.extra").lookup(M.pending, name)
+end
 
 ---@param plugin lz.n.Plugin
 function M.del(plugin)
@@ -49,7 +56,7 @@ function M.add(plugin)
     ---@param colorscheme string
     vim.iter(plugin.colorscheme):each(function(colorscheme)
         M.pending[colorscheme] = M.pending[colorscheme] or {}
-        M.pending[colorscheme][plugin.name] = plugin.name
+        M.pending[colorscheme][plugin.name] = plugin
     end)
 end
 
