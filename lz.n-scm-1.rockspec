@@ -7,20 +7,17 @@ package = 'lz.n'
 version = _MODREV .. _SPECREV
 
 dependencies = {
-  'lua >= 5.1',
+    'lua >= 5.1',
 }
 
 test_dependencies = {
-  'lua >= 5.1',
+    'lua >= 5.1',
 }
 
 source = {
-  url = 'git://github.com/nvim-neorocks/' .. package,
+    url = 'git://github.com/nvim-neorocks/' .. package,
 }
 
 build = {
-  type = 'builtin',
+    type = 'builtin',
 }
-
-
-
