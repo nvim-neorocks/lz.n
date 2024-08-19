@@ -341,7 +341,7 @@ require("lz.n").register_handler(handler)
 | ---        | ---                                 | ---                                                       |
 | spec_field | `string`                            | the `lz.n.PluginSpec` field used to configure the handler |
 | add        | `fun(plugin: lz.n.Plugin)`          | adds a plugin to the handler                              |
-| del        | `fun(plugin: lz.n.Plugin)`          | removes a plugin from the handler                         |
+| del        | `fun(name: string)`                 | removes a plugin from the handler by name                 |
 | lookup     | `fun(name: string):lz.n.Plugin?`    | lookup a plugin managed by this handler by name           |
 <!-- markdownlint-enable MD013 -->
 

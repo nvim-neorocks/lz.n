@@ -14,10 +14,6 @@ function M.lookup(name)
     return vim
         .iter(handlers)
         ---@param handler lz.n.Handler
-        :filter(function(_, handler)
-            return type(handler.lookup) == "function"
-        end)
-        ---@param handler lz.n.Handler
         :map(function(_, handler)
             return handler.lookup(name)
         end)
@@ -60,12 +56,11 @@ local function enable(plugin)
     end)
 end
 
-function M.disable(plugin)
+---@param name string
+function M.disable(name)
     ---@param handler lz.n.Handler
     vim.iter(handlers):each(function(_, handler)
-        if handler.del then
-            handler.del(plugin)
-        end
+        handler.del(name)
     end)
 end
 

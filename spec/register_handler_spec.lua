@@ -21,8 +21,9 @@ describe("handlers.custom", function()
         add = function(plugin)
             mock_state[plugin.name] = plugin
         end,
-        del = function(plugin)
-            mock_state[plugin.name] = nil
+        ---@param name string
+        del = function(name)
+            mock_state[name] = nil
         end,
         ---@param name string
         ---@return lz.n.Plugin?
@@ -52,7 +53,7 @@ describe("handlers.custom", function()
     end)
     it("loading a plugin removes it from the handler", function()
         lz_n.trigger_load(testplugin.name)
-        assert.spy(delspy).called_with(testplugin)
+        assert.spy(delspy).called_with(testplugin.name)
     end)
     it("trigger_load is idempotent when called with a plugin name", function()
         lz_n.trigger_load(testplugin.name)

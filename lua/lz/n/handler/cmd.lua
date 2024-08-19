@@ -73,12 +73,16 @@ local function add_cmd(cmd)
     })
 end
 
----@param plugin lz.n.Plugin
-function M.del(plugin)
-    pcall(vim.api.nvim_del_user_command, plugin.cmd)
-    vim.iter(M.pending):each(function(_, plugins)
-        plugins[plugin.name] = nil
-    end)
+---@param name string
+function M.del(name)
+    vim.iter(M.pending)
+        :filter(function(_, plugins)
+            return plugins[name] ~= nil
+        end)
+        :each(function(cmd, plugins)
+            pcall(vim.api.nvim_del_user_command, cmd)
+            plugins[name] = nil
+        end)
 end
 
 ---@param plugin lz.n.Plugin

@@ -178,10 +178,10 @@ function M.add(plugin)
     end)
 end
 
----@param plugin lz.n.Plugin
-function M.del(plugin)
+---@param name string
+function M.del(name)
     vim.iter(M.pending):each(function(_, plugins)
-        plugins[plugin.name] = nil
+        plugins[name] = nil
     end)
 end
 

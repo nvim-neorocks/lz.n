@@ -23,9 +23,9 @@ function M.add(plugin)
     event.add(plugin)
 end
 
----@param plugin lz.n.Plugin
-function M.del(plugin)
-    event.del(plugin)
+---@param name string
+function M.del(name)
+    event.del(name)
 end
 
 return M

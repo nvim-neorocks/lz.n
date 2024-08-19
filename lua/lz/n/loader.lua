@@ -12,7 +12,7 @@ function M._load(plugin)
     if plugin.enabled == false or (type(plugin.enabled) == "function" and not plugin.enabled()) then
         return
     end
-    require("lz.n.handler").disable(plugin)
+    require("lz.n.handler").disable(plugin.name)
     ---@type fun(name: string) | nil
     local load_impl = plugin.load or vim.tbl_get(vim.g, "lz_n", "load")
     if type(load_impl) == "function" then

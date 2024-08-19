@@ -96,8 +96,8 @@ error("Cannot import a meta module")
 --- Add a plugin to this handler.
 --- @field add fun(plugin: lz.n.Plugin)
 ---
---- Remove a plugin from this handler.
---- @field del fun(plugin: lz.n.Plugin)
+--- Remove a plugin from this handler by name.
+--- @field del fun(name: string)
 ---
 --- Lookup a plugin by name.
 --- @field lookup fun(name: string): lz.n.Plugin?
