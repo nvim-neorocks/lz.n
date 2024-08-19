@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.5](https://github.com/nvim-neorocks/lz.n/compare/v1.4.4...v1.4.5) (2024-08-19)
+
+
+### Bug Fixes
+
+* altered loading order for startup plugins ([#49](https://github.com/nvim-neorocks/lz.n/issues/49)) ([50c1454](https://github.com/nvim-neorocks/lz.n/commit/50c145466330c0c5b272fd3904b5655a1613149c))
+
 ## [1.4.4](https://github.com/nvim-neorocks/lz.n/compare/v1.4.3...v1.4.4) (2024-08-09)
 
 
