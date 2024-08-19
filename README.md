@@ -407,7 +407,7 @@ Here are some examples for extending `lz.n`:
   A module loader that searches opt plugins
   and call `lz.n` hooks to ensure proper
   plugin initialisation.
-- [A custom `lz.n.Handler`](https://github.com/BirdeeHub/birdeeSystems/blob/a38a1c2d9b8d4b44382eba094d3504817c8a3296/common/birdeevim/lua/birdee/on_require.lua)
+- [A custom `lz.n.Handler`](https://github.com/nvim-neorocks/lz.n/discussions/25)
   that auto-loads on `require`, allowing users
   to specify modules.
 
