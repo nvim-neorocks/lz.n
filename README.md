@@ -73,6 +73,8 @@ but reduced down to the very basics required for lazy-loading only.
     `lz.n` provides a `colorscheme` handler in the plugin spec.
   - Heuristics for determining a `main` module and automatically calling
     a `setup()` function.
+  - Heuristics for loading plugins on `require`.
+    You can use [`lzn-auto-require`](https://github.com/horriblename/lzn-auto-require) for that.
   - Abstractions for plugin configuration with an `opts` table.
     `lz.n` provides simple hooks that you can use to specify
     when to load configurations.
@@ -398,18 +400,6 @@ To lookup a plugin that is pending to be loaded by name, use:
   ---@type fun(name: string):lz.n.Plugin?
   require('lz.n').lookup
 ```
-
-### Extensions
-
-Here are some examples for extending `lz.n`:
-
-- [lzn-auto-require](https://github.com/horriblename/lzn-auto-require)
-  A module loader that searches opt plugins
-  and call `lz.n` hooks to ensure proper
-  plugin initialisation.
-- [A custom `lz.n.Handler`](https://github.com/nvim-neorocks/lz.n/discussions/25)
-  that auto-loads on `require`, allowing users
-  to specify modules.
 
 ## :green_heart: Contributing
 
