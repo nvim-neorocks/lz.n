@@ -6,19 +6,17 @@ permissions:
 name: Release Please
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
-  workflow_dispatch:
 
 jobs:
   release:
     name: release
     runs-on: ubuntu-latest
     steps:
-      - uses: google-github-actions/release-please-action@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+      - uses: googleapis/release-please-action@v4
         with:
           release-type: simple
-          package-name: lz.n
+          token: ${{ secrets.PAT }}
