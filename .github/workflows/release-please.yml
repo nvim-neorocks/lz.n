@@ -21,4 +21,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         with:
           release-type: simple
-          package-name: lz.n
+          package-name: lze

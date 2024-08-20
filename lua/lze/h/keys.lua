@@ -1,12 +1,14 @@
-local loader = require("lz.n.loader")
+-- NOTE: internal handlers must use internal trigger_load
+-- because require('lze') requires this module.
+local loader = require("lze.c.loader")
 
----@class lz.n.KeysHandler: lz.n.Handler
+---@class lze.KeysHandler: lze.Handler
 
----@param value lz.n.KeysSpec
+---@param value lze.KeysSpec
 ---@param mode? string
----@return lz.n.Keys
+---@return lze.Keys
 local function parse(value, mode)
-    local ret = vim.deepcopy(value) --[[@as lz.n.Keys]]
+    local ret = vim.deepcopy(value) --[[@as lze.Keys]]
     ret.lhs = ret[1] or ""
     ret.rhs = ret[2]
     ret[1] = nil
@@ -23,14 +25,14 @@ local function parse(value, mode)
     return ret
 end
 
----@type lz.n.KeysHandler
+---@type lze.KeysHandler
 local M = {
     pending = {},
     spec_field = "keys",
-    ---@param value string|lz.n.KeysSpec
-    ---@return lz.n.Keys[]
+    ---@param value string|lze.KeysSpec
+    ---@return lze.Keys[]
     parse = function(value)
-        value = type(value) == "string" and { value } or value --[[@as lz.n.KeysSpec]]
+        value = type(value) == "string" and { value } or value --[[@as lze.KeysSpec]]
         local modes = type(value.mode) == "string" and { value.mode } or value.mode --[[ @as string[] | nil ]]
         if not modes then
             return { parse(value) }
@@ -45,10 +47,10 @@ local M = {
 
 local skip = { mode = true, id = true, ft = true, rhs = true, lhs = true }
 
----@param keys lz.n.Keys
----@return lz.n.KeysBase
+---@param keys lze.Keys
+---@return lze.KeysBase
 local function get_opts(keys)
-    ---@type lz.n.KeysBase
+    ---@type lze.KeysBase
     return vim.iter(keys):fold({}, function(acc, k, v)
         if type(k) ~= "number" and not skip[k] then
             acc[k] = v
@@ -57,8 +59,8 @@ local function get_opts(keys)
     end)
 end
 
--- Create a mapping if it is managed by lz.n
----@param keys lz.n.Keys
+-- Create a mapping if it is managed by lze
+---@param keys lze.Keys
 ---@param buf integer?
 local function set(keys, buf)
     if keys.rhs then
@@ -71,7 +73,7 @@ end
 
 -- Delete a mapping and create the real global
 -- mapping when needed
----@param keys lz.n.Keys
+---@param keys lze.Keys
 local function del(keys)
     pcall(vim.keymap.del, keys.mode, keys.lhs, {
         -- NOTE: for buffer-local mappings, we only delete the mapping for the current buffer
@@ -79,13 +81,13 @@ local function del(keys)
         buffer = keys.ft and true or nil,
     })
     -- make sure to create global mappings when needed
-    -- buffer-local mappings are managed by lz.n
+    -- buffer-local mappings are managed by lze
     if not keys.ft then
         set(keys)
     end
 end
 
----@param keys lz.n.Keys
+---@param keys lze.Keys
 local function add_keys(keys)
     local lhs = keys.lhs
     local opts = get_opts(keys)
@@ -126,7 +128,7 @@ local function add_keys(keys)
                 if M.pending[keys.id] then
                     add(event.buf)
                 else
-                    -- Only create the mapping if its managed by lz.n
+                    -- Only create the mapping if its managed by lze
                     -- otherwise the plugin is supposed to manage it
                     set(keys, event.buf)
                 end
@@ -137,18 +139,33 @@ local function add_keys(keys)
     end
 end
 
----@param plugin lz.n.Plugin
+---@param plugin lze.Plugin
 function M.add(plugin)
-    ---@param key lz.n.Keys
-    vim.iter(plugin.keys or {}):each(function(key)
+    local keys_spec = plugin.keys
+    if not keys_spec then
+        return
+    end
+    local keys_def = {}
+    if type(keys_spec) == "string" then
+        local keys = M.parse(keys_spec)
+        vim.list_extend(keys_def, keys)
+    elseif type(keys_spec) == "table" then
+        ---@param keys_spec_ string | lze.KeysSpec
+        vim.iter(keys_spec):each(function(keys_spec_)
+            local keys = M.parse(keys_spec_)
+            vim.list_extend(keys_def, keys)
+        end)
+    end
+    ---@param key lze.Keys
+    vim.iter(keys_def or {}):each(function(key)
         M.pending[key.id] = M.pending[key.id] or {}
         M.pending[key.id][plugin.name] = plugin.name
         add_keys(key)
     end)
 end
 
----@param plugin lz.n.Plugin
-function M.del(plugin)
+---@param plugin lze.Plugin
+function M.before(plugin)
     vim.iter(M.pending):each(function(_, plugins)
         plugins[plugin.name] = nil
     end)

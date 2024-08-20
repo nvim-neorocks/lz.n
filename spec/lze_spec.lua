@@ -1,11 +1,11 @@
-local lz = require("lz.n")
-vim.g.lz_n = {
+local lz = require("lze")
+vim.g.lze = {
     load = function() end,
 }
-local loader = require("lz.n.loader")
+local loader = require("lze.c.loader")
 local spy = require("luassert.spy")
 
-describe("lz.n", function()
+describe("lze", function()
     describe("load", function()
         it("list of plugin specs", function()
             local spy_load = spy.on(loader, "_load")
@@ -33,9 +33,18 @@ describe("lz.n", function()
             assert.spy(spy_load).called_with({
                 name = "crates.nvim",
                 lazy = true,
+                ft = { "toml", "rust" },
                 event = {
-                    require("lz.n.handler.ft").parse("toml"),
-                    require("lz.n.handler.ft").parse("rust"),
+                    {
+                        event = "FileType",
+                        id = "toml",
+                        pattern = "toml",
+                    },
+                    {
+                        event = "FileType",
+                        id = "rust",
+                        pattern = "rust",
+                    },
                 },
             })
             vim.cmd.Telescope()
@@ -43,11 +52,8 @@ describe("lz.n", function()
             assert.spy(spy_load).called_with({
                 name = "telescope.nvim",
                 lazy = true,
-                cmd = { "Telescope" },
-                keys = {
-                    { id = "\\tt", lhs = "<leader>tt", mode = "n" },
-                    { id = "\\tt (v)", lhs = "<leader>tt", mode = "v" },
-                },
+                cmd = "Telescope",
+                keys = { { "<leader>tt", mode = { "n", "v" } } },
             })
         end)
         it("individual plugin specs", function()
@@ -95,7 +101,7 @@ describe("lz.n", function()
             assert.spy(spy_load).called_with({
                 name = "single.nvim",
                 lazy = true,
-                cmd = { "Single" },
+                cmd = "Single",
             })
         end)
     end)

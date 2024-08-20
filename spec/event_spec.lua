@@ -1,10 +1,10 @@
 ---@diagnostic disable: invisible
-vim.g.lz_n = {
+vim.g.lze = {
     load = function() end,
 }
-local event = require("lz.n.handler.event")
-local state = require("lz.n.state")
-local loader = require("lz.n.loader")
+local event = require("lze.h.event")
+local state = require("lze.c.state")
+local loader = require("lze.c.loader")
 local spy = require("luassert.spy")
 
 describe("handlers.event", function()
@@ -46,7 +46,7 @@ describe("handlers.event", function()
         )
     end)
     it("Event only loads plugin once", function()
-        ---@type lz.n.Plugin
+        ---@type lze.Plugin
         local plugin = {
             name = "foo",
             event = { event.parse("BufEnter") },
@@ -57,11 +57,13 @@ describe("handlers.event", function()
         vim.api.nvim_exec_autocmds("BufEnter", {})
         vim.api.nvim_exec_autocmds("BufEnter", {})
         assert.spy(spy_load).called(1)
+        assert.True(state.loaded[plugin.name])
+        state.loaded[plugin.name] = false
     end)
     it("Multiple events only load plugin once", function()
-        ---@param events lz.n.Event[]
+        ---@param events lze.Event[]
         local function itt(events)
-            ---@type lz.n.Plugin
+            ---@type lze.Plugin
             local plugin = {
                 name = "foo",
                 event = events,
@@ -76,12 +78,14 @@ describe("handlers.event", function()
                 pattern = ".lua",
             })
             assert.spy(spy_load).called(1)
+            assert.True(state.loaded[plugin.name])
+            state.loaded[plugin.name] = false
         end
         itt({ event.parse("BufEnter"), event.parse("WinEnter") })
         itt({ event.parse("WinEnter"), event.parse("BufEnter") })
     end)
     it("Plugins' event handlers are triggered", function()
-        ---@type lz.n.Plugin
+        ---@type lze.Plugin
         local plugin = {
             name = "foo",
             event = { event.parse("BufEnter") },
@@ -103,9 +107,11 @@ describe("handlers.event", function()
         vim.api.nvim_exec_autocmds("BufEnter", {})
         assert.True(triggered)
         loader._load = orig_load
+        assert.True(state.loaded[plugin.name])
+        state.loaded[plugin.name] = false
     end)
     it("DeferredUIEnter", function()
-        ---@type lz.n.Plugin
+        ---@type lze.Plugin
         local plugin = {
             name = "bla",
             event = { event.parse("DeferredUIEnter") },
@@ -115,5 +121,7 @@ describe("handlers.event", function()
         event.add(plugin)
         vim.api.nvim_exec_autocmds("User", { pattern = "DeferredUIEnter", modeline = false })
         assert.spy(spy_load).called(1)
+        assert.True(state.loaded[plugin.name])
+        state.loaded[plugin.name] = false
     end)
 end)

@@ -1,10 +1,10 @@
-# :sloth: lz.n
+# :sloth: lze
 
 [![Neovim][neovim-shield]][neovim-url]
 [![Lua][lua-shield]][lua-url]
-[![LuaRocks][luarocks-shield]][luarocks-url]
+<!-- [![LuaRocks][luarocks-shield]][luarocks-url] -->
 
-A dead simple lazy-loading Lua library for Neovim plugins.
+`lze` is a simple lazy-loading Lua library for Neovim plugins.
 
 It is intended to be used
 
@@ -18,7 +18,7 @@ It is intended to be used
 > It should be a plugin author's responsibility to ensure their plugin doesn't
 > unnecessarily impact startup time, not yours!
 >
-> See [our "DO's and DONT's" guide for plugin developers](https://github.com/nvim-neorocks/nvim-best-practices?tab=readme-ov-file#sleeping_bed-lazy-loading).
+> See [nvim-neorocks' "DO's and DONT's" guide for plugin developers](https://github.com/nvim-neorocks/nvim-best-practices?tab=readme-ov-file#sleeping_bed-lazy-loading).
 >
 > Regardless, the current status quo is horrible, and some authors may
 > not have the will or capacity to improve their plugins' startup impact.
@@ -28,6 +28,47 @@ It is intended to be used
 > call to a heavy `setup` function,
 > consider opening an issue on the plugin's issue tracker.
 
+## :zzz: Why fork `lz.n`?
+
+This is a fork of [nvim-neorocks/lz.n](https://github.com/nvim-neorocks/lz.n)
+explicitly focused on ease of extensibility rather than simplicity.
+
+It is still very simple, and simplicity is still a goal.
+
+It also has more builtin allowances for dealing with plugin authors
+who DON'T follow best practices, because that happens often.
+
+`lze` takes a more flexible approach to the core spec processing,
+and the managing of handlers, and the managing of how loading is called.
+
+### Extensibility Improvements
+
+- It allows you to influence the order handlers
+  are called in, as opposed to being random.
+- Handler implementations of even the built-in handlers
+  are now decoupled from the core loading api,
+  allowing full customization of the set of handlers available,
+  and the order in which any handler is called.
+- It provides a `before` and `after` hook for handler authors to use,
+  rather than just `lz.n`'s `del` (equivalent to `before`).
+  - Why is it not named `del` like in `lz.n`?
+    - It doesn't matter to
+    the core of `lze` if you delete the state in your handler.
+    It might matter for *your* handler still, and is good practice,
+    but thats only your problem, it will not break `lze`.
+- It takes a simple, authoritative approach to state management,
+  which reduces the responsibilities on handler authors
+  in case they mess up their internal state, and also
+  allows abuse of the api to be predictable if absolutely necessary.
+
+### Minor QOL
+
+- It allows multiple lists of plugin specs to be added.
+- It provides 2 new handlers for loading before or after other plugins.
+  (USUALLY NOT NECESSARY, as generally,
+  dependencies are written to only load when called,
+  and can be safely loaded at startup.)
+
 ## :star2: Features
 
 - API for lazy-loading plugins on:
@@ -36,6 +77,8 @@ It is intended to be used
   - Key mappings
   - User commands
   - Colorscheme events
+  - Other plugins
+  - Anything you can write a [custom handler](#custom-handlers) for
 - Works with:
   - Neovim's built-in `:h packpath` (`:h packadd`)
   - Any plugin manager that supports manually lazy-loading
@@ -44,17 +87,24 @@ It is intended to be used
 
 ## :moon: Introduction
 
-`lz.n` provides abstractions for lazy-loading Neovim plugins,
+`lze` provides abstractions for lazy-loading Neovim plugins,
 with an API that is loosely based on [`lazy.nvim`](https://github.com/folke/lazy.nvim),
 but reduced down to the very basics required for lazy-loading only.
 
+If attempting lazy loading via autocommands, it can get very verbose
+when you wish to load a plugin on multiple triggers.
+
+This greatly simplifies that process, and is easy to extend with
+your own custom fields via [custom handlers](#custom-handlers),
+the same mechanism through which the builtin handlers are created.
+
 ### :milky_way: Philosophy
 
-`lz.n` is designed based on the UNIX philosophy: Do one thing well.
+`lze` is designed based on the UNIX philosophy: Do one thing well.
 
 ### :zzz: Comparison with `lazy.nvim`
 
-- `lz.n` is **not a plugin manager**, but focuses **on lazy-loading only**.
+- `lze` is **not a plugin manager**, but focuses **on lazy-loading only**.
   It is intended to be used with (or by) a plugin manager.
 - The feature set is minimal, to [reduce code complexity](https://grugbrain.dev/)
   and simplify the API.
@@ -65,10 +115,11 @@ but reduced down to the very basics required for lazy-loading only.
     built-in loading mechanisms, including
     adding a plugin's API (`lua`, `autoload`, ...)
     to the runtimepath.
-    `lz.n` doesn't.
+    `lze` doesn't.
     Its only concern is plugin initialization, which is
     the bulk of the startup overhead.
-  - Automatic lazy-loading of Lua modules on `require`.
+  - Automatic lazy-loading of Lua modules on `require`
+    (without any user configuration).
   - Automatic lazy-loading of colorschemes.
     `lz.n` provides a `colorscheme` handler in the plugin spec.
   - Heuristics for determining a `main` module and automatically calling
@@ -91,7 +142,7 @@ You can override the function used to load plugins.
 `lz.n` has the following default:
 
 ```lua
-vim.g.lz_n = {
+vim.g.lze = {
     ---@type fun(name: string)
     load = vim.cmd.packadd,
 }
@@ -99,8 +150,11 @@ vim.g.lz_n = {
 
 ## :books: Usage
 
+Anywhere in your config you may call this function
+to register plugins for lazy loading!
+
 ```lua
-require("lz.n").load(plugins)
+require("lze").load(plugins)
 ```
 
 - **plugins**: this should be a `table` or a `string`
@@ -114,46 +168,83 @@ require("lz.n").load(plugins)
 >
 > You can call `load()` as you would call `lazy.nvim`'s `setup()`.
 > Or, you can also use it to register individual plugin specs for lazy
-> loading.
+> loading. You may call it as many times as you wish, but
+> it will throw an error if you try to add the same plugin multiple times.
+> It does not merge them like `lazy.nvim` does.
 
 ### Plugin spec
+
+#### Loading hooks
 
 <!-- markdownlint-disable MD013 -->
 | Property         | Type | Description | `lazy.nvim` equivalent |
 |------------------|------|-------------|-----------------------|
-| **[1]** | `string` | The plugin's name (not the module name). This is what is passed to the `load(name)` function. | `name`[^1] |
+| **[1]** | `string` | The plugin's name (not the module name). This is the directory name of the plugin in the packpath and is usually the same as the repo name of the repo it was cloned from. | `name`[^1] |
 | **enabled** | `boolean?` or `fun():boolean` | When `false`, or if the `function` returns false, then this plugin will not be included in the spec. | `enabled` |
-| **beforeAll** | `fun(lz.n.Plugin)?` | Always executed before any plugins are loaded. | `init` |
-| **before** | `fun(lz.n.Plugin)?` | Executed before a plugin is loaded. | None |
-| **after** | `fun(lz.n.Plugin)?` | Executed after a plugin is loaded. | `config` |
+| **beforeAll** | `fun(lze.Plugin)?` | Always executed upon calling `require('lze').load(spec)` before any plugin specs from that call are triggered to be loaded. | `init` |
+| **before** | `fun(lze.Plugin)?` | Executed before a plugin is loaded. | None |
+| **after** | `fun(lze.Plugin)?` | Executed after a plugin is loaded. | `config` |
+| **priority** | `number?` | Only useful for **start** plugins (not lazy-loaded) added within **the same `require('lze').load(spec)` call** to force loading certain plugins first. Default priority is `50`. | `priority` |
+| **load** | `fun(string)?` | Can be used to override the `vim.g.lze.load(name)` function for an individual plugin. (default is `vim.cmd.packadd(name)`)[^2] | None. |
+<!-- markdownlint-enable MD013 -->
+
+#### Lazy-loading triggers provided by the default handlers
+
+<!-- markdownlint-disable MD013 -->
+| Property | Type | Description | `lazy.nvim` equivalent |
+|----------|------|-------------|----------------------|
 | **event** | `string?` or `{event?:string\|string[], pattern?:string\|string[]}\` or `string[]` | Lazy-load on event. Events can be specified as `BufEnter` or with a pattern like `BufEnter *.lua`. | `event` |
 | **cmd** | `string?` or `string[]` | Lazy-load on command. | `cmd` |
 | **ft** | `string?` or `string[]` | Lazy-load on filetype. | `ft` |
-| **keys** | `string?` or `string[]` or `lz.n.KeysSpec[]` | Lazy-load on key mapping. | `keys` |
-| **colorscheme** | `string?` or `string[]` | Lazy-load on colorscheme. | None. `lazy.nvim` lazy-loads colorschemes automatically[^2]. |
-| **priority** | `number?` | Only useful for **start** plugins (not lazy-loaded) to force loading certain plugins first. Default priority is `50` (or `1000` if `colorscheme` is set). | `priority` |
-| **load** | `fun(string)?` | Can be used to override the `vim.g.lz_n.load()` function for an individual plugin. | None. |
+| **keys** | `string?` or `string[]` or `lze.KeysSpec[]` | Lazy-load on key mapping. | `keys` |
+| **colorscheme** | `string?` or `string[]` | Lazy-load on colorscheme. Sets priority to 1000 [^3] | None. `lazy.nvim` lazy-loads colorschemes automatically[^4]. |
+| **dep_of** | `string?` or `string[]` | Lazy-load before another plugin but after its `before` hook. Accepts a plugin name or a list of plugin names. |  None but is sorta the reverse of the dependencies key of the `lazy.nvim` plugin spec |
+| **on_plugin** | `string?` or `string[]` | Lazy-load after another plugin but before its `after` hook. Accepts a plugin name or a list of plugin names. | None. |
 <!-- markdownlint-enable MD013 -->
 
-[^1]: In contrast to `lazy.nvim`'s `name` field, a `lz.n.PluginSpec`'s `name` *is not optional*.
-      This is because `lz.n` is not a plugin manager and needs to be told which
+[^1]: In contrast to `lazy.nvim`'s `name` field, a `lze.PluginSpec`'s `name` *is not optional*.
+      This is because `lze` is not a plugin manager and needs to be told which
       plugins to load.
-[^2]: The reason this library doesn't lazy-load colorschemes automatically is that
+[^2]: for example, lazy-loading cmp sources will
+      require you to source its `after/plugin` file,
+      as packadd does not do this automatically for you.
+<!-- markdownlint-disable MD007 MD032 -->
+[^3]: One of the main reasons this fork of `lz.n` exists, is that handlers are *completely*
+    decoupled from the core code of `lze`. `lze` only knows about handlers by default
+    because when you first require it, it calls `M.register_handlers(M.default_handlers)`.
+    This means there is not code that would detect something like if the colorscheme
+    handler has been enabled for a plugin in the core of `lze`.
+    - That being said, `priority = 1000` still can be added, but requires a dirty hack.
+    - `lze`'s state is actually authoritative, due to
+    `trigger_load` not accepting a plugin spec like its `lz.n` equivalent does.
+    - `add` is called *after* plugins are added to state, but *before*
+    any loading occurs, even startup plugins.
+    - I would not suggest using this fact yourself
+    unless you really know what you are doing.
+    - Handlers do not need to do this to add custom loading code,
+      therefore there is VERY little reason to do this.
+      - handlers have access to both a `before` and `after` hook
+      - If they wish to affect the loading of a plugin, they can do so there
+      - These hooks are one of the other reasons this fork exists.
+        The other main reason is that handlers cannot mess things up by not
+        properly deleting a plugin from their internal state.
+<!-- markdownlint-enable MD007 MD032 -->
+[^4]: The reason this library doesn't lazy-load colorschemes automatically is that
       it would have to know where the plugin is installed in order to determine
       which plugin to load.
 
 ### User events
 
-- `DeferredUIEnter`: Triggered when `load()` is done and after `UIEnter`.
+- `DeferredUIEnter`: Triggered when `require('lze').load()` is done and after `UIEnter`.
   Can be used as an `event` to lazy-load plugins that are not immediately needed
-  for the initial UI[^3].
+  for the initial UI[^5].
 
-[^3]: This is equivalent to `lazy.nvim`'s `VeryLazy` event.
+[^5]: This is equivalent to `lazy.nvim`'s `VeryLazy` event.
 
 #### Examples
 
 ```lua
-require("lz.n").load {
+require("lze").load {
     {
         "neo-tree.nvim",
         keys = {
@@ -205,11 +296,11 @@ require("lz.n").load {
 
   ```lua
   require "paq" {
-      { "nvim-telescope/telescope.nvim", opt = true }
+      { "nvim-telescope/telescope.nvim", opt = true },
       { "NTBBloodBatch/sweetie.nvim", opt = true }
   }
 
-  require("lz.n").load {
+  require("lze").load {
       {
           "telescope.nvim",
           cmd = "Telescope",
@@ -232,11 +323,11 @@ require("lz.n").load {
   programs.neovim = {
     enable = true;
     plugins = with pkgs.vimPlugins [
-      lz-n
+      lze
       {
         plugin = pkgs.vimPlugins.telescope-nvim;
         config = ''
-          require("lz.n").load {
+          require("lze").load {
             "telescope.nvim",
             cmd = "Telescope",
           }
@@ -247,7 +338,7 @@ require("lz.n").load {
       {
         plugin = pkgs.vimPlugins.sweetie-nvim;
         config = ''
-          require("lz.n").load {
+          require("lze").load {
             "sweetie.nvim",
             colorscheme = "sweetie",
           }
@@ -266,7 +357,7 @@ require("lz.n").load {
 
 As is the case with `lazy.nvim`, you can also split your plugin specs
 into multiple files.
-Instead of passing a spec table to `load()`, you can use a Lua module.
+Instead of passing a spec table to `require('lze').load()`, you can use a Lua module.
 The function will merge specs from the **module** and any top-level **sub-modules**
 together in the final spec, so it is not needed to add `require` calls
 in your main plugin file to the other files.
@@ -276,7 +367,7 @@ Example:
 - `~/.config/nvim/init.lua`
 
 ```lua
-require("lz.n").load("plugins")
+require("lze").load("plugins")
 ```
 
 - `~/.config/nvim/lua/plugins.lua` or `~/.config/nvim/lua/plugins/init.lua`
@@ -289,10 +380,11 @@ return {
 }
 ```
 
-- `lz.n` will automatically merge any Lua file in `~/.config/nvim/lua/plugins/*.lua`
-  with the main plugin spec[^4].
+- `lze` will automatically merge any Lua file in `~/.config/nvim/lua/plugins/*.lua`
+  with the main plugin spec[^6].
 
-[^4]: It *does not* merge multiple specs for the same plugin from different files.
+[^6]: It *does not* merge multiple specs for the same plugin
+    from different files and WILL throw an error.
 
 Example structure:
 
@@ -320,52 +412,109 @@ Or
 You may register your own handlers to lazy-load plugins via
 other triggers not already covered by the plugin spec.
 
-You should register all handlers before calling `require('lz.n').load`,
-because they will not be retroactively applied to
-the `load` calls that occur before they are registered.
-
-The `register_handler` function returns a `boolean` that indicates success.
+> [!WARNING]
+> You must register ALL handlers before calling `require('lze').load`,
+> because they will not be retroactively applied to
+> the `load` calls that occur before they are registered.
 
 ```lua
----@param handler lz.n.Handler
----@return boolean success
-require("lz.n").register_handler(handler)
+---@param handlers lze.Handler[]|lze.Handler|lze.HandlerSpec[]|lze.HandlerSpec
+---@return string[] handlers_registered
+require("lze").register_handlers({
+    require("my_handlers.module1"),
+    require("my_handlers.module2"),
+    {
+        handler = require("my_handlers.module3"),
+        enabled = true,
+    },
+})
 ```
 
-#### `lz.n.Handler`
+You may call this function multiple times,
+each call will append the new handlers (if enabled) to the end of the list.
+
+The handlers define the fields you may use for lazy loading,
+with the fields like `ft` and `event` that exist
+in the default plugin spec being defined by the handlers defined in `require('lze').default_handlers`.
+
+The order of this list of handlers is important.
+
+It is the same as the order in which their `add`,
+`before`, and `after` hooks are called.
+
+If you wish to redefine a default handler, or change the order
+in which the default handlers are called, there exists a `require('lze').clear_handlers()`
+function for this purpose. It also returns the removed handlers.
+
+Here is an example of how would add a custom handler BEFORE the default list of handlers:
+
+```lua
+require('lze').clear_handlers() -- clear_handlers removes ALL handlers
+-- and now we can register them in any order we want.
+require("lze").register_handlers(require("my_handlers.b4_defaults"))
+require("lze").register_handlers(require("lze").default_handlers)
+```
+
+Again, this is important:
+
+> [!WARNING]
+> You must register ALL handlers before calling `require('lze').load`,
+> because they will not be retroactively applied to
+> the `load` calls that occur before they are registered.
+
+#### `lze.Handler`
 
 <!-- markdownlint-disable MD013 -->
 | Property | Type | Description |
 |----------|------|-------------|
-| spec_field | `string` | the `lz.n.PluginSpec` field defined by the handler |
-| add | `fun(plugin: lz.n.Plugin)` | adds a plugin to the handler |
-| del | `fun(plugin: lz.n.Plugin)?` | removes a plugin from the handler |
+| spec_field | `string` | the `lze.PluginSpec` field defined by the handler |
+| add | `fun(plugin: lze.Plugin)` | adds a plugin to the handler |
+| before | `fun(plugin: lze.Plugin)?` | called before a plugin's load implementation has been called |
+| after | `fun(plugin: lze.Plugin)?` | called after a plugin's load implementation has been called |
 <!-- markdownlint-enable MD013 -->
 
-When writing custom handlers,
-you can load the plugin and run the hooks from
-the spec with the following function:
+#### `lze.HandlerSpec`
+
+<!-- markdownlint-disable MD013 -->
+| Property | Type | Description |
+|----------|------|-------------|
+| handler | `lze.Handler` | the handler to be added |
+| enabled | ``boolean?` or `fun():boolean`` | whether the handler should be active |
+<!-- markdownlint-enable MD013 -->
+
+#### Writing Custom Handlers
+
+When writing custom handlers, via your `add` function
+you will have the opportunity to receive every plugin
+added via `require('lze').load` before any loading hooks
+are called from any plugin specs added by that `load` call.
+
+You are then in control of keeping track of it and loading it when desired.
+
+You do this loading with the following function:
 
 ```lua
-  ---@type fun(plugins: string | lz.n.Plugin | string[] | lz.n.Plugin[])
-  require('lz.n').trigger_load
+  ---@type fun(plugin_names: string | string[])
+  require('lze').trigger_load(plugins_names)
 ```
 
-The function accepts plugin names or parsed plugin specs.
-It will call the handler's `del` function (if it exists) after the `before` hooks,
-and before `load` of the plugin's spec.
+The function accepts plugin names and will only
+do anything the first time it is called.
 
-### Extensions
+It will call the handler's `before` function (if it exists) after the `before` hooks,
+and before `load` of the [Plugin's Spec](#plugin-spec).
 
-Here are some examples for extending `lz.n`:
+It will call the handler's `after` function after `load` of the [Plugin's Spec](#plugin-spec).
 
-- [lzn-auto-require](https://github.com/horriblename/lzn-auto-require)
-  A module loader that searches opt plugins
-  and call `lz.n` hooks to ensure proper
-  plugin initialisation.
-- [A custom `lz.n.Handler`](https://github.com/nvim-neorocks/lz.n/discussions/25)
-  that auto-loads on `require`, allowing users
-  to specify modules.
+> [!TIP]
+> You should delete the plugin from your handler's state
+> in either the `before` or `after` hooks
+> so that you dont have to carry around
+> unnecessary state and increase your chance of error and your memory usage.
+
+There is also a `require('lze').force_load` with the same signature
+***for testing purposes only***.
+Using it is not recommended and is likely to break things (for obvious reasons).
 
 ## :green_heart: Contributing
 
@@ -382,5 +531,7 @@ or (at your option) any later version.
 [neovim-url]: https://neovim.io/
 [lua-shield]: https://img.shields.io/badge/lua-%232C2D72.svg?style=for-the-badge&logo=lua&logoColor=white
 [lua-url]: https://www.lua.org/
-[luarocks-shield]: https://img.shields.io/luarocks/v/neorocks/lz.n?logo=lua&color=purple&style=for-the-badge
-[luarocks-url]: https://luarocks.org/modules/neorocks/lz.n
+<!-- [luarocks-shield]:
+https://img.shields.io/luarocks/v/neorocks/lz.n?logo=lua
+&color=purple&style=for-the-badge -->
+<!-- [luarocks-url]: https://luarocks.org/modules/username/lze -->

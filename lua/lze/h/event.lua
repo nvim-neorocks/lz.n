@@ -1,32 +1,34 @@
-local loader = require("lz.n.loader")
+-- NOTE: internal handlers must use internal trigger_load
+-- because require('lze') requires this module.
+local loader = require("lze.c.loader")
 
----@class lz.n.EventOpts
+---@class lze.EventOpts
 ---@field event string
 ---@field group? string
 ---@field exclude? string[] augroups to exclude
 ---@field data? unknown
 ---@field buffer? number
 
----@class lz.n.EventHandler: lz.n.Handler
+---@class lze.EventHandler: lze.Handler
 ---@field events table<string,true>
 ---@field group number
----@field parse fun(spec: lz.n.EventSpec): lz.n.Event
+---@field parse fun(spec: lze.EventSpec): lze.Event
 
-local lz_n_events = {
+local lze_events = {
     DeferredUIEnter = { id = "DeferredUIEnter", event = "User", pattern = "DeferredUIEnter" },
 }
 
-lz_n_events["User DeferredUIEnter"] = lz_n_events.DeferredUIEnter
+lze_events["User DeferredUIEnter"] = lze_events.DeferredUIEnter
 
----@type lz.n.EventHandler
+---@type lze.EventHandler
 local M = {
     pending = {},
     events = {},
-    group = vim.api.nvim_create_augroup("lz_n_handler_event", { clear = true }),
+    group = vim.api.nvim_create_augroup("lze_handler_event", { clear = true }),
     spec_field = "event",
-    ---@param spec lz.n.EventSpec
+    ---@param spec lze.EventSpec
     parse = function(spec)
-        local ret = lz_n_events[spec]
+        local ret = lze_events[spec]
         if ret then
             return ret
         end
@@ -37,7 +39,7 @@ local M = {
         elseif vim.islist(spec) then
             ret = { id = table.concat(spec, "|"), event = spec }
         else
-            ret = spec --[[@as lz.n.Event]]
+            ret = spec --[[@as lze.Event]]
             if not ret.id then
                 ---@diagnostic disable-next-line: assign-type-mismatch, param-type-mismatch
                 ret.id = type(ret.event) == "string" and ret.event or table.concat(ret.event, "|")
@@ -78,12 +80,12 @@ local event_triggers = {
 ---@param event string
 ---@param buf integer
 ---@param data unknown
----@return lz.n.EventOpts[]
+---@return lze.EventOpts[]
 local function get_state(event, buf, data)
-    ---@type lz.n.EventOpts[]
+    ---@type lze.EventOpts[]
     local state = {}
     while event do
-        ---@type lz.n.EventOpts
+        ---@type lze.EventOpts
         local event_opts = {
             event = event,
             exclude = event ~= "FileType" and get_augroups(event) or nil,
@@ -98,7 +100,7 @@ local function get_state(event, buf, data)
 end
 
 -- Trigger an event
----@param opts lz.n.EventOpts
+---@param opts lze.EventOpts
 local function _trigger(opts)
     xpcall(
         function()
@@ -117,7 +119,7 @@ end
 
 -- Trigger an event. When a group is given, only the events in that group will be triggered.
 -- When exclude is set, the events in those groups will be skipped.
----@param opts lz.n.EventOpts
+---@param opts lze.EventOpts
 local function trigger(opts)
     if opts.group or opts.exclude == nil then
         return _trigger(opts)
@@ -136,7 +138,7 @@ local function trigger(opts)
     end)
 end
 
----@param event lz.n.Event
+---@param event lze.Event
 local function add_event(event)
     local done = false
     vim.api.nvim_create_autocmd(event.event, {
@@ -153,7 +155,7 @@ local function add_event(event)
             -- load the plugins
             loader.load(M.pending[event.id])
             -- check if any plugin created an event handler for this event and fire the group
-            ---@param s lz.n.EventOpts
+            ---@param s lze.EventOpts
             vim.iter(state):each(function(s)
                 trigger(s)
             end)
@@ -161,18 +163,33 @@ local function add_event(event)
     })
 end
 
----@param plugin lz.n.Plugin
+---@param plugin lze.Plugin
 function M.add(plugin)
-    ---@param event lz.n.Event
-    vim.iter(plugin.event or {}):each(function(event)
+    local event_spec = plugin.event
+    if not event_spec then
+        return
+    end
+    local event_def = {}
+    if type(event_spec) == "string" then
+        local event = M.parse(event_spec)
+        table.insert(event_def, event)
+    elseif type(event_spec) == "table" then
+        ---@param ev lze.EventSpec[]
+        vim.iter(event_spec):each(function(ev)
+            local event = M.parse(ev)
+            table.insert(event_def, event)
+        end)
+    end
+    ---@param event lze.Event
+    vim.iter(event_def or {}):each(function(event)
         M.pending[event.id] = M.pending[event.id] or {}
         M.pending[event.id][plugin.name] = plugin.name
         add_event(event)
     end)
 end
 
----@param plugin lz.n.Plugin
-function M.del(plugin)
+---@param plugin lze.Plugin
+function M.before(plugin)
     vim.iter(M.pending):each(function(_, plugins)
         plugins[plugin.name] = nil
     end)

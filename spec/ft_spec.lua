@@ -1,10 +1,10 @@
 ---@diagnostic disable: invisible
-vim.g.lz_n = {
+vim.g.lze = {
     load = function() end,
 }
-local ft = require("lz.n.handler.ft")
-local state = require("lz.n.state")
-local loader = require("lz.n.loader")
+local ft = require("lze.h.ft")
+local state = require("lze.c.state")
+local loader = require("lze.c.loader")
 local spy = require("luassert.spy")
 
 describe("handlers.ft", function()
@@ -16,10 +16,10 @@ describe("handlers.ft", function()
         }, ft.parse("rust"))
     end)
     it("filetype event loads plugins", function()
-        ---@type lz.n.Plugin
+        ---@type lze.Plugin
         local plugin = {
             name = "Foo",
-            event = { ft.parse("rust") },
+            ft = { "rust" },
         }
         local spy_load = spy.on(loader, "_load")
         state.plugins[plugin.name] = plugin

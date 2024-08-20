@@ -1,14 +1,14 @@
-vim.g.lz_n = {
+vim.g.lze = {
     load = function() end,
 }
-local colorscheme = require("lz.n.handler.colorscheme")
-local state = require("lz.n.state")
-local loader = require("lz.n.loader")
+local colorscheme = require("lze.h.colorscheme")
+local state = require("lze.c.state")
+local loader = require("lze.c.loader")
 local spy = require("luassert.spy")
 
 describe("handlers.colorscheme", function()
     it("Colorscheme only loads plugin once", function()
-        ---@type lz.n.Plugin
+        ---@type lze.Plugin
         local plugin = {
             name = "sweetie.nvim",
             colorscheme = { "sweetie" },

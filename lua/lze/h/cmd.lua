@@ -1,8 +1,10 @@
-local loader = require("lz.n.loader")
+-- NOTE: internal handlers must use internal trigger_load
+-- because require('lze') requires this module.
+local loader = require("lze.c.loader")
 
----@class lz.n.CmdHandler: lz.n.Handler
+---@class lze.CmdHandler: lze.Handler
 
----@type lz.n.CmdHandler
+---@type lze.CmdHandler
 local M = {
     pending = {},
     spec_field = "cmd",
@@ -66,21 +68,31 @@ local function add_cmd(cmd)
     })
 end
 
----@param plugin lz.n.Plugin
-function M.del(plugin)
+---@param plugin lze.Plugin
+function M.before(plugin)
     pcall(vim.api.nvim_del_user_command, plugin.cmd)
     vim.iter(M.pending):each(function(_, plugins)
         plugins[plugin.name] = nil
     end)
 end
 
----@param plugin lz.n.Plugin
+---@param plugin lze.Plugin
 function M.add(plugin)
-    if not plugin.cmd then
+    local cmd_spec = plugin.cmd
+    if not cmd_spec then
         return
     end
+    local cmd_def = {}
+    if type(cmd_spec) == "string" then
+        table.insert(cmd_def, cmd_spec)
+    elseif type(cmd_spec) == "table" then
+        ---@param cmd_spec_ string
+        vim.iter(cmd_spec):each(function(cmd_spec_)
+            table.insert(cmd_def, cmd_spec_)
+        end)
+    end
     ---@param cmd string
-    vim.iter(plugin.cmd):each(function(cmd)
+    vim.iter(cmd_def):each(function(cmd)
         M.pending[cmd] = M.pending[cmd] or {}
         M.pending[cmd][plugin.name] = plugin.name
         add_cmd(cmd)

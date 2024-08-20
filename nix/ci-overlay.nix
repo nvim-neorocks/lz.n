@@ -2,9 +2,7 @@
 {
   self,
   plugin-name,
-}: final: prev:
-with final.lib;
-with final.stdenv; let
+}: final: prev: let
   nvim-nightly = final.neovim-nightly;
 
   mkNeorocksTest = {

@@ -1,7 +1,7 @@
 local M = {}
 
 ---@param modname string
----@param result table<string, lz.n.Plugin>
+---@param result table<string, lze.Plugin>
 local function import_modname(modname, result)
     local ok, mod = pcall(require, modname)
     if not ok then
@@ -23,12 +23,12 @@ local function import_modname(modname, result)
     M._normalize(mod, result)
 end
 
----@param spec lz.n.SpecImport
----@param result table<string, lz.n.Plugin>
+---@param spec lze.SpecImport
+---@param result table<string, lze.Plugin>
 local function import_spec(spec, result)
-    if spec.import == "lz.n" then
+    if spec.import == "lze" then
         vim.schedule(function()
-            vim.notify("Plugins modules cannot be called 'lz.n'", vim.log.levels.ERROR)
+            vim.notify("Cannot import duplicate module 'lze'", vim.log.levels.ERROR)
         end)
         return
     end
@@ -71,127 +71,59 @@ local function import_spec(spec, result)
     end
 end
 
----@param spec lz.n.PluginSpec
----@return lz.n.Plugin
+---@param spec lze.PluginSpec
+---@return lze.Plugin
 local function parse(spec)
-    ---@type lz.n.Plugin
+    ---@type lze.Plugin
     ---@diagnostic disable-next-line: assign-type-mismatch
     local result = vim.deepcopy(spec)
     result.name = spec[1]
     result[1] = nil
-    local event_spec = spec.event
-    if event_spec then
-        result.event = {}
-    end
-    if type(event_spec) == "string" then
-        local event = require("lz.n.handler.event").parse(event_spec)
-        table.insert(result.event, event)
-    elseif type(event_spec) == "table" then
-        ---@param ev lz.n.EventSpec[]
-        vim.iter(event_spec):each(function(ev)
-            local event = require("lz.n.handler.event").parse(ev)
-            table.insert(result.event, event)
-        end)
-    end
-    local ft_spec = spec.ft
-    if ft_spec then
-        result.event = result.event or {}
-        ---@diagnostic disable-next-line: inject-field
-        result.ft = nil
-    end
-    if type(ft_spec) == "string" then
-        local ft = require("lz.n.handler.ft").parse(ft_spec)
-        table.insert(result.event, ft)
-    elseif type(ft_spec) == "table" then
-        ---@param ft_spec_ string
-        vim.iter(ft_spec):each(function(ft_spec_)
-            local ft = require("lz.n.handler.ft").parse(ft_spec_)
-            table.insert(result.event, ft)
-        end)
-    end
-    local keys_spec = spec.keys
-    if keys_spec then
-        result.keys = {}
-    end
-    if type(keys_spec) == "string" then
-        local keys = require("lz.n.handler.keys").parse(keys_spec)
-        vim.list_extend(result.keys, keys)
-    elseif type(keys_spec) == "table" then
-        ---@param keys_spec_ string | lz.n.KeysSpec
-        vim.iter(keys_spec):each(function(keys_spec_)
-            local keys = require("lz.n.handler.keys").parse(keys_spec_)
-            vim.list_extend(result.keys, keys)
-        end)
-    end
-    local cmd_spec = spec.cmd
-    if cmd_spec then
-        result.cmd = {}
-    end
-    if type(cmd_spec) == "string" then
-        table.insert(result.cmd, cmd_spec)
-    elseif type(cmd_spec) == "table" then
-        ---@param cmd_spec_ string
-        vim.iter(cmd_spec):each(function(cmd_spec_)
-            table.insert(result.cmd, cmd_spec_)
-        end)
-    end
-    local colorscheme_spec = spec.colorscheme
-    if colorscheme_spec then
-        result.colorscheme = {}
-    end
-    if type(colorscheme_spec) == "string" then
-        table.insert(result.colorscheme, colorscheme_spec)
-    elseif type(colorscheme_spec) == "table" then
-        ---@param colorscheme_spec_ string
-        vim.iter(colorscheme_spec):each(function(colorscheme_spec_)
-            table.insert(result.colorscheme, colorscheme_spec_)
-        end)
-    end
-    result.lazy = require("lz.n.handler").is_lazy(spec)
+    result.lazy = require("lze.c.handler").is_lazy(spec)
     return result
 end
 
 ---XXX: This is unsafe because we assume a prior `vim.islist` check
 ---
----@param spec lz.n.Spec
+---@param spec lze.Spec
 ---@return boolean
 local function is_list_with_single_spec_unsafe(spec)
     return #spec == 1 and type(spec[1]) == "table"
 end
 
----@param spec lz.n.Spec
+---@param spec lze.Spec
 ---@return boolean
 function M.is_spec_list(spec)
     return #spec > 1 or vim.islist(spec) and #spec > 1 or is_list_with_single_spec_unsafe(spec)
 end
 
----@param spec lz.n.Spec
+---@param spec lze.Spec
 ---@return boolean
 function M.is_single_plugin_spec(spec)
     return type(spec[1]) == "string"
 end
 
 ---@private
----@param spec lz.n.Spec
----@param result table<string, lz.n.Plugin>
+---@param spec lze.Spec
+---@param result table<string, lze.Plugin>
 function M._normalize(spec, result)
     if M.is_spec_list(spec) then
-        ---@param sp lz.n.Spec
+        ---@param sp lze.Spec
         vim.iter(spec):each(function(sp)
             M._normalize(sp, result)
         end)
     elseif M.is_single_plugin_spec(spec) then
-        ---@cast spec lz.n.PluginSpec
+        ---@cast spec lze.PluginSpec
         result[spec[1]] = parse(spec)
     elseif spec.import then
-        ---@cast spec lz.n.SpecImport
+        ---@cast spec lze.SpecImport
         import_spec(spec, result)
     end
 end
 
----@param result table<string, lz.n.Plugin>
+---@param result table<string, lze.Plugin>
 local function remove_disabled_plugins(result)
-    ---@param plugin lz.n.Plugin
+    ---@param plugin lze.Plugin
     vim.iter(result):each(function(_, plugin)
         local disabled = plugin.enabled == false or (type(plugin.enabled) == "function" and not plugin.enabled())
         if disabled then
@@ -200,8 +132,8 @@ local function remove_disabled_plugins(result)
     end)
 end
 
----@param spec lz.n.Spec
----@return table<string, lz.n.Plugin>
+---@param spec lze.Spec
+---@return table<string, lze.Plugin>
 function M.parse(spec)
     local result = {}
     M._normalize(spec, result)

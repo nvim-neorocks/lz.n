@@ -1,15 +1,15 @@
 ---@diagnostic disable: invisible
-vim.g.lz_n = {
+vim.g.lze = {
     load = function() end,
 }
-local cmd = require("lz.n.handler.cmd")
-local state = require("lz.n.state")
-local loader = require("lz.n.loader")
+local cmd = require("lze.h.cmd")
+local state = require("lze.c.state")
+local loader = require("lze.c.loader")
 local spy = require("luassert.spy")
 
 describe("handlers.cmd", function()
     it("Command only loads plugin once and executes plugin command", function()
-        ---@type lz.n.Plugin
+        ---@type lze.Plugin
         local plugin = {
             name = "foo",
             cmd = { "Foo" },
@@ -32,6 +32,8 @@ describe("handlers.cmd", function()
         assert.spy(spy_load).called(1)
         assert.same(2, counter)
         loader._load = orig_load
+        assert.True(state.loaded[plugin.name])
+        state.loaded[plugin.name] = false
     end)
     it("Multiple commands only load plugin once", function()
         ---@param commands string[]
@@ -43,7 +45,7 @@ describe("handlers.cmd", function()
                 vim.api.nvim_create_user_command("Foo", function() end, {})
                 vim.api.nvim_create_user_command("Bar", function() end, {})
             end
-            ---@type lz.n.Plugin
+            ---@type lze.Plugin
             local plugin = {
                 name = "foo",
                 cmd = commands,
@@ -55,6 +57,8 @@ describe("handlers.cmd", function()
             vim.cmd[commands[2]]()
             assert.spy(spy_load).called(1)
             loader._load = orig_load
+            assert.True(state.loaded[plugin.name])
+            state.loaded[plugin.name] = false
         end
         itt({ "Foo", "Bar" })
         itt({ "Bar", "Foo" })

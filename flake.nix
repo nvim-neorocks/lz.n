@@ -24,7 +24,7 @@
     gen-luarc,
     ...
   }: let
-    name = "lz.n";
+    name = "lze";
 
     pkg-overlay = import ./nix/pkg-overlay.nix {
       inherit name self;
@@ -90,7 +90,8 @@
         };
 
         devShell = pkgs.mkShell {
-          name = "lz.n devShell";
+          name = "lze devShell";
+          DEVSHELL = 0;
           shellHook = ''
             ${pre-commit-check.shellHook}
             ln -fs ${pkgs.luarc-to-json luarc} .luarc.json
@@ -109,9 +110,9 @@
         };
 
         packages = rec {
-          default = lz-n-vimPlugin;
-          lz-n-luaPackage = pkgs.lua51Packages.lz-n;
-          lz-n-vimPlugin = pkgs.vimPlugins.lz-n;
+          default = lze-vimPlugin;
+          lze-luaPackage = pkgs.lua51Packages.${name};
+          lze-vimPlugin = pkgs.vimPlugins.${name};
         };
 
         checks = {

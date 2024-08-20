@@ -3,11 +3,11 @@
   self,
 }: final: prev: let
   packageOverrides = luaself: luaprev: {
-    lz-n = luaself.callPackage ({buildLuarocksPackage}:
+    ${name} = luaself.callPackage ({buildLuarocksPackage}:
       buildLuarocksPackage {
         pname = name;
         version = "scm-1";
-        knownRockspec = "${self}/lz.n-scm-1.rockspec";
+        knownRockspec = "${self}/${name}-scm-1.rockspec";
         src = self;
       }) {};
   };
@@ -20,7 +20,7 @@
   vimPlugins =
     prev.vimPlugins
     // {
-      lz-n = final.neovimUtils.buildNeovimPlugin {
+      ${name} = final.neovimUtils.buildNeovimPlugin {
         pname = name;
         version = "dev";
         src = self;

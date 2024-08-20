@@ -3,7 +3,7 @@
 
 local _MODREV, _SPECREV = 'scm', '-1'
 rockspec_format = '3.0'
-package = 'lz.n'
+package = 'lze'
 version = _MODREV .. _SPECREV
 
 dependencies = {
@@ -15,7 +15,7 @@ test_dependencies = {
 }
 
 source = {
-    url = 'git://github.com/nvim-neorocks/' .. package,
+    url = 'git://github.com/BirdeeHub/' .. package,
 }
 
 build = {

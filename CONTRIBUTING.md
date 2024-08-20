@@ -104,3 +104,9 @@ For static type checking:
 ```console
 nix build .#checks.<your-system>.type-check-nightly -L
 ```
+
+### Current Roadmap
+
+- Further improve tests.
+- Figure out publishing to nixpkgs.
+- Figure out publishing to luarocks.

@@ -1,15 +1,15 @@
-local lz = require("lz.n")
-vim.g.lz_n = {
+local lz = require("lze")
+vim.g.lze = {
     load = function() end,
 }
 local tempdir = vim.fn.tempname()
 vim.system({ "rm", "-r", tempdir }):wait()
 vim.system({ "mkdir", "-p", tempdir .. "/lua/plugins" }):wait()
 
-local loader = require("lz.n.loader")
+local loader = require("lze.c.loader")
 local spy = require("luassert.spy")
 
-describe("lz.n", function()
+describe("lze", function()
     describe("load", function()
         it("import", function()
             local plugin_config_content = [[
@@ -32,7 +32,7 @@ describe("lz.n", function()
         it("import root file", function()
             local plugin_config_content = [[
         return {
-            { "sweetie.nvim" },
+            { "cuteify.nvim" },
             { "bat.nvim", cmd = "Bat" },
         }
         ]]
