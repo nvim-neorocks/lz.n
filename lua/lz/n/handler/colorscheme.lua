@@ -3,10 +3,11 @@ local loader = require("lz.n.loader")
 ---@class lz.n.ColorschemeHandler: lz.n.Handler
 ---@field augroup? integer
 
+local pending = {}
+
 ---@type lz.n.ColorschemeHandler
 local M = {
     ---@type table<string, table<string, lz.n.Plugin[]>>
-    pending = {},
     augroup = nil,
     spec_field = "colorscheme",
 }
@@ -14,24 +15,24 @@ local M = {
 ---@param name string
 ---@return lz.n.Plugin?
 function M.lookup(name)
-    return require("lz.n.handler.extra").lookup(M.pending, name)
+    return require("lz.n.handler.extra").lookup(pending, name)
 end
 
 ---@param name string
 function M.del(name)
-    vim.iter(M.pending):each(function(_, plugins)
+    vim.iter(pending):each(function(_, plugins)
         plugins[name] = nil
     end)
 end
 
 ---@param name string
 local function on_colorscheme(name)
-    local pending = M.pending[name] or {}
-    if vim.tbl_isempty(pending) then
+    local plugins = pending[name] or {}
+    if vim.tbl_isempty(plugins) then
         -- already loaded
         return
     end
-    loader.load(vim.tbl_values(pending))
+    loader.load(vim.tbl_values(plugins))
 end
 
 local function init()
@@ -55,8 +56,8 @@ function M.add(plugin)
     init()
     ---@param colorscheme string
     vim.iter(plugin.colorscheme):each(function(colorscheme)
-        M.pending[colorscheme] = M.pending[colorscheme] or {}
-        M.pending[colorscheme][plugin.name] = plugin
+        pending[colorscheme] = pending[colorscheme] or {}
+        pending[colorscheme][plugin.name] = plugin
     end)
 end
 

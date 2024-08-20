@@ -2,23 +2,24 @@ local loader = require("lz.n.loader")
 
 ---@class lz.n.CmdHandler: lz.n.Handler
 
+---@type table<string, table<string, lz.n.Plugin[]>>
+local pending = {}
+
 ---@type lz.n.CmdHandler
 local M = {
-    ---@type table<string, table<string, lz.n.Plugin[]>>
-    pending = {},
     spec_field = "cmd",
 }
 
 ---@param name string
 ---@return lz.n.Plugin?
 function M.lookup(name)
-    return require("lz.n.handler.extra").lookup(M.pending, name)
+    return require("lz.n.handler.extra").lookup(pending, name)
 end
 
 ---@param cmd string
 local function load(cmd)
     vim.api.nvim_del_user_command(cmd)
-    loader.load(vim.tbl_values(M.pending[cmd]))
+    loader.load(vim.tbl_values(pending[cmd]))
 end
 
 ---@param cmd string
@@ -49,7 +50,7 @@ local function add_cmd(cmd)
         if not info then
             vim.schedule(function()
                 ---@type string
-                local plugins = "`" .. table.concat(vim.tbl_values(M.pending[cmd]), ", ") .. "`"
+                local plugins = "`" .. table.concat(vim.tbl_values(pending[cmd]), ", ") .. "`"
                 vim.notify("Command `" .. cmd .. "` not found after loading " .. plugins, vim.log.levels.ERROR)
             end)
             return
@@ -75,7 +76,7 @@ end
 
 ---@param name string
 function M.del(name)
-    vim.iter(M.pending)
+    vim.iter(pending)
         :filter(function(_, plugins)
             return plugins[name] ~= nil
         end)
@@ -92,8 +93,8 @@ function M.add(plugin)
     end
     ---@param cmd string
     vim.iter(plugin.cmd):each(function(cmd)
-        M.pending[cmd] = M.pending[cmd] or {}
-        M.pending[cmd][plugin.name] = plugin
+        pending[cmd] = pending[cmd] or {}
+        pending[cmd][plugin.name] = plugin
         add_cmd(cmd)
     end)
 end
