@@ -74,7 +74,11 @@ but reduced down to the very basics required for lazy-loading only.
   - Heuristics for determining a `main` module and automatically calling
     a `setup()` function.
   - Heuristics for loading plugins on `require`.
-    You can use [`lzn-auto-require`](https://github.com/horriblename/lzn-auto-require) for that.
+    You can use [`lzn-auto-require`](https://github.com/horriblename/lzn-auto-require)
+    for that.
+  - Plugin spec fields (like `lazy.nvim`'s `dependencies`)
+    for influencing the order in which plugins are loaded.
+    See also: [Plugin dependencies](#plugin-dependencies).
   - Abstractions for plugin configuration with an `opts` table.
     `lz.n` provides simple hooks that you can use to specify
     when to load configurations.
@@ -152,7 +156,36 @@ require("lz.n").load(plugins)
 
 [^3]: This is equivalent to `lazy.nvim`'s `VeryLazy` event.
 
-#### Examples
+### Plugin dependencies
+
+This library does not provide a `lz.n.PluginSpec` field like `lazy.nvim`'s `dependencies`.
+The rationale behind this is that you shouldn't need it.
+Instead, you can utilise the [`trigger_load`](#trigger_load) function
+in a `before` or `after` hook.
+
+However, we generally do not recommend this approach.
+Most plugins primarily rely on the Lua libraries of other plugins,
+which can be added to the `:h package.path` without any noticeable
+impact on startup time.
+
+Relying on another plugin's `plugin` or `after/plugin` scripts is considered a bug,
+as Neovim's built-in loading mechanism does not guarantee initialisation order.
+Requiring users to manually call a `setup` function [is an anti pattern](https://github.com/nvim-neorocks/nvim-best-practices?tab=readme-ov-file#zap-initialization).
+Forcing users to think about the order in which they load plugins that
+extend or depend on each other is even worse. We strongly suggest opening
+an issue or submitting a PR to fix this upstream.
+However, if you're looking for a temporary workaround, you can use
+`trigger_load` in a `before` or `after` hook, or bundle the relevant plugin configurations.
+
+> [!NOTE]
+>
+> This does not work with plugins that rely on `after/plugin`, such as many
+> nvim-cmp sources, because Neovim's `:h packadd` does not source
+> `after/plugin` scripts after startup has completed.
+> We recommend bundling such plugins with their extensions, or sourcing
+> the `after` scripts manually.
+
+### Examples
 
 ```lua
 require("lz.n").load {
@@ -187,8 +220,8 @@ require("lz.n").load {
         end,
     },
     {
-        "nvim-cmp",
-        -- load cmp on InsertEnter
+        "care.nvim",
+        -- load care.nvim on InsertEnter
         event = "InsertEnter",
     },
     {
