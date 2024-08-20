@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.0.0](https://github.com/nvim-neorocks/lz.n/compare/v1.4.4...v2.0.0) (2024-08-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* simplify state management + idempotent `trigger_load` ([#56](https://github.com/nvim-neorocks/lz.n/issues/56))
+
+### Features
+
+* simplify state management + idempotent `trigger_load` ([#56](https://github.com/nvim-neorocks/lz.n/issues/56)) ([701d6ac](https://github.com/nvim-neorocks/lz.n/commit/701d6acc030d1ed6ef16b7efe4d752dbf7d7f13b))
+
+
+### Bug Fixes
+
+* altered loading order for startup plugins ([#49](https://github.com/nvim-neorocks/lz.n/issues/49)) ([50c1454](https://github.com/nvim-neorocks/lz.n/commit/50c145466330c0c5b272fd3904b5655a1613149c))
+
 ## [1.4.4](https://github.com/nvim-neorocks/lz.n/compare/v1.4.3...v1.4.4) (2024-08-09)
 
 
