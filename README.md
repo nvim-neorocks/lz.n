@@ -179,11 +179,17 @@ However, if you're looking for a temporary workaround, you can use
 
 > [!NOTE]
 >
-> This does not work with plugins that rely on `after/plugin`, such as many
-> nvim-cmp sources, because Neovim's `:h packadd` does not source
-> `after/plugin` scripts after startup has completed.
-> We recommend bundling such plugins with their extensions, or sourcing
-> the `after` scripts manually.
+> - This does not work with plugins that rely on `after/plugin`, such as many
+>   nvim-cmp sources, because Neovim's `:h packadd` does not source
+>   `after/plugin` scripts after startup has completed.
+>   We recommend bundling such plugins with their extensions, or sourcing
+>   the `after` scripts manually.
+>
+> - Why not provide a `dependencies` field for plugins that don't adhere
+>   to best practices?
+>   Because it's unnecessary. By using the `before` and `after` hooks,
+>   you gain full control over when to load another plugin, without cluttering
+>   the API.
 
 ### Examples
 
