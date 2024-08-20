@@ -35,6 +35,30 @@ end
 ---@param handler lz.n.Handler
 ---@return boolean success
 function M.register_handler(handler)
+    if not handler.lookup then
+        vim.schedule(function()
+            vim.notify(
+                ([[
+lz.n: handler for %s does not have a 'lookup' function.
+Ignoring.
+]]):format(handler.spec_field),
+                vim.log.levels.WARN
+            )
+        end)
+        return false
+    end
+    if not handler.del then
+        vim.schedule(function()
+            vim.notify(
+                ([[
+lz.n: handler for %s does not have a 'del' function.
+Ignoring.
+]]):format(handler.spec_field),
+                vim.log.levels.WARN
+            )
+        end)
+        return false
+    end
     if handlers[handler.spec_field] == nil then
         handlers[handler.spec_field] = handler
         return true
