@@ -1,7 +1,5 @@
 ---@mod lz.n.loader
 
-local state = require("lz.n.state")
-
 local M = {}
 
 local DEFAULT_PRIORITY = 50
@@ -14,7 +12,7 @@ function M._load(plugin)
     if plugin.enabled == false or (type(plugin.enabled) == "function" and not plugin.enabled()) then
         return
     end
-    require("lz.n.handler").disable(plugin)
+    require("lz.n.handler").disable(plugin.name)
     ---@type fun(name: string) | nil
     local load_impl = plugin.load or vim.tbl_get(vim.g, "lz_n", "load")
     if type(load_impl) == "function" then
@@ -101,7 +99,8 @@ local function hook(hook_key, plugin)
 end
 
 ---@param plugins string | lz.n.Plugin | string[] | lz.n.Plugin[]
-function M.load(plugins)
+---@param lookup? fun(name: string): lz.n.Plugin?
+function M.load(plugins, lookup)
     plugins = (type(plugins) == "string" or plugins.name) and { plugins } or plugins
     ---@cast plugins (string|lz.n.Plugin)[]
     for _, plugin in pairs(plugins) do
@@ -109,9 +108,8 @@ function M.load(plugins)
         -- https://github.com/nvim-neorocks/lz.n/pull/21
         local loadable = true
         if type(plugin) == "string" then
-            if state.plugins[plugin] then
-                plugin = state.plugins[plugin]
-            else
+            plugin = lookup and lookup(plugin) or plugin
+            if type(plugin) == "string" then
                 vim.notify("Plugin " .. plugin .. " not found", vim.log.levels.ERROR, { title = "lz.n" })
                 loadable = false
             end

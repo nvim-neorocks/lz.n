@@ -5,7 +5,6 @@ local event = require("lz.n.handler.event")
 
 ---@type lz.n.FtHandler
 local M = {
-    pending = {},
     spec_field = "ft",
     ---@param value string
     ---@return lz.n.Event
@@ -16,6 +15,7 @@ local M = {
             pattern = value,
         }
     end,
+    lookup = event.lookup,
 }
 
 ---@param plugin lz.n.Plugin
@@ -23,9 +23,9 @@ function M.add(plugin)
     event.add(plugin)
 end
 
----@param plugin lz.n.Plugin
-function M.del(plugin)
-    event.del(plugin)
+---@param name string
+function M.del(name)
+    event.del(name)
 end
 
 return M

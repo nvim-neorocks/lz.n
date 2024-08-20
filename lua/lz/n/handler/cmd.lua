@@ -4,9 +4,16 @@ local loader = require("lz.n.loader")
 
 ---@type lz.n.CmdHandler
 local M = {
+    ---@type table<string, table<string, lz.n.Plugin[]>>
     pending = {},
     spec_field = "cmd",
 }
+
+---@param name string
+---@return lz.n.Plugin?
+function M.lookup(name)
+    return require("lz.n.handler.extra").lookup(M.pending, name)
+end
 
 ---@param cmd string
 local function load(cmd)
@@ -66,12 +73,16 @@ local function add_cmd(cmd)
     })
 end
 
----@param plugin lz.n.Plugin
-function M.del(plugin)
-    pcall(vim.api.nvim_del_user_command, plugin.cmd)
-    vim.iter(M.pending):each(function(_, plugins)
-        plugins[plugin.name] = nil
-    end)
+---@param name string
+function M.del(name)
+    vim.iter(M.pending)
+        :filter(function(_, plugins)
+            return plugins[name] ~= nil
+        end)
+        :each(function(cmd, plugins)
+            pcall(vim.api.nvim_del_user_command, cmd)
+            plugins[name] = nil
+        end)
 end
 
 ---@param plugin lz.n.Plugin
@@ -82,7 +93,7 @@ function M.add(plugin)
     ---@param cmd string
     vim.iter(plugin.cmd):each(function(cmd)
         M.pending[cmd] = M.pending[cmd] or {}
-        M.pending[cmd][plugin.name] = plugin.name
+        M.pending[cmd][plugin.name] = plugin
         add_cmd(cmd)
     end)
 end

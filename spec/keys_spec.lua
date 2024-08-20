@@ -3,7 +3,6 @@ vim.g.lz_n = {
     load = function() end,
 }
 local keys = require("lz.n.handler.keys")
-local state = require("lz.n.state")
 local loader = require("lz.n.loader")
 local spy = require("luassert.spy")
 
@@ -30,7 +29,6 @@ describe("handlers.keys", function()
             keys = keys.parse(lhs),
         }
         local spy_load = spy.on(loader, "_load")
-        state.plugins[plugin.name] = plugin
         keys.add(plugin)
         local feed = vim.api.nvim_replace_termcodes("<Ignore>" .. lhs, true, true, true)
         vim.api.nvim_feedkeys(feed, "ix", false)
@@ -47,7 +45,6 @@ describe("handlers.keys", function()
                 keys = lzkeys,
             }
             local spy_load = spy.on(loader, "_load")
-            state.plugins[plugin.name] = plugin
             keys.add(plugin)
             local feed1 = vim.api.nvim_replace_termcodes("<Ignore>" .. lzkeys[1].lhs, true, true, true)
             vim.api.nvim_feedkeys(feed1, "ix", false)
@@ -74,7 +71,6 @@ describe("handlers.keys", function()
             end)
             orig_load(...)
         end
-        state.plugins[plugin.name] = plugin
         keys.add(plugin)
         local feed = vim.api.nvim_replace_termcodes("<Ignore>" .. lhs, true, true, true)
         vim.api.nvim_feedkeys(feed, "ix", false)

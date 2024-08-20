@@ -3,7 +3,6 @@ vim.g.lz_n = {
     load = function() end,
 }
 local event = require("lz.n.handler.event")
-local state = require("lz.n.state")
 local loader = require("lz.n.loader")
 local spy = require("luassert.spy")
 
@@ -52,7 +51,6 @@ describe("handlers.event", function()
             event = { event.parse("BufEnter") },
         }
         local spy_load = spy.on(loader, "_load")
-        state.plugins[plugin.name] = plugin
         event.add(plugin)
         vim.api.nvim_exec_autocmds("BufEnter", {})
         vim.api.nvim_exec_autocmds("BufEnter", {})
@@ -67,7 +65,6 @@ describe("handlers.event", function()
                 event = events,
             }
             local spy_load = spy.on(loader, "_load")
-            state.plugins[plugin.name] = plugin
             event.add(plugin)
             vim.api.nvim_exec_autocmds(events[1].event, {
                 pattern = ".lua",
@@ -98,7 +95,6 @@ describe("handlers.event", function()
                 group = vim.api.nvim_create_augroup("foo", {}),
             })
         end
-        state.plugins[plugin.name] = plugin
         event.add(plugin)
         vim.api.nvim_exec_autocmds("BufEnter", {})
         assert.True(triggered)
@@ -111,7 +107,6 @@ describe("handlers.event", function()
             event = { event.parse("DeferredUIEnter") },
         }
         local spy_load = spy.on(loader, "_load")
-        state.plugins[plugin.name] = plugin
         event.add(plugin)
         vim.api.nvim_exec_autocmds("User", { pattern = "DeferredUIEnter", modeline = false })
         assert.spy(spy_load).called(1)

@@ -8,6 +8,21 @@ local handlers = {
     colorscheme = require("lz.n.handler.colorscheme"),
 }
 
+---@param name string
+---@return lz.n.Plugin?
+function M.lookup(name)
+    return vim
+        .iter(handlers)
+        ---@param handler lz.n.Handler
+        :map(function(_, handler)
+            return handler.lookup(name)
+        end)
+        ---@param result lz.n.Plugin?
+        :find(function(result)
+            return result ~= nil
+        end)
+end
+
 ---@param spec lz.n.PluginSpec
 ---@return boolean
 function M.is_lazy(spec)
@@ -41,12 +56,11 @@ local function enable(plugin)
     end)
 end
 
-function M.disable(plugin)
+---@param name string
+function M.disable(name)
     ---@param handler lz.n.Handler
     vim.iter(handlers):each(function(_, handler)
-        if handler.del then
-            handler.del(plugin)
-        end
+        handler.del(name)
     end)
 end
 

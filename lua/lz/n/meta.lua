@@ -89,9 +89,18 @@ error("Cannot import a meta module")
 --- @field load? fun(name: string)
 
 --- @class lz.n.Handler
+---
+--- The |lz.n.PluginSpec| field used to configure this handler.
 --- @field spec_field string
+---
+--- Add a plugin to this handler.
 --- @field add fun(plugin: lz.n.Plugin)
---- @field del? fun(plugin: lz.n.Plugin)
+---
+--- Remove a plugin from this handler by name.
+--- @field del fun(name: string)
+---
+--- Lookup a plugin by name.
+--- @field lookup fun(name: string): lz.n.Plugin?
 
 --- @type lz.n.Config
 vim.g.lz_n = vim.g.lz_n
