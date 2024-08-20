@@ -18,10 +18,11 @@ local lz_n_events = {
 
 lz_n_events["User DeferredUIEnter"] = lz_n_events.DeferredUIEnter
 
+---@type table<string, table<string, lz.n.Plugin[]>>
+local pending = {}
+
 ---@type lz.n.EventHandler
 local M = {
-    ---@type table<string, table<string, lz.n.Plugin[]>>
-    pending = {},
     events = {},
     group = vim.api.nvim_create_augroup("lz_n_handler_event", { clear = true }),
     spec_field = "event",
@@ -60,7 +61,7 @@ local M = {
 ---@param name string
 ---@return lz.n.Plugin?
 function M.lookup(name)
-    return require("lz.n.handler.extra").lookup(M.pending, name)
+    return require("lz.n.handler.extra").lookup(pending, name)
 end
 
 -- Get all augroups for an event
@@ -151,14 +152,14 @@ local function add_event(event)
         once = true,
         pattern = event.pattern,
         callback = function(ev)
-            if done or not M.pending[event.id] then
+            if done or not pending[event.id] then
                 return
             end
             -- HACK: work-around for https://github.com/neovim/neovim/issues/25526
             done = true
             local state = get_state(ev.event, ev.buf, ev.data)
             -- load the plugins
-            loader.load(M.pending[event.id])
+            loader.load(pending[event.id])
             -- check if any plugin created an event handler for this event and fire the group
             ---@param s lz.n.EventOpts
             vim.iter(state):each(function(s)
@@ -172,15 +173,15 @@ end
 function M.add(plugin)
     ---@param event lz.n.Event
     vim.iter(plugin.event or {}):each(function(event)
-        M.pending[event.id] = M.pending[event.id] or {}
-        M.pending[event.id][plugin.name] = plugin
+        pending[event.id] = pending[event.id] or {}
+        pending[event.id][plugin.name] = plugin
         add_event(event)
     end)
 end
 
 ---@param name string
 function M.del(name)
-    vim.iter(M.pending):each(function(_, plugins)
+    vim.iter(pending):each(function(_, plugins)
         plugins[name] = nil
     end)
 end

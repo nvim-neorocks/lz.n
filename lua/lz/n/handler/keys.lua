@@ -23,10 +23,11 @@ local function parse(value, mode)
     return ret
 end
 
+---@type table<string, table<string, lz.n.Plugin[]>>
+local pending = {}
+
 ---@type lz.n.KeysHandler
 local M = {
-    ---@type table<string, table<string, lz.n.Plugin[]>>
-    pending = {},
     spec_field = "keys",
     ---@param value string|lz.n.KeysSpec
     ---@return lz.n.Keys[]
@@ -47,7 +48,7 @@ local M = {
 ---@param name string
 ---@return lz.n.Plugin?
 function M.lookup(name)
-    return require("lz.n.handler.extra").lookup(M.pending, name)
+    return require("lz.n.handler.extra").lookup(pending, name)
 end
 
 local skip = { mode = true, id = true, ft = true, rhs = true, lhs = true }
@@ -100,10 +101,10 @@ local function add_keys(keys)
     ---@param buf? number
     local function add(buf)
         vim.keymap.set(keys.mode, lhs, function()
-            local plugins = M.pending[keys.id]
+            local plugins = pending[keys.id]
             -- always delete the mapping immediately to prevent recursive mappings
             del(keys)
-            M.pending[keys.id] = nil
+            pending[keys.id] = nil
             if plugins then
                 loader.load(plugins)
             end
@@ -130,7 +131,7 @@ local function add_keys(keys)
         vim.api.nvim_create_autocmd("FileType", {
             pattern = keys.ft,
             callback = function(event)
-                if M.pending[keys.id] then
+                if pending[keys.id] then
                     add(event.buf)
                 else
                     -- Only create the mapping if its managed by lz.n
@@ -148,15 +149,15 @@ end
 function M.add(plugin)
     ---@param key lz.n.Keys
     vim.iter(plugin.keys or {}):each(function(key)
-        M.pending[key.id] = M.pending[key.id] or {}
-        M.pending[key.id][plugin.name] = plugin
+        pending[key.id] = pending[key.id] or {}
+        pending[key.id][plugin.name] = plugin
         add_keys(key)
     end)
 end
 
 ---@param name string
 function M.del(name)
-    vim.iter(M.pending):each(function(_, plugins)
+    vim.iter(pending):each(function(_, plugins)
         plugins[name] = nil
     end)
 end
