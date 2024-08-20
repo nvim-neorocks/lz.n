@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/nvim-neorocks/lz.n/compare/v2.0.0...v2.1.0) (2024-08-20)
+
+
+### Features
+
+* **api:** watchers ([0d61aa2](https://github.com/nvim-neorocks/lz.n/commit/0d61aa22bb1c55fff1ebb7c6c16b58928794e47b))
+
 ## [2.0.0](https://github.com/nvim-neorocks/lz.n/compare/v1.4.4...v2.0.0) (2024-08-20)
 
 
