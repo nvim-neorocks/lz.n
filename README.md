@@ -462,5 +462,6 @@ or (at your option) any later version.
 [neovim-url]: https://neovim.io/
 [lua-shield]: https://img.shields.io/badge/lua-%232C2D72.svg?style=for-the-badge&logo=lua&logoColor=white
 [lua-url]: https://www.lua.org/
-[luarocks-shield]: https://img.shields.io/luarocks/v/neorocks/lz.n?logo=lua&color=purple&style=for-the-badge
+[luarocks-shield]:
+https://img.shields.io/luarocks/v/neorocks/lz.n?logo=lua&color=purple&style=for-the-badge
 [luarocks-url]: https://luarocks.org/modules/neorocks/lz.n
