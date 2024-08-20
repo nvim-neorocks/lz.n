@@ -380,6 +380,13 @@ require("lz.n").register_handler(handler)
 | lookup     | `fun(name: string):lz.n.Plugin?`    | lookup a plugin managed by this handler by name           |
 <!-- markdownlint-enable MD013 -->
 
+> [!TIP]
+>
+> For some examples, look at
+>
+> - [The built-in handlers](./lua/lz/n/handler)
+> - [The Wiki](https://github.com/nvim-neorocks/lz.n/wiki/Custom-handler-examples)
+
 ### Lua API
 
 The following Lua functions are part of the public API.
