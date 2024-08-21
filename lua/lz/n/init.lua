@@ -25,8 +25,9 @@ end
 --- handlers' `lookup` functions to search for a plugin to load
 --- (loading the first one it finds).
 --- Once a plugin has been loaded, it will be removed from all handlers (via `del`).
---- As a result, calling `trigger_load` with a plugin name is idempotent.
----@param plugins string | lz.n.Plugin | string[] | lz.n.Plugin[] | table<unknown, lz.n.Plugin>
+--- As a result, calling `trigger_load` with a plugin name is stateful and idempotent.
+---@overload fun(plugins: lz.n.Plugin | string[] | lz.n.Plugin[] | table<unknown, lz.n.Plugin>)
+---@overload fun(plugins: string | string[])
 M.trigger_load = function(plugins)
     require("lz.n.loader").load(plugins, M.lookup)
 end

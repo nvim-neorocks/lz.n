@@ -98,8 +98,8 @@ local function hook(hook_key, plugin)
     end
 end
 
----@param plugins string | lz.n.Plugin | string[] | lz.n.Plugin[] | table<unknown, lz.n.Plugin>
----@param lookup? fun(name: string): lz.n.Plugin?
+---@overload fun(plugins: lz.n.Plugin | string[] | lz.n.Plugin[] | table<unknown, lz.n.Plugin>)
+---@overload fun(plugins: string | string[], lookup: fun(name: string): lz.n.Plugin?)
 function M.load(plugins, lookup)
     plugins = (type(plugins) == "string" or plugins.name) and { plugins } or plugins
     ---@cast plugins (string|lz.n.Plugin)[] | table<unknown, lz.n.Plugin>
