@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD028 -->
 # :sloth: lz.n
 
 [![Neovim][neovim-shield]][neovim-url]
