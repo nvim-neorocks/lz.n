@@ -106,20 +106,17 @@ function M.load(plugins, lookup)
     for _, plugin in pairs(plugins) do
         -- NOTE: do not make this loop into vim.iter
         -- https://github.com/nvim-neorocks/lz.n/pull/21
-        local loadable = true
         if type(plugin) == "string" then
             plugin = lookup and lookup(plugin) or plugin
             if type(plugin) == "string" then
                 vim.notify("Plugin " .. plugin .. " not found", vim.log.levels.ERROR, { title = "lz.n" })
-                loadable = false
+                return
             end
             ---@cast plugin lz.n.Plugin
         end
-        if loadable then
-            hook("before", plugin)
-            M._load(plugin)
-            hook("after", plugin)
-        end
+        hook("before", plugin)
+        M._load(plugin)
+        hook("after", plugin)
     end
 end
 
