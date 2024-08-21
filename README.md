@@ -122,6 +122,11 @@ require("lz.n").load(plugins)
 > Or, you can also use it to register individual plugin specs for lazy
 > loading.
 
+> [!IMPORTANT]
+>
+> Since merging configs is out of scope, calling `load()` with conflicting
+> plugin specs is not supported.
+
 ### Plugin spec
 
 <!-- markdownlint-disable MD013 -->
