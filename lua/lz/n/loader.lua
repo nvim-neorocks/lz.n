@@ -98,11 +98,11 @@ local function hook(hook_key, plugin)
     end
 end
 
----@param plugins string | lz.n.Plugin | string[] | lz.n.Plugin[]
+---@param plugins string | lz.n.Plugin | string[] | lz.n.Plugin[] | table<unknown, lz.n.Plugin>
 ---@param lookup? fun(name: string): lz.n.Plugin?
 function M.load(plugins, lookup)
     plugins = (type(plugins) == "string" or plugins.name) and { plugins } or plugins
-    ---@cast plugins (string|lz.n.Plugin)[]
+    ---@cast plugins (string|lz.n.Plugin)[] | table<unknown, lz.n.Plugin>
     for _, plugin in pairs(plugins) do
         -- NOTE: do not make this loop into vim.iter
         -- https://github.com/nvim-neorocks/lz.n/pull/21

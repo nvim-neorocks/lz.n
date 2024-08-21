@@ -3,11 +3,11 @@ local loader = require("lz.n.loader")
 ---@class lz.n.ColorschemeHandler: lz.n.Handler
 ---@field augroup? integer
 
+---@type table<string, table<string, lz.n.Plugin[]>>
 local pending = {}
 
 ---@type lz.n.ColorschemeHandler
 local M = {
-    ---@type table<string, table<string, lz.n.Plugin[]>>
     augroup = nil,
     spec_field = "colorscheme",
 }
@@ -32,7 +32,7 @@ local function on_colorscheme(name)
         -- already loaded
         return
     end
-    loader.load(vim.tbl_values(plugins))
+    loader.load(plugins)
 end
 
 local function init()

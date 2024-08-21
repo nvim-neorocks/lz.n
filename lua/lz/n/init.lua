@@ -26,7 +26,7 @@ end
 --- (loading the first one it finds).
 --- Once a plugin has been loaded, it will be removed from all handlers (via `del`).
 --- As a result, calling `trigger_load` with a plugin name is idempotent.
----@param plugins string | lz.n.Plugin | string[] | lz.n.Plugin[]
+---@param plugins string | lz.n.Plugin | string[] | lz.n.Plugin[] | table<unknown, lz.n.Plugin>
 M.trigger_load = function(plugins)
     require("lz.n.loader").load(plugins, M.lookup)
 end

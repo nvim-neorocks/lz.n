@@ -19,7 +19,7 @@ end
 ---@param cmd string
 local function load(cmd)
     vim.api.nvim_del_user_command(cmd)
-    loader.load(vim.tbl_values(pending[cmd]))
+    loader.load(pending[cmd])
 end
 
 ---@param cmd string
