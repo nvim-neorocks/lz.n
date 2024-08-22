@@ -1,10 +1,9 @@
 # Add flake.nix test inputs as arguments here
 {
   self,
+  inputs,
   plugin-name,
-}: final: prev:
-with final.lib;
-with final.stdenv; let
+}: final: prev: let
   nvim-nightly = final.neovim-nightly;
 
   mkNeorocksTest = {
@@ -40,10 +39,21 @@ with final.stdenv; let
         cp -r tests $out
       '';
     };
+  docgen = final.writeShellApplication {
+    name = "docgen";
+    runtimeInputs = [
+      inputs.vimcats.packages.${final.system}.default
+    ];
+    text = ''
+      mkdir -p doc
+      vimcats lua/lz/n/{init,meta}.lua > doc/lz.n.txt
+    '';
+  };
 in {
   nvim-stable-tests = mkNeorocksTest {name = "neovim-stable-tests";};
   nvim-nightly-tests = mkNeorocksTest {
     name = "neovim-nightly-tests";
     nvim = nvim-nightly;
   };
+  inherit docgen;
 }

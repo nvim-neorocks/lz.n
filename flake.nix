@@ -13,6 +13,8 @@
     neorocks.url = "github:nvim-neorocks/neorocks";
 
     gen-luarc.url = "github:mrcjkb/nix-gen-luarc-json";
+
+    vimcats.url = "github:mrcjkb/vimcats";
   };
 
   outputs = inputs @ {
@@ -45,7 +47,7 @@
         ...
       }: let
         ci-overlay = import ./nix/ci-overlay.nix {
-          inherit self;
+          inherit self inputs;
           plugin-name = name;
         };
 
@@ -86,6 +88,13 @@
                 "CHANGELOG.md"
               ];
             };
+            docgen = {
+              enable = true;
+              name = "docgen";
+              entry = "${pkgs.docgen}/bin/docgen";
+              files = "\\.(lua)$";
+              pass_filenames = false;
+            };
           };
         };
 
@@ -100,6 +109,7 @@
             ++ (with pkgs; [
               lua-language-server
               busted-nlua
+              docgen
             ]);
         };
       in {
