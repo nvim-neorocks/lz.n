@@ -197,6 +197,11 @@ However, if you're looking for a temporary workaround, you can use
 >   you gain full control over when to load another plugin, without cluttering
 >   the API.
 
+> [!TIP]
+>
+> We recommend [care.nvim](https://max397574.github.io/care.nvim/)
+> as a modern alternative to nvim-cmp.
+
 ### Examples
 
 ```lua
