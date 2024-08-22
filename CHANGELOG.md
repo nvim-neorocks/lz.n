@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/nvim-neorocks/lz.n/compare/v2.0.1...v2.1.0) (2024-08-22)
+
+
+### Features
+
+* **api:** ability to filter plugin searches by handlers ([#68](https://github.com/nvim-neorocks/lz.n/issues/68)) ([33a8b19](https://github.com/nvim-neorocks/lz.n/commit/33a8b1945c96b10e50de430906973029596805c1))
+
 ## [2.0.1](https://github.com/nvim-neorocks/lz.n/compare/v2.0.0...v2.0.1) (2024-08-22)
 
 
