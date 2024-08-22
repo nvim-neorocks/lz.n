@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/nvim-neorocks/lz.n/compare/v2.0.0...v2.0.1) (2024-08-22)
+
+
+### Bug Fixes
+
+* **loader:** deterministic ordering when loading lists of plugins ([87b55bd](https://github.com/nvim-neorocks/lz.n/commit/87b55bd5cbba7463eac5de876d40fc6f0341f43d))
+
 ## [2.0.0](https://github.com/nvim-neorocks/lz.n/compare/v1.4.4...v2.0.0) (2024-08-20)
 
 
