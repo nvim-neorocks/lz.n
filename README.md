@@ -415,8 +415,8 @@ The following Lua functions are part of the public API.
 
 #### `trigger_load`
 
-You can manually load a plugin (and run the hooks from the spec)
-with the following function:
+You can manually load a plugin and run its associated hooks
+using the `trigger_load` function:
 
 ```lua
   ---@overload fun(plugin: lz.n.Plugin | lz.n.Plugin[])
@@ -424,31 +424,29 @@ with the following function:
   require('lz.n').trigger_load
 ```
 
-The function accepts plugin names (`string | string[]`, when called in another
-plugin's hook), or `lz.n.Plugin` items (when called by a `lz.n.Handler`).
-If called with a plugin name, it will use the registered
-handlers' `lookup` functions to search for a plugin to load
-(loading the first one it finds).
-Once a plugin has been loaded, it will be removed from all handlers (via `del`).
-As a result, calling `trigger_load` with a plugin name is idempotent.
+The function provides two overloads, each suited for different use cases:
 
-> [!IMPORTANT]
->
-> This can be used to influence the order in which plugins are lazy-loaded,
-> for example when a plugin depends on another one.
->
-> However, we strongly recommend you consider alternatives before doing so.
-> lz.n was designed with automatic dependency management in mind and hence
-> **does not provide an API** to declare dependencies in the `lz.n.PluginSpec`.
-> Plugin dependencies are usually just Lua libraries, which can be added to the
-> `package.path` without any noticeable impact on startup time.
->
-> If a plugin relies on another plugin's `plugin/` or `after/plugin/` scripts
-> having been sourced before it is loaded, we consider this a bug, as this is not
-> supported by Neovim's built-in loading mechanisms.
->
-> Similarly, requiring users to worry about *the order in which they configure*
-> plugins is bad design and defeats the purpose of automatic dependency management.
+1. **Stateless version:**
+    - Usage: `trigger_load(plugin: lz.n.Plugin | lz.n.Plugin[])`
+    - Intended for: Use by a `lz.n.Handler`
+    - Description: This version should be used when working with `lz.n.Handler`
+      instances to maintain referential transparency.
+      Each handler should have full authority over its internal state to prevent
+      conflicts or multiple sources of truth.
+      By using this stateless version, you ensure that the handler's internal state
+      remains isolated and unaffected by external influences[^5].
+2. **Stateful version:**
+    - Usage: `trigger_load(plugin: string | string[], opts: lz.n.lookup.Opts)`
+    - Intended For: Scenarios where handler state is unknown or inaccessible,
+      such as in `before` or `after` hooks.
+    - Description: This version allows you to load plugins by name.
+      It searches through the handlers, querying their `lookup` functions
+      to identify an appropriate plugin, and returns the first match.
+      You can fine-tune the search process by providing a [`lz.n.lookup.Opts` table](#lookup).
+
+[^5]: In theory, conflicts could arise if `load` were to be called multiple
+      times with conflicting plugin specs.
+      However, this is not a supported use case and thus does not pose an issue in practice.
 
 #### `lookup`
 
