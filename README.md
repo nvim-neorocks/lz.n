@@ -389,12 +389,12 @@ require("lz.n").register_handler(handler)
 #### `lz.n.Handler`
 
 <!-- markdownlint-disable MD013 -->
-| Property   | Type                                | Description                                               |
-| ---        | ---                                 | ---                                                       |
-| spec_field | `string`                            | the `lz.n.PluginSpec` field used to configure the handler |
-| add        | `fun(plugin: lz.n.Plugin)`          | adds a plugin to the handler                              |
-| del        | `fun(name: string)`                 | removes a plugin from the handler by name                 |
-| lookup     | `fun(name: string):lz.n.Plugin?`    | lookup a plugin managed by this handler by name           |
+| Property   | Type                       | Description                                               |
+| ---        | ---                        | ---                                                       |
+| spec_field | `string`                   | the `lz.n.PluginSpec` field used to configure the handler |
+| add        | `fun(plugin: lz.n.Plugin)` | adds a plugin to the handler                              |
+| del        | `fun(name: string)`        | removes a plugin from the handler by name                 |
+| lookup     | `fun(name: string`         | lookup a plugin managed by this handler by name           |
 <!-- markdownlint-enable MD013 -->
 
 > [!TIP]
@@ -419,7 +419,8 @@ You can manually load a plugin (and run the hooks from the spec)
 with the following function:
 
 ```lua
-  ---@type fun(plugins: string | string[] | lz.n.Plugin | lz.n.Plugin[])
+  ---@overload fun(plugin: lz.n.Plugin | lz.n.Plugin[])
+  ---@overload fun(plugin: string | string[], opts: lz.n.lookup.Opts)
   require('lz.n').trigger_load
 ```
 
@@ -454,8 +455,19 @@ As a result, calling `trigger_load` with a plugin name is idempotent.
 To lookup a plugin that is pending to be loaded by name, use:
 
 ```lua
-  ---@type fun(name: string):lz.n.Plugin?
+  ---@type fun(name: string, opts: lz.n.lookup.Opts):lz.n.Plugin?
   require('lz.n').lookup
+```
+
+The lookup, as well as `trigger_load(string|string[])` can be
+fine-tuned with a `lz.n.lookup.Opts` table:
+
+```lua
+--- The handlers to include in the search (filtered by `spec_field`)
+--- In case of multiple filters, the order of the filter list
+--- determines the order in which handlers' `lookup` functions are called.
+---@field filter string | string[]
+---@class lz.n.lookup.Opts
 ```
 
 ## :green_heart: Contributing
