@@ -103,7 +103,7 @@ end
 function M.load(plugins, lookup)
     plugins = (type(plugins) == "string" or plugins.name) and { plugins } or plugins
     ---@cast plugins (string|lz.n.Plugin)[] | table<unknown, lz.n.Plugin>
-    for _, plugin in pairs(plugins) do
+    for _, plugin in ipairs(plugins) do
         -- NOTE: do not make this loop into vim.iter
         -- https://github.com/nvim-neorocks/lz.n/pull/21
         if type(plugin) == "string" then
