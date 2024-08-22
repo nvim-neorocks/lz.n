@@ -9,12 +9,27 @@ local handlers = {
 }
 
 ---@param name string
+---@param opts? lz.n.lookup.Opts
 ---@return lz.n.Plugin?
-function M.lookup(name)
+function M.lookup(name, opts)
+    ---@type string | string[] | nil
+    local filter = opts and vim.tbl_get(opts, "filter")
+    if type(filter) == "string" then
+        filter = { filter }
+    end
+    ---@type lz.n.Handler[]
+    local handler_list = filter
+            and vim.iter(filter)
+                :map(function(key)
+                    return handlers[key]
+                end)
+                :totable()
+        or vim.tbl_values(handlers)
+    ---@cast filter string[] | nil
     return vim
-        .iter(handlers)
+        .iter(handler_list)
         ---@param handler lz.n.Handler
-        :map(function(_, handler)
+        :map(function(handler)
             return handler.lookup(name)
         end)
         ---@param result lz.n.Plugin?

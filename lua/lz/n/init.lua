@@ -27,9 +27,11 @@ end
 --- Once a plugin has been loaded, it will be removed from all handlers (via `del`).
 --- As a result, calling `trigger_load` with a plugin name is stateful and idempotent.
 ---@overload fun(plugins: lz.n.Plugin | string[] | lz.n.Plugin[] | table<unknown, lz.n.Plugin>)
----@overload fun(plugins: string | string[])
-M.trigger_load = function(plugins)
-    require("lz.n.loader").load(plugins, M.lookup)
+---@overload fun(plugins: string | string[], opts: lz.n.lookup.Opts)
+M.trigger_load = function(plugins, opts)
+    require("lz.n.loader").load(plugins, function(name)
+        return M.lookup(name, opts)
+    end)
 end
 
 ---@overload fun(spec: lz.n.Spec)
@@ -63,11 +65,19 @@ function M.load(spec)
     end
 end
 
----Lookup a plugin that is pending to be loaded by name.
+--- Lookup a plugin that is pending to be loaded by name.
 ---@param name string
+---@param opts? lz.n.lookup.Opts
 ---@return lz.n.Plugin?
-function M.lookup(name)
-    return require("lz.n.handler").lookup(name)
+function M.lookup(name, opts)
+    return require("lz.n.handler").lookup(name, opts)
 end
+
+---@class lz.n.lookup.Opts
+---
+--- The handlers to include in the search (filtered by `spec_field`)
+--- In case of multiple filters, the order of the filter list
+--- determines the order in which handlers' `lookup` functions are called.
+---@field filter string | string[]
 
 return M
