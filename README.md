@@ -190,6 +190,9 @@ However, if you're looking for a temporary workaround, you can use
 >   `after/plugin` scripts after startup has completed.
 >   We recommend bundling such plugins with their extensions, or sourcing
 >   the `after` scripts manually.
+>   In the spirit of the UNIX philosophy, `lz.n` does not provide any functions
+>   for sourcing plugin scripts. For sourcing `after/plugin` directories
+>   manually, you can use [`rtp.nvim`](https://github.com/nvim-neorocks/rtp.nvim).
 >
 > - Why not provide a `dependencies` field for plugins that don't adhere
 >   to best practices?
