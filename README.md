@@ -431,10 +431,9 @@ The function provides two overloads, each suited for different use cases:
     - Intended for: Use by a `lz.n.Handler`
     - Description: This version should be used when working with `lz.n.Handler`
       instances to maintain referential transparency.
-      Each handler should have full authority over its internal state to prevent
-      conflicts or multiple sources of truth.
-      By using this stateless version, you ensure that the handler's internal state
-      remains isolated and unaffected by external influences[^5].
+      Each handler has full authority over its internal state, ensuring it
+      remains isolated and unaffected by external influences[^5],
+      thereby preventing multiple sources of truth.
 2. **Stateful version:**
     - Usage: `trigger_load(plugin: string | string[], opts?: lz.n.lookup.Opts)`
     - Intended for: Scenarios where handler state is unknown or inaccessible,
@@ -444,9 +443,7 @@ The function provides two overloads, each suited for different use cases:
       to identify an appropriate plugin, and returns the first match.
       You can fine-tune the search process by providing a [`lz.n.lookup.Opts` table](#lookup).
 
-[^5]: In theory, conflicts could arise if `load` were to be called multiple
-      times with conflicting plugin specs.
-      However, this is not a supported use case and thus does not pose an issue in practice.
+[^5]: Until the handler is instructed to stop tracking a loaded plugin via its `del` function.
 
 #### `lookup`
 
