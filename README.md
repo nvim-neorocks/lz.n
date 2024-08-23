@@ -458,11 +458,12 @@ The lookup, as well as `trigger_load(string|string[])` can be
 fine-tuned with a `lz.n.lookup.Opts` table:
 
 ```lua
+---@class lz.n.lookup.Opts
+---
 --- The handlers to include in the search (filtered by `spec_field`)
 --- In case of multiple filters, the order of the filter list
 --- determines the order in which handlers' `lookup` functions are called.
 ---@field filter string | string[]
----@class lz.n.lookup.Opts
 ```
 
 ## :green_heart: Contributing
