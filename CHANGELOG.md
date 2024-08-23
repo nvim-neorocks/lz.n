@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/nvim-neorocks/lz.n/compare/v2.1.0...v2.2.0) (2024-08-23)
+
+
+### Features
+
+* **trigger_load:** return list of skipped plugins instead of failing ([#70](https://github.com/nvim-neorocks/lz.n/issues/70)) ([9c74d06](https://github.com/nvim-neorocks/lz.n/commit/9c74d06fdcc1429a07bacc96003bd29b073b53bc))
+
 ## [2.1.0](https://github.com/nvim-neorocks/lz.n/compare/v2.0.1...v2.1.0) (2024-08-22)
 
 
