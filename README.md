@@ -437,7 +437,7 @@ The function provides two overloads, each suited for different use cases:
       remains isolated and unaffected by external influences[^5].
 2. **Stateful version:**
     - Usage: `trigger_load(plugin: string | string[], opts: lz.n.lookup.Opts)`
-    - Intended For: Scenarios where handler state is unknown or inaccessible,
+    - Intended for: Scenarios where handler state is unknown or inaccessible,
       such as in `before` or `after` hooks.
     - Description: This version allows you to load plugins by name.
       It searches through the handlers, querying their `lookup` functions
