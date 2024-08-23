@@ -436,7 +436,7 @@ The function provides two overloads, each suited for different use cases:
       By using this stateless version, you ensure that the handler's internal state
       remains isolated and unaffected by external influences[^5].
 2. **Stateful version:**
-    - Usage: `trigger_load(plugin: string | string[], opts: lz.n.lookup.Opts)`
+    - Usage: `trigger_load(plugin: string | string[], opts?: lz.n.lookup.Opts)`
     - Intended for: Scenarios where handler state is unknown or inaccessible,
       such as in `before` or `after` hooks.
     - Description: This version allows you to load plugins by name.
