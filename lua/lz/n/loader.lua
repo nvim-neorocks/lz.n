@@ -99,26 +99,33 @@ local function hook(hook_key, plugin)
 end
 
 ---@overload fun(plugins: lz.n.Plugin | string[] | lz.n.Plugin[] | table<unknown, lz.n.Plugin>)
----@overload fun(plugins: string | string[], lookup: fun(name: string): lz.n.Plugin?)
+---@overload fun(plugins: string | string[], lookup: fun(name: string): lz.n.Plugin?): string[]
 function M.load(plugins, lookup)
     local iterator = vim.islist(plugins) and ipairs or pairs
     plugins = (type(plugins) == "string" or plugins.name) and { plugins } or plugins
     ---@cast plugins (string|lz.n.Plugin)[] | table<unknown, lz.n.Plugin>
+    ---@type string[]
+    local skipped = {}
     for _, plugin in iterator(plugins) do
+        local loadable = true
         -- NOTE: do not make this loop into vim.iter
         -- https://github.com/nvim-neorocks/lz.n/pull/21
         if type(plugin) == "string" then
+            ---@diagnostic disable-next-line: cast-local-type
             plugin = lookup and lookup(plugin) or plugin
             if type(plugin) == "string" then
-                vim.notify("Plugin " .. plugin .. " not found", vim.log.levels.ERROR, { title = "lz.n" })
-                return
+                loadable = false
+                table.insert(skipped, plugin)
             end
             ---@cast plugin lz.n.Plugin
         end
-        hook("before", plugin)
-        M._load(plugin)
-        hook("after", plugin)
+        if loadable then
+            hook("before", plugin)
+            M._load(plugin)
+            hook("after", plugin)
+        end
     end
+    return skipped
 end
 
 return M

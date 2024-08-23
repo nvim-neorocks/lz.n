@@ -420,7 +420,7 @@ using the `trigger_load` function:
 
 ```lua
   ---@overload fun(plugin: lz.n.Plugin | lz.n.Plugin[])
-  ---@overload fun(plugin: string | string[], opts: lz.n.lookup.Opts)
+  ---@overload fun(plugin_name: string | string[], opts: lz.n.lookup.Opts): string[]
   require('lz.n').trigger_load
 ```
 
@@ -435,7 +435,9 @@ The function provides two overloads, each suited for different use cases:
       remains isolated and unaffected by external influences[^5],
       thereby preventing multiple sources of truth.
 2. **Stateful version:**
-    - Usage: `trigger_load(plugin: string | string[], opts?: lz.n.lookup.Opts)`
+    - Usage: `trigger_load(plugin_name: string | string[], opts?: lz.n.lookup.Opts)`
+    - Returns: A list of plugin names that were skipped
+      (empty if all plugins were loaded).
     - Intended for: Scenarios where handler state is unknown or inaccessible,
       such as in `before` or `after` hooks.
     - Description: This version allows you to load plugins by name.
