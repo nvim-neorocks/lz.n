@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/nvim-neorocks/lz.n/compare/v2.2.0...v2.3.0) (2024-08-26)
+
+
+### Features
+
+* vimdoc ([#65](https://github.com/nvim-neorocks/lz.n/issues/65)) ([c8c06af](https://github.com/nvim-neorocks/lz.n/commit/c8c06af2ac674d6a77c1c49c89ce2a2220ca3826))
+
 ## [2.2.0](https://github.com/nvim-neorocks/lz.n/compare/v2.1.0...v2.2.0) (2024-08-23)
 
 
