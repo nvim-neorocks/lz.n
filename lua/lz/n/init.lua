@@ -1,4 +1,17 @@
 ---@mod lz.n
+---
+---@brief [[
+---A dead simple lazy-loading Lua library for Neovim plugins.
+---
+---It is intended to be used
+---
+---- by users of plugin managers that don't provide a convenient API for lazy-loading.
+---- by plugin managers, to provide a convenient API for lazy-loading.
+---@brief ]]
+
+---@toc lz.n.contents
+
+---@mod lz.n.api lz.n Lua API
 
 local M = {}
 
@@ -14,20 +27,27 @@ local deferred_ui_enter = vim.schedule_wrap(function()
     vim.api.nvim_exec_autocmds("User", { pattern = "DeferredUIEnter", modeline = false })
 end)
 
----@type fun(handler: lz.n.Handler): boolean
-M.register_handler = function(...)
-    return require("lz.n.handler").register_handler(...)
-end
-
---- Accepts plugin names (`string | string[]`, when called in another
---- plugin's hook), or |lz.n.Plugin| items (when called by a |lz.n.Handler|).
---- If called with a plugin name, it will use the registered
---- handlers' `lookup` functions to search for a plugin to load
---- (loading the first one it finds).
---- Once a plugin has been loaded, it will be removed from all handlers (via `del`).
---- As a result, calling `trigger_load` with a plugin name is stateful and idempotent.
+--- The function provides two overloads, each suited for different use cases:
+---
 ---@overload fun(plugins: lz.n.Plugin | string[] | lz.n.Plugin[] | table<unknown, lz.n.Plugin>)
+--- **Stateless version:**
+---   - Intended for: Use by a `lz.n.Handler`
+---   - Description: This version should be used when working with `lz.n.Handler`
+---     instances to maintain referential transparency.
+---     Each handler has full authority over its internal state, ensuring it
+---     remains isolated and unaffected by external influences,
+---     thereby preventing multiple sources of truth.
+---
 ---@overload fun(plugins: string | string[], opts: lz.n.lookup.Opts): string[]
+--- **Stateful version:**
+---   - Returns: A list of plugin names that were skipped
+---     (empty if all plugins were loaded).
+---   - Intended for: Scenarios where handler state is unknown or inaccessible,
+---     such as in `before` or `after` hooks.
+---   - Description: This version allows you to load plugins by name.
+---     It searches through the handlers, querying their `lookup` functions
+---     to identify an appropriate plugin, and returns the first match.
+---     You can fine-tune the search process by providing a [`lz.n.lookup.Opts` table](#lookup).
 M.trigger_load = function(plugins, opts)
     return require("lz.n.loader").load(plugins, function(name)
         return M.lookup(name, opts)
@@ -35,7 +55,10 @@ M.trigger_load = function(plugins, opts)
 end
 
 ---@overload fun(spec: lz.n.Spec)
+---Register a list with your plugin specs or a single plugin spec to be lazy-loaded.
+---
 ---@overload fun(import: string)
+---Register a Lua module name that contains your plugin spec(s) to be lazy-loaded.
 function M.load(spec)
     if type(spec) == "string" then
         spec = { import = spec }
@@ -79,5 +102,12 @@ end
 --- In case of multiple filters, the order of the filter list
 --- determines the order in which handlers' `lookup` functions are called.
 ---@field filter string | string[]
+
+---Register a custom handler.
+---@param handler lz.n.Handler
+---@return boolean success
+M.register_handler = function(handler)
+    return require("lz.n.handler").register_handler(handler)
+end
 
 return M

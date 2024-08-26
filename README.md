@@ -119,9 +119,11 @@ require("lz.n").load(plugins)
 
 > [!TIP]
 >
-> You can call `load()` as you would call `lazy.nvim`'s `setup()`.
-> Or, you can also use it to register individual plugin specs for lazy
-> loading.
+> - You can call `load()` as you would call `lazy.nvim`'s `setup()`.
+>   Or, you can also use it to register individual plugin specs for lazy
+>   loading.
+>
+> - See also: [`:h lz.n`](./doc/lz.n.txt)
 
 > [!IMPORTANT]
 >
