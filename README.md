@@ -195,6 +195,7 @@ However, if you're looking for a temporary workaround, you can use
 >   In the spirit of the UNIX philosophy, `lz.n` does not provide any functions
 >   for sourcing plugin scripts. For sourcing `after/plugin` directories
 >   manually, you can use [`rtp.nvim`](https://github.com/nvim-neorocks/rtp.nvim).
+>   [Here is an example](https://github.com/nvim-neorocks/lz.n/wiki/lazy%E2%80%90loading-nvim%E2%80%90cmp-and-its-extensions).
 >
 > - Why not provide a `dependencies` field for plugins that don't adhere
 >   to best practices?
