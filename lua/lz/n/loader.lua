@@ -4,8 +4,6 @@ local M = {}
 
 local DEFAULT_PRIORITY = 50
 
-local DEFAULT_COLORSCHEME_PRIORITY = 1000
-
 ---@package
 ---@param plugin lz.n.Plugin
 function M._load(plugin)
@@ -43,7 +41,7 @@ end
 
 ---@param plugin lz.n.Plugin
 local function get_priority(plugin)
-    return plugin.priority or (plugin.colorscheme and DEFAULT_COLORSCHEME_PRIORITY) or DEFAULT_PRIORITY
+    return plugin.priority or DEFAULT_PRIORITY
 end
 
 ---@param plugins table<string, lz.n.Plugin>
