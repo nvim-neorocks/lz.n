@@ -32,7 +32,16 @@ local function on_colorscheme(name)
         -- already loaded
         return
     end
-    loader.load(plugins)
+    -- Make sure trigger_load calls in before hooks can't interfere with the state,
+    -- but they can load a plugin before it's loaded by this handler
+    vim
+        .iter(vim.deepcopy(pending[name]))
+        ---@param plugin lz.n.Plugin
+        :each(function(_, plugin)
+            if pending[name][plugin.name] then
+                loader.load(plugin)
+            end
+        end)
 end
 
 local function init()

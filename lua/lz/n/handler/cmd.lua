@@ -17,9 +17,21 @@ function M.lookup(name)
 end
 
 ---@param cmd string
+---@return string[] loaded_plugin_names
 local function load(cmd)
     vim.api.nvim_del_user_command(cmd)
-    loader.load(pending[cmd])
+    local plugins = pending[cmd]
+    -- Make sure trigger_load calls in before hooks can't interfere with the state,
+    -- but they can load a plugin before it's loaded by this handler
+    vim
+        .iter(vim.deepcopy(pending[cmd]))
+        ---@param plugin lz.n.Plugin
+        :each(function(_, plugin)
+            if pending[cmd][plugin.name] then
+                loader.load(plugin)
+            end
+        end)
+    return vim.tbl_keys(plugins)
 end
 
 ---@param cmd string
@@ -44,14 +56,14 @@ local function add_cmd(cmd)
             command.range = { event.line1, event.line2 }
         end
 
-        load(cmd)
+        local plugin_names = load(cmd)
 
         local info = vim.api.nvim_get_commands({})[cmd] or vim.api.nvim_buf_get_commands(0, {})[cmd]
         if not info then
             vim.schedule(function()
                 ---@type string
-                local plugins = "`" .. table.concat(vim.tbl_values(pending[cmd]), ", ") .. "`"
-                vim.notify("Command `" .. cmd .. "` not found after loading " .. plugins, vim.log.levels.ERROR)
+                local plugins_str = "`" .. table.concat(plugin_names, ", ") .. "`"
+                vim.notify("Command `" .. cmd .. "` not found after loading " .. plugins_str, vim.log.levels.ERROR)
             end)
             return
         end
