@@ -240,12 +240,12 @@ state.new()                                                          *state.new*
 lz.n.handler.State                                          *lz.n.handler.State*
 
     Fields: ~
-        {insert}               (fun(key:string,plugin:lz.n.Plugin))
-                                                                                    Insert a plugin by key.
+        {insert}               (fun(key?:string,plugin:lz.n.Plugin))
+                                                                                    Insert a plugin (optionally, by key).
         {del}                  (fun(plugin_name:string,callback?:fun(key:string)))
                                                                                     Remove a plugin by its name.
-        {has_pending_plugins}  (fun(key:string):boolean)
-                                                                                    Check if there are pending plugins for a key
+        {has_pending_plugins}  (fun(key?:string):boolean)
+                                                                                    Check if there are pending plugins (optionally, by key)
         {lookup_plugin}        (fun(plugin_name:string):lz.n.Plugin)
                                                                                     Lookup a plugin by its name.
 

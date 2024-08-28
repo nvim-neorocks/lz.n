@@ -13,9 +13,17 @@ function state.new()
     ---@type table<string, table<string, lz.n.Plugin>>
     local pending = {}
 
+    local DEFAULT_KEY = "lz.n.handler.State.DEFAULT_KEY"
+
     ---@type lz.n.handler.State
     return {
+        ---@overload fun(key: string, plugin: lz.n.Plugin)
+        ---@overload fun(plugin: lz.n.Plugin)
         insert = function(key, plugin)
+            if type(key) ~= "string" then
+                plugin = key
+                key = DEFAULT_KEY
+            end
             pending[key] = pending[key] or {}
             pending[key][plugin.name] = plugin
         end,
@@ -38,6 +46,7 @@ function state.new()
         end,
 
         has_pending_plugins = function(key)
+            key = key or DEFAULT_KEY
             return pending[key] ~= nil and not vim.tbl_isempty(pending[key])
         end,
 
@@ -54,7 +63,13 @@ function state.new()
                 end)
         end,
 
+        ---@overload fun(key: string, callback: fun(plugin: lz.n.Plugin)): string[]
+        ---@overload fun(callback: fun(plugin: lz.n.Plugin)): string[]
         each_pending = function(key, callback)
+            if type(key) ~= "string" then
+                callback = key
+                key = DEFAULT_KEY
+            end
             local plugins = pending[key] or {}
             vim
                 .iter(vim.deepcopy(plugins))
@@ -71,19 +86,20 @@ end
 
 ---@class lz.n.handler.State
 ---
----Insert a plugin by key.
----@field insert fun(key: string, plugin: lz.n.Plugin)
+---Insert a plugin (optionally, by key).
+---@field insert fun(key?: string, plugin: lz.n.Plugin)
 ---
 ---Remove a plugin by its name.
 ---@field del fun(plugin_name: string, callback?: fun(key: string))
 ---
----Check if there are pending plugins for a key
----@field has_pending_plugins fun(key: string):boolean
+---Check if there are pending plugins (optionally, by key)
+---@field has_pending_plugins fun(key?: string):boolean
 ---
 ---Lookup a plugin by its name.
 ---@field lookup_plugin fun(plugin_name: string):lz.n.Plugin?
 ---
----Safely apply a callback to all pending plugins by key.
----@field each_pending fun(key: string, callback: fun(plugin: lz.n.Plugin)): string[]
+---Safely apply a callback to all pending plugins
+---(optionally, by key).
+---@field each_pending fun(key?: string, callback: fun(plugin: lz.n.Plugin)): string[]
 
 return state
