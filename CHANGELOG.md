@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.1](https://github.com/nvim-neorocks/lz.n/compare/v2.5.0...v2.5.1) (2024-08-28)
+
+
+### Bug Fixes
+
+* **vimdoc:** duplicate tag ([ef2194d](https://github.com/nvim-neorocks/lz.n/commit/ef2194d277da3707074c7754aa3928ca74638169))
+
 ## [2.5.0](https://github.com/nvim-neorocks/lz.n/compare/v2.4.0...v2.5.0) (2024-08-28)
 
 
