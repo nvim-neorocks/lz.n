@@ -3,8 +3,8 @@ local loader = require("lz.n.loader")
 ---@class lz.n.ColorschemeHandler: lz.n.Handler
 ---@field augroup? integer
 
----@type table<string, table<string, lz.n.Plugin[]>>
-local pending = {}
+---@type lz.n.handler.State
+local state = require("lz.n.handler.state").new()
 
 ---@type lz.n.ColorschemeHandler
 local M = {
@@ -15,33 +15,17 @@ local M = {
 ---@param name string
 ---@return lz.n.Plugin?
 function M.lookup(name)
-    return require("lz.n.handler.extra").lookup(pending, name)
+    return state.lookup_plugin(name)
 end
 
 ---@param name string
 function M.del(name)
-    vim.iter(pending):each(function(_, plugins)
-        plugins[name] = nil
-    end)
+    state.del(name)
 end
 
 ---@param name string
 local function on_colorscheme(name)
-    local plugins = pending[name] or {}
-    if vim.tbl_isempty(plugins) then
-        -- already loaded
-        return
-    end
-    -- Make sure trigger_load calls in before hooks can't interfere with the state,
-    -- but they can load a plugin before it's loaded by this handler
-    vim
-        .iter(vim.deepcopy(pending[name]))
-        ---@param plugin lz.n.Plugin
-        :each(function(_, plugin)
-            if pending[name][plugin.name] then
-                loader.load(plugin)
-            end
-        end)
+    state.each_pending(name, loader.load)
 end
 
 local function init()
@@ -65,8 +49,7 @@ function M.add(plugin)
     init()
     ---@param colorscheme string
     vim.iter(plugin.colorscheme):each(function(colorscheme)
-        pending[colorscheme] = pending[colorscheme] or {}
-        pending[colorscheme][plugin.name] = plugin
+        state.insert(colorscheme, plugin)
     end)
 end
 
