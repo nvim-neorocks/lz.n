@@ -15,7 +15,7 @@ function state.new()
 
     local DEFAULT_KEY = "lz.n.handler.State.DEFAULT_KEY"
 
-    ---@type lz.n.handler.State
+    ---@class lz.n.handler.State
     return {
         ---@overload fun(key: string, plugin: lz.n.Plugin)
         ---@overload fun(plugin: lz.n.Plugin)
@@ -87,7 +87,7 @@ end
 ---@class lz.n.handler.State
 ---
 ---Insert a plugin (optionally, by key).
----@field insert fun(key?: string, plugin: lz.n.Plugin)
+---@field insert fun(key: string, plugin: lz.n.Plugin) | fun(plugin: lz.n.Plugin)
 ---
 ---Remove a plugin by its name.
 ---@field del fun(plugin_name: string, callback?: fun(key: string))
@@ -100,6 +100,6 @@ end
 ---
 ---Safely apply a callback to all pending plugins
 ---(optionally, by key).
----@field each_pending fun(key?: string, callback: fun(plugin: lz.n.Plugin)): string[]
+---@field each_pending fun(key: string, callback: fun(plugin: lz.n.Plugin)): string[] | fun(callback: fun(plugin: lz.n.Plugin)): string[]
 
 return state
