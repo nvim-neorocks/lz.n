@@ -101,13 +101,18 @@ local function add_keys(keys)
     ---@param buf? number
     local function add(buf)
         vim.keymap.set(keys.mode, lhs, function()
-            local plugins = pending[keys.id]
             -- always delete the mapping immediately to prevent recursive mappings
             del(keys)
-            pending[keys.id] = nil
-            if plugins then
-                loader.load(plugins)
-            end
+            -- Make sure trigger_load calls in before hooks can't interfere with the state,
+            -- but they can load a plugin before it's loaded by this handler
+            vim
+                .iter(vim.deepcopy(pending[keys.id]))
+                ---@param plugin lz.n.Plugin
+                :each(function(_, plugin)
+                    if pending[keys.id][plugin.name] then
+                        loader.load(plugin)
+                    end
+                end)
             -- Create the real buffer-local mapping
             if keys.ft then
                 set(keys, buf)

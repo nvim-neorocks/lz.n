@@ -158,9 +158,16 @@ local function add_event(event)
             -- HACK: work-around for https://github.com/neovim/neovim/issues/25526
             done = true
             local state = get_state(ev.event, ev.buf, ev.data)
-            -- load the plugins
-            loader.load(pending[event.id])
-            -- check if any plugin created an event handler for this event and fire the group
+            -- Make sure trigger_load calls in before hooks can't interfere with the state,
+            -- but they can load a plugin before it's loaded by this handler
+            vim
+                .iter(vim.deepcopy(pending[event.id]))
+                ---@param plugin lz.n.Plugin
+                :each(function(_, plugin)
+                    if pending[event.id][plugin.name] then
+                        loader.load(plugin)
+                    end
+                end)
             ---@param s lz.n.EventOpts
             vim.iter(state):each(function(s)
                 trigger(s)
