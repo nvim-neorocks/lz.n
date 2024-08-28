@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.0](https://github.com/nvim-neorocks/lz.n/compare/v2.4.0...v2.5.0) (2024-08-28)
+
+
+### Features
+
+* support a simplified handler.state API without keys ([180eb92](https://github.com/nvim-neorocks/lz.n/commit/180eb920f0e32ccf76db4cc84d36ef4a18e41769))
+
 ## [2.4.0](https://github.com/nvim-neorocks/lz.n/compare/v2.3.0...v2.4.0) (2024-08-28)
 
 
