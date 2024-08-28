@@ -404,7 +404,8 @@ require("lz.n").register_handler(handler)
 <!-- markdownlint-enable MD013 -->
 
 To manage handler state safely, ensuring `trigger_load` can be invoked from
-within a plugin's hooks, it is recommended to use the `:h lz.n.handler.state` module.
+within a plugin's hooks, it is recommended to use
+the [`:h lz.n.handler.state`](./doc/lz.n.txt) module.
 
 > [!TIP]
 >
