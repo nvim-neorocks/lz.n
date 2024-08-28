@@ -1,6 +1,17 @@
 {
   description = "Add laziness to your favourite plugin manager!";
 
+  nixConfig = {
+    extra-substituters = [
+      "https://neorocks.cachix.org"
+      "https://mrcjkb.cachix.org" # for vimcats
+    ];
+    extra-trusted-public-keys = [
+      "neorocks.cachix.org-1:WqMESxmVTOJX7qoBC54TwrMMoVI1xAM+7yFin8NRfwk="
+      "mrcjkb.cachix.org-1:KhpstvH5GfsuEFOSyGjSTjng8oDecEds7rbrI96tjA4="
+    ];
+  };
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
