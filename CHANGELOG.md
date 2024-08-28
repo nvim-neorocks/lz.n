@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.2](https://github.com/nvim-neorocks/lz.n/compare/v2.5.1...v2.5.2) (2024-08-28)
+
+
+### Bug Fixes
+
+* **vimdoc:** missing lz.n.State field ([a1d34cd](https://github.com/nvim-neorocks/lz.n/commit/a1d34cdf78c9c82bdaf35bb306c70c95575b1d01))
+
 ## [2.5.1](https://github.com/nvim-neorocks/lz.n/compare/v2.5.0...v2.5.1) (2024-08-28)
 
 
