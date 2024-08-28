@@ -150,9 +150,6 @@ function M.add(plugin)
     end)
 end
 
----@param name string
-function M.del(name)
-    state.del(name)
-end
+M.del = state.del
 
 return M

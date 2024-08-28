@@ -18,10 +18,7 @@ function M.lookup(name)
     return state.lookup_plugin(name)
 end
 
----@param name string
-function M.del(name)
-    state.del(name)
-end
+M.del = state.del
 
 ---@param name string
 local function on_colorscheme(name)
