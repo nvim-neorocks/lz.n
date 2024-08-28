@@ -101,12 +101,15 @@ end
 ---@overload fun(plugins: lz.n.Plugin | string[] | lz.n.Plugin[] | table<unknown, lz.n.Plugin>)
 ---@overload fun(plugins: string | string[], lookup: fun(name: string): lz.n.Plugin?): string[]
 function M.load(plugins, lookup)
-    local iterator = vim.islist(plugins) and ipairs or pairs
     plugins = (type(plugins) == "string" or plugins.name) and { plugins } or plugins
-    ---@cast plugins (string|lz.n.Plugin)[] | table<unknown, lz.n.Plugin>
+    if not vim.islist(plugins) then
+        -- This ensures we can use ipairs to preserve ordering of lists
+        plugins = vim.tbl_values(plugins)
+    end
+    ---@cast plugins (string|lz.n.Plugin)[]
     ---@type string[]
     local skipped = {}
-    for _, plugin in iterator(plugins) do
+    for _, plugin in ipairs(plugins) do
         local loadable = true
         -- NOTE: do not make this loop into vim.iter
         -- https://github.com/nvim-neorocks/lz.n/pull/21
