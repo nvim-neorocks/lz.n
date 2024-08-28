@@ -95,7 +95,7 @@ end
 ---@field has_pending_plugins fun(key?: string):boolean
 ---
 ---Lookup a plugin by its name.
----@field lookup_plugin fun(plugin_name: string):lz.n.Plugin?
+---@field lookup_plugin fun(plugin_name: string):(lz.n.Plugin | nil)
 ---
 ---Safely apply a callback to all pending plugins
 ---(optionally, by key).

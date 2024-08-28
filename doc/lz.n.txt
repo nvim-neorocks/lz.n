@@ -241,13 +241,16 @@ lz.n.handler.State                                          *lz.n.handler.State*
 
     Fields: ~
         {insert}               (fun(key:string,plugin:lz.n.Plugin)|fun(plugin:lz.n.Plugin))
-                                                                                             Insert a plugin (optionally, by key).
+                                                                                                                                           Insert a plugin (optionally, by key).
         {del}                  (fun(plugin_name:string,callback?:fun(key:string)))
-                                                                                             Remove a plugin by its name.
+                                                                                                                                           Remove a plugin by its name.
         {has_pending_plugins}  (fun(key?:string):boolean)
-                                                                                             Check if there are pending plugins (optionally, by key)
-        {lookup_plugin}        (fun(plugin_name:string):lz.n.Plugin)
-                                                                                             Lookup a plugin by its name.
+                                                                                                                                           Check if there are pending plugins (optionally, by key)
+        {lookup_plugin}        (fun(plugin_name:string):lz.n.Plugin|nil)
+                                                                                                                                           Lookup a plugin by its name.
+        {each_pending}         (fun(key:string,callback:fun(plugin:lz.n.Plugin)):string[]|fun(callback:fun(plugin:lz.n.Plugin)):string[])
+                                                                                                                                           Safely apply a callback to all pending plugins
+                                                                                                                                           (optionally, by key).
 
 
 vim:tw=78:ts=8:noet:ft=help:norl:
