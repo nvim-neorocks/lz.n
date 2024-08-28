@@ -29,7 +29,7 @@ end)
 
 --- The function provides two overloads, each suited for different use cases:
 ---
----@overload fun(plugins: lz.n.Plugin | string[] | lz.n.Plugin[] | table<unknown, lz.n.Plugin>)
+---@overload fun(plugin: lz.n.Plugin)
 --- **Stateless version:**
 ---   - Intended for: Use by a `lz.n.Handler`
 ---   - Description: This version should be used when working with `lz.n.Handler`
@@ -37,8 +37,13 @@ end)
 ---     Each handler has full authority over its internal state, ensuring it
 ---     remains isolated and unaffected by external influences,
 ---     thereby preventing multiple sources of truth.
+---   - Note: If loading multiple plugins simultaneously,
+---     handlers should iterate over |vim.deepcopy| of the plugins,
+---     verifying they are still pending before each `trigger_load` call.
+---     This practice allows for safe invocation of the stateful `trigger_load`
+---     in `before` and `after` hooks.
 ---
----@overload fun(plugins: string | string[], opts: lz.n.lookup.Opts): string[]
+---@overload fun(plugins: string | string[], opts?: lz.n.lookup.Opts): string[]
 --- **Stateful version:**
 ---   - Returns: A list of plugin names that were skipped
 ---     (empty if all plugins were loaded).

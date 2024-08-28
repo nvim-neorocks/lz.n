@@ -98,14 +98,16 @@ local function hook(hook_key, plugin)
     end
 end
 
----@overload fun(plugins: lz.n.Plugin | string[] | lz.n.Plugin[] | table<unknown, lz.n.Plugin>)
+---@overload fun(plugin: lz.n.Plugin)
 ---@overload fun(plugins: string | string[], lookup: fun(name: string): lz.n.Plugin?): string[]
 function M.load(plugins, lookup)
-    local iterator = vim.islist(plugins) and ipairs or pairs
+    local islist = vim.islist(plugins)
+    local iterator = islist and ipairs or pairs
     plugins = (type(plugins) == "string" or plugins.name) and { plugins } or plugins
     ---@cast plugins (string|lz.n.Plugin)[] | table<unknown, lz.n.Plugin>
     ---@type string[]
     local skipped = {}
+    local plugin_spec_count = 0 -- used to detect deprecated use
     for _, plugin in iterator(plugins) do
         local loadable = true
         -- NOTE: do not make this loop into vim.iter
@@ -117,12 +119,31 @@ function M.load(plugins, lookup)
                 loadable = false
                 table.insert(skipped, plugin)
             end
-            ---@cast plugin lz.n.Plugin
+        else
+            plugin_spec_count = plugin_spec_count + 1
         end
+        ---@cast plugin lz.n.Plugin
         if loadable then
             hook("before", plugin)
             M._load(plugin)
             hook("after", plugin)
+        end
+    end
+    if plugin_spec_count > 1 then
+        if islist then
+            vim.deprecate(
+                "'trigger_load(plugins: lz.n.PluginSpec[])'",
+                "'trigger_load(plugin: lz.n.PluginSpec)'",
+                "3.0.0",
+                "lz.n"
+            )
+        else
+            vim.deprecate(
+                "'trigger_load(plugins: table<T, lz.n.PluginSpec[]>)'",
+                "'trigger_load(plugin: lz.n.PluginSpec)'",
+                "3.0.0",
+                "lz.n"
+            )
         end
     end
     return skipped
