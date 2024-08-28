@@ -433,20 +433,25 @@ using the `trigger_load` function:
 The function provides two overloads, each suited for different use cases:
 
 1. **Stateless version:**
-    - Usage: `trigger_load(plugin: lz.n.Plugin | lz.n.Plugin[])`
-    - Intended for: Use by a `lz.n.Handler`
-    - Description: This version should be used when working with `lz.n.Handler`
+    - *Usage:* `trigger_load(plugin: lz.n.Plugin)`
+    - *Intended for:* Use by a `lz.n.Handler`
+    - *Description:* This version should be used when working with `lz.n.Handler`
       instances to maintain referential transparency.
       Each handler has full authority over its internal state, ensuring it
       remains isolated and unaffected by external influences[^5],
       thereby preventing multiple sources of truth.
+    - *Note:* If loading multiple plugins simultaneously,
+      handlers should iterate over a deep copy (`:h vim.deepcopy`) of the plugins,
+      verifying they are still pending before each `trigger_load` call.
+      This practice allows for safe invocation of the stateful `trigger_load`
+      in `before` and `after` hooks.
 2. **Stateful version:**
-    - Usage: `trigger_load(plugin_name: string | string[], opts?: lz.n.lookup.Opts)`
-    - Returns: A list of plugin names that were skipped
+    - *Usage:* `trigger_load(plugin_name: string | string[], opts?: lz.n.lookup.Opts)`
+    - *Returns:* A list of plugin names that were skipped
       (empty if all plugins were loaded).
-    - Intended for: Scenarios where handler state is unknown or inaccessible,
+    - *Intended for:* Scenarios where handler state is unknown or inaccessible,
       such as in `before` or `after` hooks.
-    - Description: This version allows you to load plugins by name.
+    - *Description:* This version allows you to load plugins by name.
       It searches through the handlers, querying their `lookup` functions
       to identify an appropriate plugin, and returns the first match.
       You can fine-tune the search process by providing a [`lz.n.lookup.Opts` table](#lookup).
