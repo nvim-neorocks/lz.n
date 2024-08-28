@@ -239,9 +239,6 @@ state.new()                                                          *state.new*
 
 lz.n.handler.State                                          *lz.n.handler.State*
 
-
-lz.n.handler.State                                          *lz.n.handler.State*
-
     Fields: ~
         {insert}               (fun(key:string,plugin:lz.n.Plugin)|fun(plugin:lz.n.Plugin))
                                                                                              Insert a plugin (optionally, by key).

@@ -15,7 +15,6 @@ function state.new()
 
     local DEFAULT_KEY = "lz.n.handler.State.DEFAULT_KEY"
 
-    ---@class lz.n.handler.State
     return {
         ---@overload fun(key: string, plugin: lz.n.Plugin)
         ---@overload fun(plugin: lz.n.Plugin)
