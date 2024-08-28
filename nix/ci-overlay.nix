@@ -46,7 +46,7 @@
     ];
     text = ''
       mkdir -p doc
-      vimcats lua/lz/n/{init,meta}.lua > doc/lz.n.txt
+      vimcats lua/lz/n/{init,meta,handler/state}.lua > doc/lz.n.txt
     '';
   };
 in {

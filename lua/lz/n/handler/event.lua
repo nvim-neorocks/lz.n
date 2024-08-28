@@ -18,8 +18,8 @@ local lz_n_events = {
 
 lz_n_events["User DeferredUIEnter"] = lz_n_events.DeferredUIEnter
 
----@type table<string, table<string, lz.n.Plugin[]>>
-local pending = {}
+---@type lz.n.handler.State
+local state = require("lz.n.handler.state").new()
 
 ---@type lz.n.EventHandler
 local M = {
@@ -61,7 +61,7 @@ local M = {
 ---@param name string
 ---@return lz.n.Plugin?
 function M.lookup(name)
-    return require("lz.n.handler.extra").lookup(pending, name)
+    return state.lookup_plugin(name)
 end
 
 -- Get all augroups for an event
@@ -89,7 +89,7 @@ local event_triggers = {
 ---@return lz.n.EventOpts[]
 local function get_state(event, buf, data)
     ---@type lz.n.EventOpts[]
-    local state = {}
+    local st = {}
     while event do
         ---@type lz.n.EventOpts
         local event_opts = {
@@ -98,11 +98,11 @@ local function get_state(event, buf, data)
             buffer = buf,
             data = data,
         }
-        table.insert(state, 1, event_opts)
+        table.insert(st, 1, event_opts)
         data = nil -- only pass the data to the first event
         event = event_triggers[event]
     end
-    return state
+    return st
 end
 
 -- Trigger an event
@@ -152,24 +152,15 @@ local function add_event(event)
         once = true,
         pattern = event.pattern,
         callback = function(ev)
-            if done or not pending[event.id] then
+            if done or not state.has_pending_plugins(event.id) then
                 return
             end
             -- HACK: work-around for https://github.com/neovim/neovim/issues/25526
             done = true
-            local state = get_state(ev.event, ev.buf, ev.data)
-            -- Make sure trigger_load calls in before hooks can't interfere with the state,
-            -- but they can load a plugin before it's loaded by this handler
-            vim
-                .iter(vim.deepcopy(pending[event.id]))
-                ---@param plugin lz.n.Plugin
-                :each(function(_, plugin)
-                    if pending[event.id][plugin.name] then
-                        loader.load(plugin)
-                    end
-                end)
+            local st = get_state(ev.event, ev.buf, ev.data)
+            state.each_pending(event.id, loader.load)
             ---@param s lz.n.EventOpts
-            vim.iter(state):each(function(s)
+            vim.iter(st):each(function(s)
                 trigger(s)
             end)
         end,
@@ -180,17 +171,14 @@ end
 function M.add(plugin)
     ---@param event lz.n.Event
     vim.iter(plugin.event or {}):each(function(event)
-        pending[event.id] = pending[event.id] or {}
-        pending[event.id][plugin.name] = plugin
+        state.insert(event.id, plugin)
         add_event(event)
     end)
 end
 
 ---@param name string
 function M.del(name)
-    vim.iter(pending):each(function(_, plugins)
-        plugins[name] = nil
-    end)
+    state.del(name)
 end
 
 return M

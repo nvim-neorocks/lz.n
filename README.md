@@ -403,6 +403,9 @@ require("lz.n").register_handler(handler)
 | lookup     | `fun(name: string): lz.n.Plugin?` | lookup a plugin managed by this handler by name           |
 <!-- markdownlint-enable MD013 -->
 
+To manage handler state safely, ensuring `trigger_load` can be invoked from
+within a plugin's hooks, it is recommended to use the `:h lz.n.handler.state` module.
+
 > [!TIP]
 >
 > For some examples, look at
@@ -440,11 +443,6 @@ The function provides two overloads, each suited for different use cases:
       Each handler has full authority over its internal state, ensuring it
       remains isolated and unaffected by external influences[^5],
       thereby preventing multiple sources of truth.
-    - *Note:* If loading multiple plugins simultaneously,
-      handlers should iterate over a deep copy (`:h vim.deepcopy`) of the plugins,
-      verifying they are still pending before each `trigger_load` call.
-      This practice allows for safe invocation of the stateful `trigger_load`
-      in `before` and `after` hooks.
 2. **Stateful version:**
     - *Usage:* `trigger_load(plugin_name: string | string[], opts?: lz.n.lookup.Opts)`
     - *Returns:* A list of plugin names that were skipped

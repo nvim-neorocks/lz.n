@@ -23,8 +23,8 @@ local function parse(value, mode)
     return ret
 end
 
----@type table<string, table<string, lz.n.Plugin[]>>
-local pending = {}
+---@type lz.n.handler.State
+local state = require("lz.n.handler.state").new()
 
 ---@type lz.n.KeysHandler
 local M = {
@@ -48,7 +48,7 @@ local M = {
 ---@param name string
 ---@return lz.n.Plugin?
 function M.lookup(name)
-    return require("lz.n.handler.extra").lookup(pending, name)
+    return state.lookup_plugin(name)
 end
 
 local skip = { mode = true, id = true, ft = true, rhs = true, lhs = true }
@@ -103,16 +103,7 @@ local function add_keys(keys)
         vim.keymap.set(keys.mode, lhs, function()
             -- always delete the mapping immediately to prevent recursive mappings
             del(keys)
-            -- Make sure trigger_load calls in before hooks can't interfere with the state,
-            -- but they can load a plugin before it's loaded by this handler
-            vim
-                .iter(vim.deepcopy(pending[keys.id]))
-                ---@param plugin lz.n.Plugin
-                :each(function(_, plugin)
-                    if pending[keys.id][plugin.name] then
-                        loader.load(plugin)
-                    end
-                end)
+            state.each_pending(keys.id, loader.load)
             -- Create the real buffer-local mapping
             if keys.ft then
                 set(keys, buf)
@@ -136,7 +127,7 @@ local function add_keys(keys)
         vim.api.nvim_create_autocmd("FileType", {
             pattern = keys.ft,
             callback = function(event)
-                if pending[keys.id] then
+                if state.has_pending_plugins[keys.id] then
                     add(event.buf)
                 else
                     -- Only create the mapping if its managed by lz.n
@@ -154,17 +145,14 @@ end
 function M.add(plugin)
     ---@param key lz.n.Keys
     vim.iter(plugin.keys or {}):each(function(key)
-        pending[key.id] = pending[key.id] or {}
-        pending[key.id][plugin.name] = plugin
+        state.insert(key.id, plugin)
         add_keys(key)
     end)
 end
 
 ---@param name string
 function M.del(name)
-    vim.iter(pending):each(function(_, plugins)
-        plugins[name] = nil
-    end)
+    state.del(name)
 end
 
 return M

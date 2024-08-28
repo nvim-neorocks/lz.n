@@ -2,8 +2,8 @@ local loader = require("lz.n.loader")
 
 ---@class lz.n.CmdHandler: lz.n.Handler
 
----@type table<string, table<string, lz.n.Plugin[]>>
-local pending = {}
+---@type lz.n.handler.State
+local state = require("lz.n.handler.state").new()
 
 ---@type lz.n.CmdHandler
 local M = {
@@ -13,25 +13,14 @@ local M = {
 ---@param name string
 ---@return lz.n.Plugin?
 function M.lookup(name)
-    return require("lz.n.handler.extra").lookup(pending, name)
+    return state.lookup_plugin(name)
 end
 
 ---@param cmd string
 ---@return string[] loaded_plugin_names
 local function load(cmd)
     vim.api.nvim_del_user_command(cmd)
-    local plugins = pending[cmd]
-    -- Make sure trigger_load calls in before hooks can't interfere with the state,
-    -- but they can load a plugin before it's loaded by this handler
-    vim
-        .iter(vim.deepcopy(pending[cmd]))
-        ---@param plugin lz.n.Plugin
-        :each(function(_, plugin)
-            if pending[cmd][plugin.name] then
-                loader.load(plugin)
-            end
-        end)
-    return vim.tbl_keys(plugins)
+    return state.each_pending(cmd, loader.load)
 end
 
 ---@param cmd string
@@ -88,14 +77,9 @@ end
 
 ---@param name string
 function M.del(name)
-    vim.iter(pending)
-        :filter(function(_, plugins)
-            return plugins[name] ~= nil
-        end)
-        :each(function(cmd, plugins)
-            pcall(vim.api.nvim_del_user_command, cmd)
-            plugins[name] = nil
-        end)
+    state.del(name, function(cmd)
+        pcall(vim.api.nvim_del_user_command, cmd)
+    end)
 end
 
 ---@param plugin lz.n.Plugin
@@ -105,8 +89,7 @@ function M.add(plugin)
     end
     ---@param cmd string
     vim.iter(plugin.cmd):each(function(cmd)
-        pending[cmd] = pending[cmd] or {}
-        pending[cmd][plugin.name] = plugin
+        state.insert(cmd, plugin)
         add_cmd(cmd)
     end)
 end

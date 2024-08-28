@@ -14,6 +14,7 @@ Table of Contents                                                *lz.n.contents*
  ········································································ |lz.n|
 lz.n Lua API ························································ |lz.n.api|
 lz.n type definitions ············································· |lz.n.types|
+Safe state management for handlers ························ |lz.n.handler.state|
 
 ==============================================================================
 lz.n Lua API                                                          *lz.n.api*
@@ -221,6 +222,32 @@ lz.n.Handler                                                      *lz.n.Handler*
                                                        Remove a plugin from this handler by name.
         {lookup}      (fun(name:string):lz.n.Plugin)
                                                        Lookup a plugin by name.
+
+
+==============================================================================
+Safe state management for handlers                          *lz.n.handler.state*
+
+This module is to be used by |lz.n.Handler| implementations.
+It provides an API for safely managing handler state,
+ensuring that `trigger_load` can be called in plugin hooks.
+
+state.new()                                                          *state.new*
+
+    Returns: ~
+        (lz.n.handler.State)
+
+
+lz.n.handler.State                                          *lz.n.handler.State*
+
+    Fields: ~
+        {insert}               (fun(key:string,plugin:lz.n.Plugin))
+                                                                                    Insert a plugin by key.
+        {del}                  (fun(plugin_name:string,callback?:fun(key:string)))
+                                                                                    Remove a plugin by its name.
+        {has_pending_plugins}  (fun(key:string):boolean)
+                                                                                    Check if there are pending plugins for a key
+        {lookup_plugin}        (fun(plugin_name:string):lz.n.Plugin)
+                                                                                    Lookup a plugin by its name.
 
 
 vim:tw=78:ts=8:noet:ft=help:norl:
