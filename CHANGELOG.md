@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.4.0](https://github.com/nvim-neorocks/lz.n/compare/v2.3.0...v2.4.0) (2024-08-28)
+
+
+### Features
+
+* deprecate trigger_load with lists of plugin specs ([8611566](https://github.com/nvim-neorocks/lz.n/commit/8611566831f9f0da68b51ca8c5274049d2928265))
+* handler.state module ([efe92fa](https://github.com/nvim-neorocks/lz.n/commit/efe92fa725afcd8ac02b97866f7f41cba0d21a4f))
+
+
+### Bug Fixes
+
+* handler resilience against trigger_load calls in hooks ([163b247](https://github.com/nvim-neorocks/lz.n/commit/163b2471e287e3ed9f6ca14ecaaa3e25aeb84c49))
+* lookup now returns deep copy ([#74](https://github.com/nvim-neorocks/lz.n/issues/74)) ([dac14fb](https://github.com/nvim-neorocks/lz.n/commit/dac14fb5db15c7f3c6a37470e03603cc4601ff60))
+
 ## [2.3.0](https://github.com/nvim-neorocks/lz.n/compare/v2.2.0...v2.3.0) (2024-08-26)
 
 
