@@ -401,6 +401,7 @@ require("lz.n").register_handler(handler)
 | add        | `fun(plugin: lz.n.Plugin)`        | adds a plugin to the handler                              |
 | del        | `fun(name: string)`               | removes a plugin from the handler by name                 |
 | lookup     | `fun(name: string): lz.n.Plugin?` | lookup a plugin managed by this handler by name           |
+| post_load        | `fun()?`               | ran once after each `require('lze').load` call, for handlers to create custom triggers such as the event handler's DeferredUIEnter event |
 <!-- markdownlint-enable MD013 -->
 
 To manage handler state safely, ensuring `trigger_load` can be invoked from

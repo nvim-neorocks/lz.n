@@ -178,4 +178,24 @@ end
 
 M.del = state.del
 
+local deferred_ui_enter = vim.schedule_wrap(function()
+    if vim.v.exiting ~= vim.NIL then
+        return
+    end
+    vim.g.lz_n_did_deferred_ui_enter = true
+    vim.api.nvim_exec_autocmds("User", { pattern = "DeferredUIEnter", modeline = false })
+end)
+
+function M.post_load()
+    if vim.v.vim_did_enter == 1 then
+        deferred_ui_enter()
+    elseif not vim.g.lz_n_did_create_deferred_ui_enter_autocmd then
+        vim.api.nvim_create_autocmd("UIEnter", {
+            once = true,
+            callback = deferred_ui_enter,
+        })
+        vim.g.lz_n_did_create_deferred_ui_enter_autocmd = true
+    end
+end
+
 return M
