@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.0](https://github.com/nvim-neorocks/lz.n/compare/v2.5.2...v2.6.0) (2024-08-30)
+
+
+### Features
+
+* **api:** `handler.post_load` for setting up custom events ([#82](https://github.com/nvim-neorocks/lz.n/issues/82)) ([ed9b8a4](https://github.com/nvim-neorocks/lz.n/commit/ed9b8a4a1c9add4a46da241a41ac3349531c3dbc))
+
 ## [2.5.2](https://github.com/nvim-neorocks/lz.n/compare/v2.5.1...v2.5.2) (2024-08-28)
 
 
