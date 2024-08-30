@@ -104,7 +104,7 @@
 ---@field lookup fun(name: string): lz.n.Plugin?
 ---
 ---For setting up handler specific triggers such as
----the DeferredUIEnter event created by the builtin
+---the `DeferredUIEnter` event created by the builtin
 ---event handler. Called once after each call to require("lz.n").load
 ---@field post_load? fun()
 
