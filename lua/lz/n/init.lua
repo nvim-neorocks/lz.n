@@ -19,14 +19,6 @@ if vim.fn.has("nvim-0.10.0") ~= 1 then
     error("lz.n requires Neovim >= 0.10.0")
 end
 
-local deferred_ui_enter = vim.schedule_wrap(function()
-    if vim.v.exiting ~= vim.NIL then
-        return
-    end
-    vim.g.lz_n_did_deferred_ui_enter = true
-    vim.api.nvim_exec_autocmds("User", { pattern = "DeferredUIEnter", modeline = false })
-end)
-
 --- The function provides two overloads, each suited for different use cases:
 ---
 ---@overload fun(plugin: lz.n.Plugin)
@@ -82,15 +74,7 @@ function M.load(spec)
     -- `require('lz.n').trigger_load()` safely
     require("lz.n.loader").load_startup_plugins(plugins)
 
-    if vim.v.vim_did_enter == 1 then
-        deferred_ui_enter()
-    elseif not vim.g.lz_n_did_create_deferred_ui_enter_autocmd then
-        vim.api.nvim_create_autocmd("UIEnter", {
-            once = true,
-            callback = deferred_ui_enter,
-        })
-        vim.g.lz_n_did_create_deferred_ui_enter_autocmd = true
-    end
+    require("lz.n.handler").run_post_load()
 end
 
 --- Lookup a plugin that is pending to be loaded by name.

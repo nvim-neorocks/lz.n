@@ -105,6 +105,15 @@ function M.disable(name)
     end)
 end
 
+function M.run_post_load()
+    ---@param handler lz.n.Handler
+    vim.iter(handlers):each(function(_, handler)
+        if handler.post_load then
+            handler.post_load()
+        end
+    end)
+end
+
 ---@param plugins table<string, lz.n.Plugin>
 function M.init(plugins)
     ---@param plugin lz.n.Plugin
