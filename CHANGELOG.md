@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.1](https://github.com/nvim-neorocks/lz.n/compare/v2.6.0...v2.6.1) (2024-08-31)
+
+
+### Bug Fixes
+
+* error when applying colorscheme in after hook on event trigger ([#86](https://github.com/nvim-neorocks/lz.n/issues/86)) ([bc619dd](https://github.com/nvim-neorocks/lz.n/commit/bc619dd3b1acee9a13268acb7c49878ce8e8bda5))
+
 ## [2.6.0](https://github.com/nvim-neorocks/lz.n/compare/v2.5.2...v2.6.0) (2024-08-30)
 
 
