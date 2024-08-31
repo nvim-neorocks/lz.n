@@ -150,6 +150,7 @@ local function add_event(event)
     vim.api.nvim_create_autocmd(event.event, {
         group = M.group,
         once = true,
+        nested = true,
         pattern = event.pattern,
         callback = function(ev)
             if done or not state.has_pending_plugins(event.id) then
@@ -157,10 +158,10 @@ local function add_event(event)
             end
             -- HACK: work-around for https://github.com/neovim/neovim/issues/25526
             done = true
-            local st = get_state(ev.event, ev.buf, ev.data)
+            local state_before_load = get_state(ev.event, ev.buf, ev.data)
             state.each_pending(event.id, loader.load)
             ---@param s lz.n.EventOpts
-            vim.iter(st):each(function(s)
+            vim.iter(state_before_load):each(function(s)
                 trigger(s)
             end)
         end,
@@ -192,6 +193,7 @@ function M.post_load()
     elseif not vim.g.lz_n_did_create_deferred_ui_enter_autocmd then
         vim.api.nvim_create_autocmd("UIEnter", {
             once = true,
+            nested = true,
             callback = deferred_ui_enter,
         })
         vim.g.lz_n_did_create_deferred_ui_enter_autocmd = true
