@@ -34,6 +34,7 @@ local function init()
         callback = function(event)
             on_colorscheme(event.match)
         end,
+        nested = true,
         group = M.augroup,
     })
 end
