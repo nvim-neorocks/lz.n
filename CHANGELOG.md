@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.0](https://github.com/nvim-neorocks/lz.n/compare/v2.6.1...v2.7.0) (2024-09-16)
+
+
+### Features
+
+* move handler field parsing logic to handlers ([#92](https://github.com/nvim-neorocks/lz.n/issues/92)) ([33796ea](https://github.com/nvim-neorocks/lz.n/commit/33796eae1d810c28475a8d8e69e9c906fa855703))
+
 ## [2.6.1](https://github.com/nvim-neorocks/lz.n/compare/v2.6.0...v2.6.1) (2024-08-31)
 
 
