@@ -8,6 +8,20 @@ local state = require("lz.n.handler.state").new()
 ---@type lz.n.CmdHandler
 local M = {
     spec_field = "cmd",
+    ---@param cmd_spec? string[]|string
+    parse = function(result, cmd_spec)
+        if cmd_spec then
+            result.cmd = {}
+        end
+        if type(cmd_spec) == "string" then
+            table.insert(result.cmd, cmd_spec)
+        elseif type(cmd_spec) == "table" then
+            ---@param cmd_spec_ string
+            vim.iter(cmd_spec):each(function(cmd_spec_)
+                table.insert(result.cmd, cmd_spec_)
+            end)
+        end
+    end,
 }
 
 ---@param name string
@@ -20,6 +34,7 @@ end
 ---@return string[] loaded_plugin_names
 local function load(cmd)
     vim.api.nvim_del_user_command(cmd)
+    ---@diagnostic disable-next-line: return-type-mismatch
     return state.each_pending(cmd, loader.load)
 end
 

@@ -10,7 +10,6 @@ local loader = require("lz.n.loader")
 ---@class lz.n.EventHandler: lz.n.Handler
 ---@field events table<string,true>
 ---@field group number
----@field parse fun(spec: lz.n.EventSpec): lz.n.Event
 
 local lz_n_events = {
     DeferredUIEnter = { id = "DeferredUIEnter", event = "User", pattern = "DeferredUIEnter" },
@@ -21,40 +20,57 @@ lz_n_events["User DeferredUIEnter"] = lz_n_events.DeferredUIEnter
 ---@type lz.n.handler.State
 local state = require("lz.n.handler.state").new()
 
+---@param spec lz.n.EventSpec
+local function parse(spec)
+    local ret = lz_n_events[spec]
+    if ret then
+        return ret
+    end
+    if type(spec) == "string" then
+        local event, pattern = spec:match("^(%w+)%s+(.*)$")
+        event = event or spec
+        return { id = spec, event = event, pattern = pattern }
+    elseif vim.islist(spec) then
+        ret = { id = table.concat(spec, "|"), event = spec }
+    else
+        ret = spec --[[@as lz.n.Event]]
+        if not ret.id then
+            ---@diagnostic disable-next-line: assign-type-mismatch, param-type-mismatch
+            ret.id = type(ret.event) == "string" and ret.event or table.concat(ret.event, "|")
+            if ret.pattern then
+                ---@diagnostic disable-next-line: assign-type-mismatch, param-type-mismatch
+                ret.id = ret.id
+                    .. " "
+                    .. (
+                        type(ret.pattern) == "string" and ret.pattern
+                        or table.concat(ret.pattern --[[@as table]], ", ")
+                    )
+            end
+        end
+    end
+    return ret
+end
+
 ---@type lz.n.EventHandler
 local M = {
     events = {},
     group = vim.api.nvim_create_augroup("lz_n_handler_event", { clear = true }),
     spec_field = "event",
-    ---@param spec lz.n.EventSpec
-    parse = function(spec)
-        local ret = lz_n_events[spec]
-        if ret then
-            return ret
+    ---@param event_spec? lz.n.EventSpec
+    parse = function(plugin, event_spec)
+        if event_spec then
+            plugin.event = {}
         end
-        if type(spec) == "string" then
-            local event, pattern = spec:match("^(%w+)%s+(.*)$")
-            event = event or spec
-            return { id = spec, event = event, pattern = pattern }
-        elseif vim.islist(spec) then
-            ret = { id = table.concat(spec, "|"), event = spec }
-        else
-            ret = spec --[[@as lz.n.Event]]
-            if not ret.id then
-                ---@diagnostic disable-next-line: assign-type-mismatch, param-type-mismatch
-                ret.id = type(ret.event) == "string" and ret.event or table.concat(ret.event, "|")
-                if ret.pattern then
-                    ---@diagnostic disable-next-line: assign-type-mismatch, param-type-mismatch
-                    ret.id = ret.id
-                        .. " "
-                        .. (
-                            type(ret.pattern) == "string" and ret.pattern
-                            or table.concat(ret.pattern --[[@as table]], ", ")
-                        )
-                end
-            end
+        if type(event_spec) == "string" or type(event_spec) == "table" and (event_spec.event or event_spec.pattern) then
+            local event = parse(event_spec)
+            table.insert(plugin.event, event)
+        elseif type(event_spec) == "table" then
+            ---@param ev lz.n.EventSpec[]
+            vim.iter(event_spec):each(function(ev)
+                local event = parse(ev)
+                table.insert(plugin.event, event)
+            end)
         end
-        return ret
     end,
 }
 

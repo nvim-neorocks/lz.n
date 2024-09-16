@@ -103,10 +103,15 @@
 --- Lookup a plugin by name.
 ---@field lookup fun(name: string): lz.n.Plugin?
 ---
----For setting up handler specific triggers such as
----the `DeferredUIEnter` event created by the builtin
----event handler. Called once after each call to require("lz.n").load
+--- For setting up handler specific triggers such as
+--- the `DeferredUIEnter` event created by the builtin
+--- event handler. Called once after each call to require("lz.n").load
 ---@field post_load? fun()
+---
+--- If a handler needs to transform the spec passed in by users
+--- and add it to the plugin spec, this can be done here.
+--- If unset, lz.n will add the `handler_spec` to the `lz.n.Plugin` as is.
+---@field parse? fun(plugin: lz.n.Plugin, spec: unknown)
 
 ---@type lz.n.Config
 vim.g.lz_n = vim.g.lz_n
