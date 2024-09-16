@@ -395,13 +395,14 @@ require("lz.n").register_handler(handler)
 #### `lz.n.Handler`
 
 <!-- markdownlint-disable MD013 -->
-| Property   | Type                              | Description                                               |
-| ---        | ---                               | ---                                                       |
-| spec_field | `string`                          | the `lz.n.PluginSpec` field used to configure the handler |
-| add        | `fun(plugin: lz.n.Plugin)`        | adds a plugin to the handler                              |
-| del        | `fun(name: string)`               | removes a plugin from the handler by name                 |
-| lookup     | `fun(name: string): lz.n.Plugin?` | lookup a plugin managed by this handler by name           |
-| post_load        | `fun()?`               | ran once after each `require('lz.n').load` call, for handlers to create custom triggers such as the event handler's `DeferredUIEnter` event |
+| Property   | Type                                       | Description                                               |
+| ---        | ---                                        | ---                                                       |
+| spec_field | `string`                                   | The `lz.n.PluginSpec` field used to configure the handler |
+| parse      | `fun(plugin: lz.n.Plugin, spec: unknown)?` | Parse a spec and add it to the passed in plugin           |
+| add        | `fun(plugin: lz.n.Plugin)`                 | Adds a plugin to the handler                              |
+| del        | `fun(name: string)`                        | Removes a plugin from the handler by name                 |
+| lookup     | `fun(name: string): lz.n.Plugin?`          | Lookup a plugin managed by this handler by name           |
+| post_load  | `fun()?`                                   | Ran once after each `require('lz.n').load` call, for handlers to create custom triggers such as the event handler's `DeferredUIEnter` event |
 <!-- markdownlint-enable MD013 -->
 
 To manage handler state safely, ensuring `trigger_load` can be invoked from

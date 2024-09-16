@@ -5,7 +5,7 @@ local loader = require("lz.n.loader")
 ---@param value lz.n.KeysSpec
 ---@param mode? string
 ---@return lz.n.Keys
-local function parse(value, mode)
+local function parse_keys_spec(value, mode)
     local ret = vim.deepcopy(value) --[[@as lz.n.Keys]]
     ret.lhs = ret[1] or ""
     ret.rhs = ret[2]
@@ -23,25 +23,42 @@ local function parse(value, mode)
     return ret
 end
 
+---@param value string|lz.n.KeysSpec
+---@return lz.n.Keys[]
+local function parse(value)
+    value = type(value) == "string" and { value } or value --[[@as lz.n.KeysSpec]]
+    local modes = type(value.mode) == "string" and { value.mode } or value.mode --[[ @as string[] | nil ]]
+    if not modes then
+        return { parse_keys_spec(value) }
+    end
+    return vim.iter(modes)
+        :map(function(mode)
+            return parse_keys_spec(value, mode)
+        end)
+        :totable()
+end
+
 ---@type lz.n.handler.State
 local state = require("lz.n.handler.state").new()
 
 ---@type lz.n.KeysHandler
 local M = {
     spec_field = "keys",
-    ---@param value string|lz.n.KeysSpec
-    ---@return lz.n.Keys[]
-    parse = function(value)
-        value = type(value) == "string" and { value } or value --[[@as lz.n.KeysSpec]]
-        local modes = type(value.mode) == "string" and { value.mode } or value.mode --[[ @as string[] | nil ]]
-        if not modes then
-            return { parse(value) }
+    ---@param keys_spec? string|string[]|lz.n.KeysSpec[]
+    parse = function(plugin, keys_spec)
+        if keys_spec then
+            plugin.keys = {}
         end
-        return vim.iter(modes)
-            :map(function(mode)
-                return parse(value, mode)
+        if type(keys_spec) == "string" then
+            local keys = parse(keys_spec)
+            vim.list_extend(plugin.keys, keys)
+        elseif type(keys_spec) == "table" then
+            ---@param keys_spec_ string | lz.n.KeysSpec
+            vim.iter(keys_spec):each(function(keys_spec_)
+                local keys = parse(keys_spec_)
+                vim.list_extend(plugin.keys, keys)
             end)
-            :totable()
+        end
     end,
 }
 

@@ -8,18 +8,22 @@ local spy = require("luassert.spy")
 
 describe("handlers.ft", function()
     it("can parse from string", function()
+        local plugin = {}
+        ft.parse(plugin, "rust")
         assert.same({
-            event = "FileType",
-            id = "rust",
-            pattern = "rust",
-        }, ft.parse("rust"))
+            {
+                event = "FileType",
+                id = "rust",
+                pattern = "rust",
+            },
+        }, plugin.event)
     end)
     it("filetype event loads plugins", function()
         ---@type lz.n.Plugin
         local plugin = {
             name = "Foo",
-            event = { ft.parse("rust") },
         }
+        ft.parse(plugin, "rust")
         local spy_load = spy.on(loader, "_load")
         ft.add(plugin)
         vim.api.nvim_exec_autocmds("FileType", { pattern = "rust" })

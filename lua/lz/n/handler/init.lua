@@ -40,15 +40,6 @@ function M.lookup(name, opts)
     return result and vim.deepcopy(result)
 end
 
----@param spec lz.n.PluginSpec
----@return boolean
-function M.is_lazy(spec)
-    ---@diagnostic disable-next-line: undefined-field
-    return spec.lazy or vim.iter(handlers):any(function(spec_field, _)
-        return spec[spec_field] ~= nil
-    end)
-end
-
 ---@param handler lz.n.Handler
 ---@return boolean success
 function M.register_handler(handler)
@@ -95,6 +86,31 @@ local function enable(plugin)
     vim.iter(handlers):each(function(_, handler)
         handler.add(plugin)
     end)
+end
+
+---@param spec lz.n.PluginSpec
+---@return boolean
+local function is_lazy(spec)
+    ---@diagnostic disable-next-line: undefined-field
+    return spec.lazy or vim.iter(handlers):any(function(spec_field, _)
+        return spec[spec_field] ~= nil
+    end)
+end
+
+---Mutates the `plugin`.
+---@param plugin lz.n.Plugin
+---@param spec lz.n.PluginSpec
+function M.parse(plugin, spec)
+    vim
+        .iter(handlers)
+        ---@param spec_field string
+        ---@param handler lz.n.Handler
+        :each(function(spec_field, handler)
+            if handler.parse then
+                handler.parse(plugin, spec[spec_field])
+            end
+        end)
+    plugin.lazy = is_lazy(spec)
 end
 
 ---@param name string

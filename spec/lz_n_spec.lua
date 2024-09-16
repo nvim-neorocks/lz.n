@@ -30,14 +30,12 @@ describe("lz.n", function()
             })
             vim.api.nvim_exec_autocmds("FileType", { pattern = "toml" })
             assert.spy(spy_load).called(2)
-            assert.spy(spy_load).called_with({
+            local plugin = {
                 name = "crates.nvim",
                 lazy = true,
-                event = {
-                    require("lz.n.handler.ft").parse("toml"),
-                    require("lz.n.handler.ft").parse("rust"),
-                },
-            })
+            }
+            require("lz.n.handler.ft").parse(plugin, { "toml", "rust" })
+            assert.spy(spy_load).called_with(plugin)
             vim.cmd.Telescope()
             assert.spy(spy_load).called(3)
             assert.spy(spy_load).called_with({

@@ -15,9 +15,13 @@ describe("handlers.keys", function()
         }
         for _, test in ipairs(tests) do
             if test[3] then
-                assert.same(keys.parse(test[1])[1].id, keys.parse(test[2])[1].id)
+                local plguin = {}
+                keys.parse(plguin, { test[1], test[2] })
+                assert.same(plguin.keys[1].id, plguin.keys[2].id)
             else
-                assert.is_not.same(keys.parse(test[1])[1].id, keys.parse(test[2])[1].id)
+                local plugin = {}
+                keys.parse(plugin, { test[1], test[2] })
+                assert.is_not.same(plugin.keys[1].id, plugin.keys[2].id)
             end
         end
     end)
@@ -26,8 +30,8 @@ describe("handlers.keys", function()
         ---@type lz.n.Plugin
         local plugin = {
             name = "foo",
-            keys = keys.parse(lhs),
         }
+        keys.parse(plugin, lhs)
         local spy_load = spy.on(loader, "_load")
         keys.add(plugin)
         local feed = vim.api.nvim_replace_termcodes("<Ignore>" .. lhs, true, true, true)
@@ -37,31 +41,32 @@ describe("handlers.keys", function()
         --
     end)
     it("Multiple keys only load plugin once", function()
-        ---@param lzkeys lz.n.Keys[]
-        local function itt(lzkeys)
+        ---@param fst string
+        ---@param snd string
+        local function itt(fst, snd)
             ---@type lz.n.Plugin
             local plugin = {
                 name = "foo",
-                keys = lzkeys,
             }
+            keys.parse(plugin, { fst, snd })
             local spy_load = spy.on(loader, "_load")
             keys.add(plugin)
-            local feed1 = vim.api.nvim_replace_termcodes("<Ignore>" .. lzkeys[1].lhs, true, true, true)
+            local feed1 = vim.api.nvim_replace_termcodes("<Ignore>" .. plugin.keys[1].lhs, true, true, true)
             vim.api.nvim_feedkeys(feed1, "ix", false)
-            local feed2 = vim.api.nvim_replace_termcodes("<Ignore>" .. lzkeys[2].lhs, true, true, true)
+            local feed2 = vim.api.nvim_replace_termcodes("<Ignore>" .. plugin.keys[2].lhs, true, true, true)
             vim.api.nvim_feedkeys(feed2, "ix", false)
             assert.spy(spy_load).called(1)
         end
-        itt({ keys.parse("<leader>tt")[1], keys.parse("<leader>ff")[1] })
-        itt({ keys.parse("<leader>ff")[1], keys.parse("<leader>tt")[1] })
+        itt("<leader>tt", "<leader>ff")
+        itt("<leader>ff", "<leader>tt")
     end)
     it("Plugins' keymaps are triggered", function()
         local lhs = "<leader>xy"
         ---@type lz.n.Plugin
         local plugin = {
             name = "baz",
-            keys = keys.parse(lhs),
         }
+        keys.parse(plugin, lhs)
         local triggered = false
         local orig_load = loader._load
         ---@diagnostic disable-next-line: duplicate-set-field

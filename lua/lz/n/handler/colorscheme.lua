@@ -10,6 +10,20 @@ local state = require("lz.n.handler.state").new()
 local M = {
     augroup = nil,
     spec_field = "colorscheme",
+    ---@param colorscheme_spec? string[]|string
+    parse = function(plugin, colorscheme_spec)
+        if colorscheme_spec then
+            plugin.colorscheme = {}
+        end
+        if type(colorscheme_spec) == "string" then
+            table.insert(plugin.colorscheme, colorscheme_spec)
+        elseif type(colorscheme_spec) == "table" then
+            ---@param colorscheme_spec_ string
+            vim.iter(colorscheme_spec):each(function(colorscheme_spec_)
+                table.insert(plugin.colorscheme, colorscheme_spec_)
+            end)
+        end
+    end,
 }
 
 ---@param name string

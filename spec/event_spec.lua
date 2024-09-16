@@ -8,48 +8,49 @@ local spy = require("luassert.spy")
 
 describe("handlers.event", function()
     it("can parse from string", function()
-        assert.same({
+        local plugin = {}
+        event.parse(plugin, "VimEnter")
+        assert.same({ {
             event = "VimEnter",
             id = "VimEnter",
-        }, event.parse("VimEnter"))
+        } }, plugin.event)
     end)
     it("can parse from table", function()
-        assert.same(
-            {
-                event = "VimEnter",
-                id = "VimEnter",
-            },
-            event.parse({
-                event = "VimEnter",
-            })
-        )
-        assert.same(
+        local plugin = {}
+        event.parse(plugin, {
+            event = "VimEnter",
+        })
+        assert.same({ {
+            event = "VimEnter",
+            id = "VimEnter",
+        } }, plugin.event)
+        plugin = {}
+        event.parse(plugin, { event = { "VimEnter", "BufEnter" } })
+        assert.same({
             {
                 event = { "VimEnter", "BufEnter" },
                 id = "VimEnter|BufEnter",
             },
-            event.parse({
-                event = { "VimEnter", "BufEnter" },
-            })
-        )
-        assert.same(
+        }, plugin.event)
+        plugin = {}
+        event.parse(plugin, {
+            event = "BufEnter",
+            pattern = "*.lua",
+        })
+        assert.same({
             {
                 event = "BufEnter",
                 id = "BufEnter *.lua",
                 pattern = "*.lua",
             },
-            event.parse({
-                event = "BufEnter",
-                pattern = "*.lua",
-            })
-        )
+        }, plugin.event)
     end)
     it("Event only loads plugin once", function()
         ---@type lz.n.Plugin
         local plugin = {
             name = "foo",
-            event = { event.parse("BufEnter") },
         }
+        event.parse(plugin, "BufEnter")
         local spy_load = spy.on(loader, "_load")
         event.add(plugin)
         vim.api.nvim_exec_autocmds("BufEnter", {})
@@ -57,32 +58,33 @@ describe("handlers.event", function()
         assert.spy(spy_load).called(1)
     end)
     it("Multiple events only load plugin once", function()
-        ---@param events lz.n.Event[]
-        local function itt(events)
+        ---@param fst string
+        ---@param snd string
+        local function itt(fst, snd)
             ---@type lz.n.Plugin
             local plugin = {
                 name = "foo",
-                event = events,
             }
+            event.parse(plugin, { fst, snd })
             local spy_load = spy.on(loader, "_load")
             event.add(plugin)
-            vim.api.nvim_exec_autocmds(events[1].event, {
+            vim.api.nvim_exec_autocmds(plugin.event[1].event, {
                 pattern = ".lua",
             })
-            vim.api.nvim_exec_autocmds(events[2].event, {
+            vim.api.nvim_exec_autocmds(plugin.event[2].event, {
                 pattern = ".lua",
             })
             assert.spy(spy_load).called(1)
         end
-        itt({ event.parse("BufEnter"), event.parse("WinEnter") })
-        itt({ event.parse("WinEnter"), event.parse("BufEnter") })
+        itt("BufEnter", "WinEnter")
+        itt("WinEnter", "BufEnter")
     end)
     it("Plugins' event handlers are triggered", function()
         ---@type lz.n.Plugin
         local plugin = {
             name = "foo",
-            event = { event.parse("BufEnter") },
         }
+        event.parse(plugin, "BufEnter")
         local triggered = false
         local orig_load = loader._load
         ---@diagnostic disable-next-line: duplicate-set-field
@@ -104,8 +106,8 @@ describe("handlers.event", function()
         ---@type lz.n.Plugin
         local plugin = {
             name = "bla",
-            event = { event.parse("DeferredUIEnter") },
         }
+        event.parse(plugin, "DeferredUIEnter")
         local spy_load = spy.on(loader, "_load")
         event.add(plugin)
         vim.api.nvim_exec_autocmds("User", { pattern = "DeferredUIEnter", modeline = false })

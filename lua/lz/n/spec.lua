@@ -79,75 +79,7 @@ local function parse(spec)
     local result = vim.deepcopy(spec)
     result.name = spec[1]
     result[1] = nil
-    local event_spec = spec.event
-    if event_spec then
-        result.event = {}
-    end
-    if type(event_spec) == "string" then
-        local event = require("lz.n.handler.event").parse(event_spec)
-        table.insert(result.event, event)
-    elseif type(event_spec) == "table" then
-        ---@param ev lz.n.EventSpec[]
-        vim.iter(event_spec):each(function(ev)
-            local event = require("lz.n.handler.event").parse(ev)
-            table.insert(result.event, event)
-        end)
-    end
-    local ft_spec = spec.ft
-    if ft_spec then
-        result.event = result.event or {}
-        ---@diagnostic disable-next-line: inject-field
-        result.ft = nil
-    end
-    if type(ft_spec) == "string" then
-        local ft = require("lz.n.handler.ft").parse(ft_spec)
-        table.insert(result.event, ft)
-    elseif type(ft_spec) == "table" then
-        ---@param ft_spec_ string
-        vim.iter(ft_spec):each(function(ft_spec_)
-            local ft = require("lz.n.handler.ft").parse(ft_spec_)
-            table.insert(result.event, ft)
-        end)
-    end
-    local keys_spec = spec.keys
-    if keys_spec then
-        result.keys = {}
-    end
-    if type(keys_spec) == "string" then
-        local keys = require("lz.n.handler.keys").parse(keys_spec)
-        vim.list_extend(result.keys, keys)
-    elseif type(keys_spec) == "table" then
-        ---@param keys_spec_ string | lz.n.KeysSpec
-        vim.iter(keys_spec):each(function(keys_spec_)
-            local keys = require("lz.n.handler.keys").parse(keys_spec_)
-            vim.list_extend(result.keys, keys)
-        end)
-    end
-    local cmd_spec = spec.cmd
-    if cmd_spec then
-        result.cmd = {}
-    end
-    if type(cmd_spec) == "string" then
-        table.insert(result.cmd, cmd_spec)
-    elseif type(cmd_spec) == "table" then
-        ---@param cmd_spec_ string
-        vim.iter(cmd_spec):each(function(cmd_spec_)
-            table.insert(result.cmd, cmd_spec_)
-        end)
-    end
-    local colorscheme_spec = spec.colorscheme
-    if colorscheme_spec then
-        result.colorscheme = {}
-    end
-    if type(colorscheme_spec) == "string" then
-        table.insert(result.colorscheme, colorscheme_spec)
-    elseif type(colorscheme_spec) == "table" then
-        ---@param colorscheme_spec_ string
-        vim.iter(colorscheme_spec):each(function(colorscheme_spec_)
-            table.insert(result.colorscheme, colorscheme_spec_)
-        end)
-    end
-    result.lazy = require("lz.n.handler").is_lazy(spec)
+    require("lz.n.handler").parse(result, spec)
     return result
 end
 
