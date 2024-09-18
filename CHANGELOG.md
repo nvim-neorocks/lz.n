@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.0](https://github.com/nvim-neorocks/lz.n/compare/v2.7.0...v2.8.0) (2024-09-18)
+
+
+### Features
+
+* **`load`:** take first module when multiple matches exist on the rtp ([#94](https://github.com/nvim-neorocks/lz.n/issues/94)) ([1d1c546](https://github.com/nvim-neorocks/lz.n/commit/1d1c5468f7f87bd800e707f1f537da65d299058a))
+
 ## [2.7.0](https://github.com/nvim-neorocks/lz.n/compare/v2.6.1...v2.7.0) (2024-09-16)
 
 
