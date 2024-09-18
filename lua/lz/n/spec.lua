@@ -50,7 +50,7 @@ local function import_spec(spec, result)
         import_modname(modname, result)
     end
     local import_dir = vim.api.nvim_get_runtime_file(vim.fs.joinpath("lua", modname), true)
-    if #import_dir == 1 then
+    if #import_dir > 0 then
         local dir = import_dir[1]
         local handle = vim.uv.fs_scandir(dir)
         while handle do
