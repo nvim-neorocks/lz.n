@@ -23,7 +23,7 @@ end
 ---@param plugins table<string, lz.n.Plugin>
 local function run_before_all(plugins)
     ---@param plugin lz.n.Plugin
-    vim.iter(plugins):each(function(plugin)
+    vim.iter(plugins):each(function(_, plugin)
         if plugin.beforeAll then
             xpcall(
                 plugin.beforeAll,
