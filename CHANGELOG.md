@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.1](https://github.com/nvim-neorocks/lz.n/compare/v2.8.0...v2.8.1) (2024-10-15)
+
+
+### Bug Fixes
+
+* **hooks:** regression preventing beforeAll from being run ([#101](https://github.com/nvim-neorocks/lz.n/issues/101)) ([8259302](https://github.com/nvim-neorocks/lz.n/commit/82593022086138822245706ed5466ef9bc4e2c7b))
+
 ## [2.8.0](https://github.com/nvim-neorocks/lz.n/compare/v2.7.0...v2.8.0) (2024-09-18)
 
 
