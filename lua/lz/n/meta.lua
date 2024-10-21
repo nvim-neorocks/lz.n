@@ -26,6 +26,7 @@
 ---@field keys? lz.n.Keys[]
 ---@field cmd? string[]
 ---@field colorscheme? string[]
+---@field lazy? boolean
 
 ---@class lz.n.PluginSpecHandlers
 ---

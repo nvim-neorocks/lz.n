@@ -13,13 +13,14 @@ describe("trigger_load in before/after hooks", function()
                 local foo_load_count = 0
                 local zoo_load_count = 0
                 local hoo_load_count = 0
+                local lazy_plugin_load_count = 0
                 local ignored_by_trigger_load
                 lz.load({
                     {
                         "bar",
                         [hook] = function()
                             -- This should remove bar from the event handler's list
-                            ignored_by_trigger_load = lz.trigger_load({ "foo", "zoo", "hoo" })
+                            ignored_by_trigger_load = lz.trigger_load({ "foo", "zoo", "hoo", "lazy_plugin" })
                         end,
                         event = "BufEnter",
                     },
@@ -44,12 +45,20 @@ describe("trigger_load in before/after hooks", function()
                             hoo_load_count = hoo_load_count + 1
                         end,
                     },
+                    {
+                        "lazy_plugin",
+                        lazy = true,
+                        load = function()
+                            lazy_plugin_load_count = lazy_plugin_load_count + 1
+                        end,
+                    },
                 })
                 vim.api.nvim_exec_autocmds("BufEnter", {})
                 assert.is_not_nil(ignored_by_trigger_load) -- before invoked
                 assert.same(1, foo_load_count)
                 assert.same(1, zoo_load_count)
                 assert.same(1, hoo_load_count)
+                assert.same(1, lazy_plugin_load_count)
             end
         end)
         it("resilient against state updates with multiple events in " .. hook .. " hook", function()
