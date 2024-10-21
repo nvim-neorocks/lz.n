@@ -126,6 +126,7 @@ lz.n.PluginHandlers                                        *lz.n.PluginHandlers*
         {keys?}         (lz.n.Keys[])
         {cmd?}          (string[])
         {colorscheme?}  (string[])
+        {lazy?}         (boolean)
 
 
 lz.n.PluginSpecHandlers                                *lz.n.PluginSpecHandlers*

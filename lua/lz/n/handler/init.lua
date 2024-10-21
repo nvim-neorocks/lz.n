@@ -6,6 +6,7 @@ local handlers = {
     ft = require("lz.n.handler.ft"),
     keys = require("lz.n.handler.keys"),
     colorscheme = require("lz.n.handler.colorscheme"),
+    lazy = require("lz.n.handler.lazy"),
 }
 
 ---@param name string
