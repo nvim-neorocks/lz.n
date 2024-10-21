@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.0](https://github.com/nvim-neorocks/lz.n/compare/v2.8.1...v2.9.0) (2024-10-21)
+
+
+### Features
+
+* `lazy` field for lazy-loading via `trigger_load` only ([#105](https://github.com/nvim-neorocks/lz.n/issues/105)) ([a7b445f](https://github.com/nvim-neorocks/lz.n/commit/a7b445fd34fb242f7fa5d294499e89f55ed0935a))
+
 ## [2.8.1](https://github.com/nvim-neorocks/lz.n/compare/v2.8.0...v2.8.1) (2024-10-15)
 
 
