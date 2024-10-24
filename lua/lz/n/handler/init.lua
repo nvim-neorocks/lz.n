@@ -93,9 +93,13 @@ end
 ---@return boolean
 local function is_lazy(spec)
     ---@diagnostic disable-next-line: undefined-field
-    return spec.lazy or vim.iter(handlers):any(function(spec_field, _)
-        return spec[spec_field] ~= nil
-    end)
+    return spec.lazy
+        or vim.iter(handlers):any(function(spec_field, _)
+            -- PERF: This should be simpler and more performant than
+            -- filtering out "lazy" spec fields. However, this also
+            -- assumes that 'false' means a handler is disabled.
+            return spec[spec_field] and spec[spec_field] ~= nil
+        end)
 end
 
 ---Mutates the `plugin`.
