@@ -33,7 +33,7 @@ describe("hooks", function()
         lz.load({
             {
                 "neorg",
-                beforeAll = function()
+                after = function()
                     afterRun = true
                 end,
             },
