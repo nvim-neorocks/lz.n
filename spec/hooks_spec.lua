@@ -40,4 +40,29 @@ describe("hooks", function()
         })
         assert.True(afterRun)
     end)
+    describe("regression-#187", function()
+        it("hook run when `lazy = false`", function()
+            local beforeAllRun = false
+            local beforeRun = false
+            local afterRun = false
+            lz.load({
+                {
+                    "neorg",
+                    lazy = false,
+                    beforeAll = function()
+                        beforeAllRun = true
+                    end,
+                    before = function()
+                        beforeRun = true
+                    end,
+                    after = function()
+                        afterRun = true
+                    end,
+                },
+            })
+            assert.True(beforeAllRun)
+            assert.True(beforeRun)
+            assert.True(afterRun)
+        end)
+    end)
 end)
