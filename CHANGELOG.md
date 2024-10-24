@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.1](https://github.com/nvim-neorocks/lz.n/compare/v2.9.0...v2.9.1) (2024-10-24)
+
+
+### Bug Fixes
+
+* setting `lazy = false` marks plugin as eager ([#108](https://github.com/nvim-neorocks/lz.n/issues/108)) ([6325a21](https://github.com/nvim-neorocks/lz.n/commit/6325a21905419c43152e4c91315f98b05d67663d))
+
 ## [2.9.0](https://github.com/nvim-neorocks/lz.n/compare/v2.8.1...v2.9.0) (2024-10-21)
 
 
