@@ -23,6 +23,12 @@ local function import_modname(modname, result)
     M._normalize(mod, result)
 end
 
+---@param modname string module name in the format `foo.bar`
+---@return string modpath module path in the format `foo/bar`
+local function mod_name_to_path(modname)
+    return vim.fs.joinpath(unpack(vim.split(modname, ".", { plain = true })))
+end
+
 ---@param spec lz.n.SpecImport
 ---@param result table<string, lz.n.Plugin>
 local function import_spec(spec, result)
@@ -44,12 +50,12 @@ local function import_spec(spec, result)
     if spec.enabled == false or (type(spec.enabled) == "function" and not spec.enabled()) then
         return
     end
-    local modname = spec.import
-    local import_root = vim.api.nvim_get_runtime_file(vim.fs.joinpath("lua", modname .. ".lua"), true)
+    local modpath = mod_name_to_path(spec.import)
+    local import_root = vim.api.nvim_get_runtime_file(vim.fs.joinpath("lua", modpath .. ".lua"), true)
     if #import_root == 1 then
-        import_modname(modname, result)
+        import_modname(modpath, result)
     end
-    local import_dir = vim.api.nvim_get_runtime_file(vim.fs.joinpath("lua", modname), true)
+    local import_dir = vim.api.nvim_get_runtime_file(vim.fs.joinpath("lua", modpath), true)
     if #import_dir > 0 then
         local dir = import_dir[1]
         local handle = vim.uv.fs_scandir(dir)
@@ -63,9 +69,9 @@ local function import_spec(spec, result)
             -- It seems to break in tests with with local symlinks
             elseif (ty == "file" or ty == "link") and name:sub(-4) == ".lua" then
                 local submodname = name:sub(1, -5)
-                import_modname(modname .. "." .. submodname, result)
+                import_modname(modpath .. "." .. submodname, result)
             elseif ty == "directory" and vim.uv.fs_stat(vim.fs.joinpath(path, "init.lua")) then
-                import_modname(modname .. "." .. name, result)
+                import_modname(modpath .. "." .. name, result)
             end
         end
     end
