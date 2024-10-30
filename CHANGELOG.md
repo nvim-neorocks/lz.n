@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.2](https://github.com/nvim-neorocks/lz.n/compare/v2.9.1...v2.9.2) (2024-10-30)
+
+
+### Bug Fixes
+
+* **loader:** support importing submodules (`foo.bar`) ([988b7b3](https://github.com/nvim-neorocks/lz.n/commit/988b7b3c9a55deae5dcf229edb146b61589395dc))
+
 ## [2.9.1](https://github.com/nvim-neorocks/lz.n/compare/v2.9.0...v2.9.1) (2024-10-24)
 
 
