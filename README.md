@@ -374,6 +374,9 @@ Or
   ├── init.lua
 ```
 
+> [!WARNING]
+> When using submodules, ensure you use `/` as a separator (i.e., `parent/submodule` over `parent.submodule`)
+
 ## :electric_plug: API
 
 ### Custom handlers

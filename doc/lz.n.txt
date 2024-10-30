@@ -53,7 +53,9 @@ M.load()                                                                *M.load*
     Register a list with your plugin specs or a single plugin spec to be lazy-loaded.
 
     @overload fun(import: string)
-    Register a Lua module name that contains your plugin spec(s) to be lazy-loaded.
+    Register a Lua module name that contains your plugin spec(s) to be
+    lazy-loaded. When using submodules, ensure you use `/` as a separator
+    (i.e., `parent/submodule` over `parent.submodule`).
 
 
 M.lookup({name}, {opts?})                                             *M.lookup*
