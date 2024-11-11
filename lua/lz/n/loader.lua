@@ -99,7 +99,7 @@ end
 ---@overload fun(plugin: lz.n.Plugin)
 ---@overload fun(plugins: string | string[], lookup: fun(name: string): lz.n.Plugin?): string[]
 function M.load(plugins, lookup)
-    local islist = vim.islist(plugins)
+    local islist = type(plugins) == "table" and vim.islist(plugins)
     local iterator = islist and ipairs or pairs
     plugins = (type(plugins) == "string" or plugins.name) and { plugins } or plugins
     ---@cast plugins (string|lz.n.Plugin)[] | table<unknown, lz.n.Plugin>
