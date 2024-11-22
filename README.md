@@ -207,7 +207,8 @@ However, if you're looking for a temporary workaround, you can use
 > [!TIP]
 >
 > We recommend [care.nvim](https://max397574.github.io/care.nvim/)
-> as a modern alternative to nvim-cmp.
+> or [blink.cmp](https://github.com/Saghen/blink.cmp)
+> as a modern alternatives to nvim-cmp.
 
 ### Examples
 
