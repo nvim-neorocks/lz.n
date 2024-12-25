@@ -96,5 +96,21 @@ describe("lz.n", function()
                 cmd = { "Single" },
             })
         end)
+        it("eagerly load if lazy=False", function()
+            local spy_load = spy.on(loader, "_load")
+            lz.load({
+                {
+                    "single.nvim",
+                    cmd = "Single",
+                    lazy = false,
+                },
+            })
+            assert.spy(spy_load).called(1)
+            assert.spy(spy_load).called_with({
+                name = "single.nvim",
+                cmd = { "Single" },
+                lazy = false,
+            })
+        end)
     end)
 end)
