@@ -285,38 +285,68 @@ require("lz.n").load {
 
 <details>
   <summary>
-    <b><a href="https://wiki.nixos.org/wiki/Neovim">Nix (Home Manager) example</a></b>
+    <b><a href="https://wiki.nixos.org/wiki/Neovim">Nix (Home Manager)</a> example</b>
   </summary>
 
   ```nix
-  programs.neovim = {
-    enable = true;
-    plugins = with pkgs.vimPlugins [
-      lz-n
-      {
-        plugin = pkgs.vimPlugins.telescope-nvim;
-        config = ''
-          require("lz.n").load {
-            "telescope.nvim",
-            cmd = "Telescope",
-          }
-        '';
-        type = "lua";
-        optional = true;
-      }
-      {
-        plugin = pkgs.vimPlugins.sweetie-nvim;
-        config = ''
-          require("lz.n").load {
-            "sweetie.nvim",
-            colorscheme = "sweetie",
-          }
-        '';
-        type = "lua";
-        optional = true;
-      }
-    ];
-  };
+  {
+    programs.neovim = {
+      enable = true;
+      plugins = with pkgs.vimPlugins [
+        lz-n
+        {
+          plugin = pkgs.vimPlugins.telescope-nvim;
+          config = ''
+            require("lz.n").load {
+              "telescope.nvim",
+              cmd = "Telescope",
+            }
+          '';
+          type = "lua";
+          optional = true;
+        }
+        {
+          plugin = pkgs.vimPlugins.sweetie-nvim;
+          config = ''
+            require("lz.n").load {
+              "sweetie.nvim",
+              colorscheme = "sweetie",
+            }
+          '';
+          type = "lua";
+          optional = true;
+        }
+      ];
+    };
+  }
+  ```
+
+</details>
+
+<details>
+  <summary>
+    <b><a href="https://wiki.nixos.org/wiki/Neovim">Nix (NixVim)</a> example</b>
+  </summary>
+
+  > You can find up-to-date NixVim documentation for lazy-loading with `lz.n` here:
+  >
+  > https://nix-community.github.io/nixvim/user-guide/lazy-loading
+
+  ```nix
+  {
+    # Enable lz.n as lazy-loading provider
+    plugins.lz-n.enable = true;
+
+    plugins.telescope = {
+      enable = true;
+      lazyLoad.settings.cmd = "Telescope";
+    };
+
+    colorschemes.catppuccin = {
+      enable = true;
+      lazyLoad.settings.colorscheme = "catppuccin";
+    };
+  }
   ```
 
 </details>
