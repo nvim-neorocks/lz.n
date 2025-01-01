@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.10.0](https://github.com/nvim-neorocks/lz.n/compare/v2.9.2...v2.10.0) (2025-01-01)
+
+
+### Features
+
+* support explicit `lazy=false` ([#122](https://github.com/nvim-neorocks/lz.n/issues/122)) ([5a6d5fa](https://github.com/nvim-neorocks/lz.n/commit/5a6d5fa243cd9010d610daa7b9a111f56687a605))
+
 ## [2.9.2](https://github.com/nvim-neorocks/lz.n/compare/v2.9.1...v2.9.2) (2024-10-30)
 
 
