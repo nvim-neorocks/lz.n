@@ -44,6 +44,10 @@
 ---
 --- Load a plugin on one or more |colorscheme| events.
 ---@field colorscheme? string[]|string
+---
+--- Lazy-load manually, e.g. using `trigger_load`.
+--- Will disable lazy-loading if explicitly set to `false`.
+---@field lazy? boolean
 
 ---@class lz.n.KeysBase: vim.keymap.set.Opts
 ---@field desc? string

@@ -142,6 +142,9 @@ lz.n.PluginSpecHandlers                                *lz.n.PluginSpecHandlers*
                                                             Load a plugin on one or more |key-mapping|s.
         {colorscheme?}  (string[]|string)
                                                             Load a plugin on one or more |colorscheme| events.
+        {lazy?}         (boolean)
+                                                            Lazy-load manually, e.g. using `trigger_load`.
+                                                            Will disable lazy-loading if explicitly set to `false`.
 
 
 lz.n.KeysBase : vim.keymap.set.Opts                              *lz.n.KeysBase*
