@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.10.1](https://github.com/nvim-neorocks/lz.n/compare/v2.10.0...v2.10.1) (2025-01-25)
+
+
+### Bug Fixes
+
+* cmd handler can delete user commands created in before hook ([#130](https://github.com/nvim-neorocks/lz.n/issues/130)) ([448df14](https://github.com/nvim-neorocks/lz.n/commit/448df14ce9adb29eff9903e89e19d1497b8cc429))
+
 ## [2.10.0](https://github.com/nvim-neorocks/lz.n/compare/v2.9.2...v2.10.0) (2025-01-01)
 
 
