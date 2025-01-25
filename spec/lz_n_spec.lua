@@ -100,17 +100,32 @@ describe("lz.n", function()
             local spy_load = spy.on(loader, "_load")
             lz.load({
                 {
-                    "single.nvim",
-                    cmd = "Single",
+                    "foo.nvim",
+                    cmd = "Foo",
                     lazy = false,
                 },
             })
             assert.spy(spy_load).called(1)
             assert.spy(spy_load).called_with({
-                name = "single.nvim",
-                cmd = { "Single" },
+                name = "foo.nvim",
+                cmd = { "Foo" },
                 lazy = false,
             })
+        end)
+        it("regression: cmd handler does not delete user commands created in before hook", function()
+            --
+            lz.load({
+                {
+                    "foo.nvim",
+                    cmd = { "Foo", "Bar" },
+                    before = function()
+                        vim.api.nvim_create_user_command("Foo", function() end, {})
+                        vim.api.nvim_create_user_command("Bar", function() end, {})
+                    end,
+                },
+            })
+            vim.cmd.Foo()
+            vim.cmd.Bar()
         end)
     end)
 end)
