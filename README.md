@@ -178,8 +178,8 @@ Examples:
 local keymap = require("lz.n").keymap({
   "telescope.nvim",
   cmd = "Telescope",
-  before = function()
-    -- ...
+  after = function()
+    require("telescope").setup()
   end,
 })
 -- Now you can create keymaps that will load the plugin using
