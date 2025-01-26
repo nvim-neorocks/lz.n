@@ -99,6 +99,19 @@ M.register_handler = function(handler)
     return require("lz.n.handler").register_handler(handler)
 end
 
+---@type table<string, lz.n.Plugin>
+local keymap_lookup_cache = {}
+
+---@param name string
+---@return lz.n.Plugin?
+local function cached_lookup(name)
+    if keymap_lookup_cache[name] then
+        return keymap_lookup_cache[name]
+    end
+    keymap_lookup_cache[name] = M.lookup(name)
+    return keymap_lookup_cache[name]
+end
+
 ---Creates an equivalent to |vim.keymap| that will load a plugin when a keymap
 ---created with `keymap.set` is triggered.
 ---This may be useful if you have lots of keymaps defined using `vim.keymap.set`.
@@ -148,7 +161,7 @@ M.keymap = function(plugin)
             if type(plugin) == "string" then
                 local name = plugin
                 ---@diagnostic disable-next-line: cast-local-type
-                plugin_ = M.lookup(name)
+                plugin_ = cached_lookup(name)
                 if plugin_ then
                     plugin_ = vim.deepcopy(plugin_)
                 else
@@ -159,7 +172,7 @@ M.keymap = function(plugin)
             else
                 local name = plugin[1]
                 ---@diagnostic disable-next-line: cast-local-type
-                plugin_ = M.lookup(name)
+                plugin_ = cached_lookup(name)
                 if plugin_ then
                     plugin_ = vim.tbl_deep_extend("force", plugin_, plugin)
                 else
