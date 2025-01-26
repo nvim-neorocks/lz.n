@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.11.1](https://github.com/nvim-neorocks/lz.n/compare/v2.11.0...v2.11.1) (2025-01-26)
+
+
+### Performance Improvements
+
+* **keymap-api:** cache lookups ([2817538](https://github.com/nvim-neorocks/lz.n/commit/281753820ff91ff6897c21e8b8d493c2b7740961))
+
 ## [2.11.0](https://github.com/nvim-neorocks/lz.n/compare/v2.10.1...v2.11.0) (2025-01-26)
 
 
