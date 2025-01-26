@@ -83,6 +83,49 @@ M.register_handler({handler})                               *M.register_handler*
         (boolean)  success
 
 
+M.keymap({plugin})                                                    *M.keymap*
+    Creates an equivalent to |vim.keymap| that will load a plugin when a keymap
+    created with `keymap.set` is triggered.
+    This may be useful if you have lots of keymaps defined using `vim.keymap.set`.
+
+    Examples:
+
+    Load a plugin by name.
+
+    >lua
+    local lz = require("lz.n")
+    local keymap = lz.keymap("foo")
+    keymap.set("n", "<leader>f", function() end, {}) -- Will load foo when invoked.
+    <
+
+    Load a plugin with a |lz.n.PluginSpec|.
+
+    >lua
+    local lz = require("lz.n")
+    local keymap = lz.keymap({
+      "bar",
+      before = function()
+        -- ...
+      end,
+    })
+    keymap.set("n", "<leader>b", function() end, {}) -- Will load bar when invoked.
+    <
+
+
+    Parameters: ~
+        {plugin}  (string|lz.n.PluginSpec)  The plugin to load (name or spec).
+
+    Returns: ~
+        (lz.n.keymap)
+
+
+lz.n.keymap                                                        *lz.n.keymap*
+
+    Fields: ~
+        {set}  (fun(mode:string|string[],lhs:string,rhs:string|function,opts:vim.keymap.set.Opts))
+                                                                                                    The same signature as |vim.keymap.set()|
+
+
 ==============================================================================
 lz.n type definitions                                               *lz.n.types*
 
