@@ -99,4 +99,89 @@ M.register_handler = function(handler)
     return require("lz.n.handler").register_handler(handler)
 end
 
+---Creates an equivalent to |vim.keymap| that will load a plugin when a keymap
+---created with `keymap.set` is triggered.
+---This may be useful if you have lots of keymaps defined using `vim.keymap.set`.
+---
+---Examples:
+---
+---Load a plugin by name.
+---
+--->lua
+---local lz = require("lz.n")
+---local keymap = lz.keymap("foo")
+---keymap.set("n", "<leader>f", function() end, {}) -- Will load foo when invoked.
+---<
+---
+---Load a plugin with a |lz.n.PluginSpec|.
+---
+--->lua
+---local lz = require("lz.n")
+---local keymap = lz.keymap({
+---  "bar",
+---  before = function()
+---    -- ...
+---  end,
+---})
+---keymap.set("n", "<leader>b", function() end, {}) -- Will load bar when invoked.
+---<
+---
+---@param plugin string | lz.n.PluginSpec The plugin to load (name or spec).
+---@return lz.n.keymap
+M.keymap = function(plugin)
+    local keymap = {
+        ---@param mode string|string[] Mode "short-name" (see |nvim_set_keymap()|), or a list thereof.
+        ---@param lhs string           Left-hand side |{lhs}| of the mapping.
+        ---@param rhs string|function  Right-hand side |{rhs}| of the mapping, can be a Lua function.
+        ---@param opts? vim.keymap.set.Opts
+        set = function(mode, lhs, rhs, opts)
+            opts = opts or {}
+            local spec = vim.tbl_deep_extend("force", opts, {
+                [1] = lhs,
+                [2] = rhs,
+                mode = mode,
+            })
+            ---@cast spec lz.n.KeysSpec
+            local h = require("lz.n.handler.keys")
+            ---@type lz.n.Plugin
+            local plugin_
+            if type(plugin) == "string" then
+                local name = plugin
+                ---@diagnostic disable-next-line: cast-local-type
+                plugin_ = M.lookup(name)
+                if plugin_ then
+                    plugin_ = vim.deepcopy(plugin_)
+                else
+                    plugin_ = {
+                        name = name,
+                    }
+                end
+            else
+                local name = plugin[1]
+                ---@diagnostic disable-next-line: cast-local-type
+                plugin_ = M.lookup(name)
+                if plugin_ then
+                    plugin_ = vim.tbl_deep_extend("force", plugin_, plugin)
+                else
+                    ---@diagnostic disable-next-line: cast-local-type
+                    plugin_ = vim.deepcopy(plugin)
+                    ---@diagnostic disable-next-line: inject-field
+                    plugin_.name = name
+                    plugin_[1] = nil
+                    ---@cast plugin_ lz.n.Plugin
+                end
+            end
+            plugin_.keys = nil
+            h.parse(plugin_, { spec })
+            h.add(plugin_)
+        end,
+    }
+    return keymap
+end
+
+---@class lz.n.keymap
+---
+---The same signature as |vim.keymap.set()|
+---@field set fun(mode: string|string[], lhs: string, rhs: string|function, opts: vim.keymap.set.Opts)
+
 return M

@@ -165,6 +165,33 @@ require("lz.n").load(plugins)
 
 [^3]: This is equivalent to `lazy.nvim`'s `VeryLazy` event.
 
+### `keymap(<plugin>).set`
+
+To provide a familiar UX that is as close as possible to the built-in Neovim experience,
+`lz.n` has a helper function that lets you lazy-load plugins with keymap
+triggers using the same signature as [`:h vim.keymap.set()`](https://neovim.io/doc/user/lua.html#vim.keymap.set()).
+
+Examples:
+
+```lua
+-- You can pass in a plugin spec or a plugin's name.
+local keymap = require("lz.n").keymap({
+  "telescope.nvim",
+  cmd = "Telescope",
+  before = function()
+    -- ...
+  end,
+})
+-- Now you can create keymaps that will load the plugin using
+-- the same UX as vim.keymap.set().
+keymap.set("n", "<leader>tp", function()
+  require("telescope.builtin").find_files()
+end)
+keymap.set("n", "<leader>tg", function()
+  require("telescope.builtin").live_grep()
+end)
+```
+
 ### Plugin dependencies
 
 This library does not provide a `lz.n.PluginSpec` field like `lazy.nvim`'s `dependencies`.

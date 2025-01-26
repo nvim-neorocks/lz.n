@@ -23,6 +23,11 @@ local function parse_keys_spec(value, mode)
     return ret
 end
 
+---@param keys lz.n.Keys
+local function is_nop(keys)
+    return type(keys.rhs) == "string" and (keys.rhs == "" or keys.rhs:lower() == "<nop>")
+end
+
 ---@param value string|lz.n.KeysSpec
 ---@return lz.n.Keys[]
 local function parse(value)
@@ -42,6 +47,7 @@ end
 local state = require("lz.n.handler.state").new()
 
 ---@type lz.n.KeysHandler
+---@diagnostic disable-next-line: missing-fields
 local M = {
     spec_field = "keys",
     ---@param keys_spec? string|string[]|lz.n.KeysSpec[]
@@ -117,6 +123,9 @@ local function add_keys(keys)
 
     ---@param buf? number
     local function add(buf)
+        if is_nop(keys) then
+            return set(keys, buf)
+        end
         vim.keymap.set(keys.mode, lhs, function()
             -- always delete the mapping immediately to prevent recursive mappings
             del(keys)
