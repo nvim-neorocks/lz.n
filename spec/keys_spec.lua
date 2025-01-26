@@ -83,4 +83,25 @@ describe("handlers.keys", function()
         assert.True(triggered)
         loader._load = orig_load
     end)
+    it("Locally created keymaps are triggered", function()
+        local triggered = false
+        local lhs = "<leader>xz"
+        ---@type lz.n.KeysSpec
+        local keys_spec = {
+            lhs,
+            function()
+                triggered = true
+            end,
+        }
+        ---@type lz.n.Plugin
+        local plugin = {
+            name = "xz",
+        }
+        keys.parse(plugin, { keys_spec })
+        keys.add(plugin)
+        local feed = vim.api.nvim_replace_termcodes("<Ignore>" .. lhs, true, true, true)
+        vim.api.nvim_feedkeys(feed, "ix", false)
+        vim.api.nvim_feedkeys(feed, "x", false)
+        assert.True(triggered)
+    end)
 end)
