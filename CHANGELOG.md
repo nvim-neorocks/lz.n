@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.11.0](https://github.com/nvim-neorocks/lz.n/compare/v2.10.1...v2.11.0) (2025-01-26)
+
+
+### Features
+
+* `keymap(<plugin>).set` lazy-loading API ([#133](https://github.com/nvim-neorocks/lz.n/issues/133)) ([36aec13](https://github.com/nvim-neorocks/lz.n/commit/36aec13b46e9cc784d0e5346302cc222155f98f9))
+
 ## [2.10.1](https://github.com/nvim-neorocks/lz.n/compare/v2.10.0...v2.10.1) (2025-01-25)
 
 
