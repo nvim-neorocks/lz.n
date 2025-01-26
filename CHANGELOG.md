@@ -5,7 +5,7 @@
 
 ### Features
 
-* `keymap(&lt;plugin&gt;).set` lazy-loading API ([#133](https://github.com/nvim-neorocks/lz.n/issues/133)) ([36aec13](https://github.com/nvim-neorocks/lz.n/commit/36aec13b46e9cc784d0e5346302cc222155f98f9))
+* `keymap(<plugin>).set` lazy-loading API ([#133](https://github.com/nvim-neorocks/lz.n/issues/133)) ([36aec13](https://github.com/nvim-neorocks/lz.n/commit/36aec13b46e9cc784d0e5346302cc222155f98f9))
 
 ## [2.10.1](https://github.com/nvim-neorocks/lz.n/compare/v2.10.0...v2.10.1) (2025-01-25)
 
