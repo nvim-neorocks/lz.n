@@ -62,7 +62,7 @@ but reduced down to the very basics required for lazy-loading only.
   For example, the following `lazy.nvim` features are **out of scope**:
   - Merging multiple plugin specs for a single plugin
     (primarily intended for use by Neovim distributions).
-  - `lazy.vim` completely disables and takes over Neovim's
+  - `lazy.nvim` completely disables and takes over Neovim's
     built-in loading mechanisms, including
     adding a plugin's API (`lua`, `autoload`, ...)
     to the runtimepath.
