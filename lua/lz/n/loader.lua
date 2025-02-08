@@ -71,7 +71,13 @@ function M.load_startup_plugins(plugins)
     run_before_all(plugins)
     ---@param plugin lz.n.Plugin
     vim.iter(get_eager_plugins(plugins)):each(function(plugin)
-        M.load(plugin)
+        xpcall(
+            M.load,
+            vim.schedule_wrap(function(err)
+                vim.notify("Failed to load " .. plugin.name .. ": " .. tostring(err or ""), vim.log.levels.ERROR)
+            end),
+            plugin
+        )
         plugins[plugin.name] = nil
     end)
 end
