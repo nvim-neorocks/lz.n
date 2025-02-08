@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.11.2](https://github.com/nvim-neorocks/lz.n/compare/v2.11.1...v2.11.2) (2025-02-08)
+
+
+### Bug Fixes
+
+* don't propagate startup plugin loading errors ([#137](https://github.com/nvim-neorocks/lz.n/issues/137)) ([4b64680](https://github.com/nvim-neorocks/lz.n/commit/4b64680e8df6529a66925ee11ea2e0d1c0b7b06a))
+
 ## [2.11.1](https://github.com/nvim-neorocks/lz.n/compare/v2.11.0...v2.11.1) (2025-01-26)
 
 
