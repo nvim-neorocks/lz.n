@@ -109,11 +109,6 @@ local function del(keys)
         -- So the mapping could still exist in other buffers
         buffer = keys.ft and true or nil,
     })
-    -- make sure to create global mappings when needed
-    -- buffer-local mappings are managed by lz.n
-    if not keys.ft then
-        set(keys)
-    end
 end
 
 ---@param keys lz.n.Keys
@@ -129,6 +124,11 @@ local function add_keys(keys)
         vim.keymap.set(keys.mode, lhs, function()
             -- always delete the mapping immediately to prevent recursive mappings
             del(keys)
+            -- make sure to create global mappings when needed
+            -- buffer-local mappings are managed by lz.n
+            if not keys.ft then
+                set(keys)
+            end
             state.each_pending(keys.id, loader.load)
             -- Create the real buffer-local mapping
             if keys.ft then
