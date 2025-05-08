@@ -65,6 +65,34 @@ describe("lz.n", function()
             vim.cmd.Bar()
             assert.spy(spy_load).called(2)
         end)
+        it("keys with callback (#154)", function()
+            local spy_load = spy.on(loader, "_load")
+            local callback_invoked_successfully = false
+            local after_invoked = false
+            lz.load({
+                "smart-splits.nvim",
+                after = function()
+                    after_invoked = true
+                end,
+                keys = {
+                    {
+                        "<A-Left>",
+                        function()
+                            assert.spy(spy_load).called(1)
+                            assert.True(after_invoked)
+                            callback_invoked_successfully = true
+                        end,
+                        desc = "Resize Left",
+                        mode = "n",
+                        noremap = true,
+                    },
+                },
+            })
+            assert.spy(spy_load).called(0)
+            local feed = vim.api.nvim_replace_termcodes("<Ignore><A-Left>", true, true, true)
+            vim.api.nvim_feedkeys(feed, "ix", false)
+            assert.True(callback_invoked_successfully)
+        end)
         it("can override load implementation via plugin spec", function()
             local loaded = false
             lz.load({
