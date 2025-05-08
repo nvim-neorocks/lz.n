@@ -67,7 +67,8 @@ describe("lz.n", function()
         end)
         it("keys with callback (#154)", function()
             local spy_load = spy.on(loader, "_load")
-            local callback_invoked_successfully = false
+            local left_callback_count = 0
+            local right_callback_count = 0
             local after_invoked = false
             lz.load({
                 "smart-splits.nvim",
@@ -80,9 +81,20 @@ describe("lz.n", function()
                         function()
                             assert.spy(spy_load).called(1)
                             assert.True(after_invoked)
-                            callback_invoked_successfully = true
+                            left_callback_count = left_callback_count + 1
                         end,
                         desc = "Resize Left",
+                        mode = "n",
+                        noremap = true,
+                    },
+                    {
+                        "<A-Right>",
+                        function()
+                            -- We only want to load once.
+                            assert.spy(spy_load).called(1)
+                            right_callback_count = right_callback_count + 1
+                        end,
+                        desc = "Resize Right",
                         mode = "n",
                         noremap = true,
                     },
@@ -91,7 +103,14 @@ describe("lz.n", function()
             assert.spy(spy_load).called(0)
             local feed = vim.api.nvim_replace_termcodes("<Ignore><A-Left>", true, true, true)
             vim.api.nvim_feedkeys(feed, "ix", false)
-            assert.True(callback_invoked_successfully)
+            assert.same(1, left_callback_count)
+            vim.api.nvim_feedkeys(feed, "ix", false)
+            assert.same(2, left_callback_count)
+            feed = vim.api.nvim_replace_termcodes("<Ignore><A-Right>", true, true, true)
+            vim.api.nvim_feedkeys(feed, "ix", false)
+            assert.same(1, right_callback_count)
+            vim.api.nvim_feedkeys(feed, "ix", false)
+            assert.same(2, right_callback_count)
         end)
         it("can override load implementation via plugin spec", function()
             local loaded = false
