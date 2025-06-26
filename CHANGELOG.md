@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.11.3](https://github.com/nvim-neorocks/lz.n/compare/v2.11.2...v2.11.3) (2025-06-26)
+
+
+### Bug Fixes
+
+* **keys:** error when specifying filetype pattern ([#163](https://github.com/nvim-neorocks/lz.n/issues/163)) ([518dcf4](https://github.com/nvim-neorocks/lz.n/commit/518dcf474d6588c2830c6a85442ce1f57c0208b3))
+
 ## [2.11.2](https://github.com/nvim-neorocks/lz.n/compare/v2.11.1...v2.11.2) (2025-02-08)
 
 
