@@ -22,6 +22,10 @@ describe("lz.n", function()
                     keys = { { "<leader>tt", mode = { "n", "v" } } },
                     cmd = "Telescope",
                 },
+                {
+                    "telescope-manix",
+                    keys = { { "<leader>tn", mode = { "n", "v" }, ft = { "nix" } } },
+                },
             })
             assert.spy(spy_load).called(1)
             assert.spy(spy_load).called_with({
@@ -47,6 +51,11 @@ describe("lz.n", function()
                     { id = "\\tt (v)", lhs = "<leader>tt", mode = "v" },
                 },
             })
+            vim.api.nvim_exec_autocmds("FileType", { pattern = "nix" })
+            assert.spy(spy_load).called(3)
+            local feed = vim.api.nvim_replace_termcodes("<Ignore><leader>tn", true, true, true)
+            vim.api.nvim_feedkeys(feed, "ix", false)
+            assert.spy(spy_load).called(4)
         end)
         it("individual plugin specs", function()
             local spy_load = spy.on(loader, "_load")
