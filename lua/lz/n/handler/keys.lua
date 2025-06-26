@@ -154,7 +154,7 @@ local function add_keys(keys)
             pattern = keys.ft,
             nested = true,
             callback = function(event)
-                if state.has_pending_plugins[keys.id] then
+                if state.has_pending_plugins(keys.id) then
                     add(event.buf)
                 else
                     -- Only create the mapping if its managed by lz.n
