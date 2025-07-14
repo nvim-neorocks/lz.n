@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.11.4](https://github.com/nvim-neorocks/lz.n/compare/v2.11.3...v2.11.4) (2025-07-14)
+
+
+### Bug Fixes
+
+* **rockspec:** restrict lua version to 5.1 ([bad1ae6](https://github.com/nvim-neorocks/lz.n/commit/bad1ae6f540d5fed64cd488042858cc70538c867))
+
 ## [2.11.3](https://github.com/nvim-neorocks/lz.n/compare/v2.11.2...v2.11.3) (2025-06-26)
 
 
