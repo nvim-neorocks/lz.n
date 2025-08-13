@@ -6,6 +6,7 @@ local loader = require("lz.n.loader")
 local state = require("lz.n.handler.state").new()
 
 ---@type lz.n.CmdHandler
+---@diagnostic disable-next-line: missing-fields
 local M = {
     spec_field = "cmd",
     ---@param cmd_spec? string[]|string
