@@ -52,6 +52,7 @@ local function parse(spec)
 end
 
 ---@type lz.n.EventHandler
+---@diagnostic disable-next-line: missing-fields
 local M = {
     events = {},
     group = vim.api.nvim_create_augroup("lz_n_handler_event", { clear = true }),

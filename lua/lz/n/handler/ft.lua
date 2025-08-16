@@ -13,6 +13,7 @@ local function parse(value)
 end
 
 ---@type lz.n.FtHandler
+---@diagnostic disable-next-line: missing-fields
 local M = {
     spec_field = "ft",
     lookup = event.lookup,

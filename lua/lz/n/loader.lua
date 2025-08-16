@@ -32,6 +32,7 @@ local function run_before_all(plugins)
                         vim.log.levels.ERROR
                     )
                 end),
+                ---@diagnostic disable-next-line: redundant-parameter
                 plugin
             )
         end
@@ -76,6 +77,7 @@ function M.load_startup_plugins(plugins)
             vim.schedule_wrap(function(err)
                 vim.notify("Failed to load " .. plugin.name .. ": " .. tostring(err or ""), vim.log.levels.ERROR)
             end),
+            ---@diagnostic disable-next-line: redundant-parameter
             plugin
         )
         plugins[plugin.name] = nil
@@ -96,6 +98,7 @@ local function hook(hook_key, plugin)
                     vim.log.levels.ERROR
                 )
             end),
+            ---@diagnostic disable-next-line: redundant-parameter
             plugin
         )
     end

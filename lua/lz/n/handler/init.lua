@@ -147,6 +147,7 @@ function M.init(plugins)
             vim.schedule_wrap(function(err)
                 vim.notify(("Failed to enable handlers for %s: %s"):format(plugin.name, err), vim.log.levels.ERROR)
             end),
+            ---@diagnostic disable-next-line: redundant-parameter
             plugin
         )
     end)

@@ -7,6 +7,7 @@ local loader = require("lz.n.loader")
 local state = require("lz.n.handler.state").new()
 
 ---@type lz.n.ColorschemeHandler
+---@diagnostic disable-next-line: missing-fields
 local M = {
     augroup = nil,
     spec_field = "colorscheme",
@@ -24,15 +25,15 @@ local M = {
             end)
         end
     end,
+
+    del = state.del,
+
+    ---@param name string
+    ---@return lz.n.Plugin?
+    lookup = function(name)
+        return state.lookup_plugin(name)
+    end,
 }
-
----@param name string
----@return lz.n.Plugin?
-function M.lookup(name)
-    return state.lookup_plugin(name)
-end
-
-M.del = state.del
 
 ---@param name string
 local function on_colorscheme(name)
