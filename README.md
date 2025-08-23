@@ -206,7 +206,6 @@ impact on startup time.
 
 Relying on another plugin's `plugin` or `after/plugin` scripts is considered a bug,
 as Neovim's built-in loading mechanism does not guarantee initialisation order.
-Requiring users to manually call a `setup` function [is an anti pattern](https://github.com/nvim-neorocks/nvim-best-practices?tab=readme-ov-file#zap-initialization).
 Forcing users to think about the order in which they load plugins that
 extend or depend on each other is even worse. We strongly suggest opening
 an issue or submitting a PR to fix this upstream.
@@ -287,13 +286,51 @@ require("lz.n").load {
 <!-- markdownlint-disable -->
 <details>
   <summary>
+    <b><a href="https://neovim.io/doc/user/pack.html#vim.pack.add()">Neovim nightly's `vim.pack`</a> example (experimental)</b>
+  </summary>
+
+  As this is an experimental nightly feature, it is subject to change!
+
+  ```lua
+  -- Make sure you add lz.n first.
+  vim.pack.add({ "https://github.com/nvim-neorocks/lz.n" })
+
+  -- You can inject lz.n.PluginSpec fields (without the name) via the
+  -- `data` field.
+
+  ---@type lz.n.pack.Spec[]
+  local plugins = {
+    {
+      src = "https://github.com/nvim-telescope/telescope.nvim",
+      data = {
+        cmd = "Telescope",
+      },
+    },
+    {
+      src = "https://github.com/NTBBloodBath/sweetie.nvim",
+      data = {
+        colorscheme = "sweetie",
+      },
+    }
+  }
+
+  --- Add the plugins, replacing the built-in `load` function
+  --- with lz.n's implementation.
+  vim.pack.add(plugins, { load = require("lz.n").load })
+  ```
+</details>
+
+
+<!-- markdownlint-disable -->
+<details>
+  <summary>
     <b><a href="https://github.com/savq/paq-nvim">paq-nvim</a> example</b>
   </summary>
 
   ```lua
   require "paq" {
       { "nvim-telescope/telescope.nvim", opt = true }
-      { "NTBBloodBatch/sweetie.nvim", opt = true }
+      { "NTBBloodBath/sweetie.nvim", opt = true }
   }
 
   require("lz.n").load {

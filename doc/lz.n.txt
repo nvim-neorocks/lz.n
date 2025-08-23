@@ -229,8 +229,23 @@ lz.n.Plugin : lz.n.PluginBase, lz.n.PluginHandlers, lz.n.PluginHooks
                              Whether to lazy-load this plugin. Defaults to `false`.
 
 
-                                                               *lz.n.PluginSpec*
-lz.n.PluginSpec : lz.n.PluginBase, lz.n.PluginSpecHandlers, lz.n.PluginHooks
+lz.n.pack.Spec : vim.pack.Spec                                  *lz.n.pack.Spec*
+
+    Fields: ~
+        {data}  (lz.n.PluginLoadSpec)
+
+
+lz.n.PackPluginData                                        *lz.n.PackPluginData*
+
+    Fields: ~
+        {spec}  (lz.n.pack.Spec)
+
+
+                                                           *lz.n.PluginLoadSpec*
+lz.n.PluginLoadSpec : lz.n.PluginBase, lz.n.PluginSpecHandlers, lz.n.PluginHooks
+
+
+lz.n.PluginSpec : lz.n.PluginLoadSpec                          *lz.n.PluginSpec*
 
     Fields: ~
         {1}  (string)
@@ -247,7 +262,7 @@ lz.n.SpecImport                                                *lz.n.SpecImport*
 lz.n.Spec                                                            *lz.n.Spec*
 
     Type: ~
-        lz.n.PluginSpec|lz.n.SpecImport|lz.n.Spec[]
+        lz.n.PluginSpec|lz.n.SpecImport|lz.n.Spec[]|lz.n.pack.Spec
 
 
 lz.n.Config                                                        *lz.n.Config*

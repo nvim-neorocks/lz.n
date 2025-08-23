@@ -65,8 +65,8 @@ local function import_spec(spec, result)
             ty = ty or vim.uv.fs_stat(path).type
             if not name then
                 break
-            -- XXX: "link" is required to support Nix.
-            -- It seems to break in tests with with local symlinks
+                -- XXX: "link" is required to support Nix.
+                -- It seems to break in tests with with local symlinks
             elseif (ty == "file" or ty == "link") and name:sub(-4) == ".lua" then
                 local submodname = name:sub(1, -5)
                 import_modname(modpath .. "." .. submodname, result)
@@ -124,6 +124,12 @@ function M._normalize(spec, result)
     elseif spec.import then
         ---@cast spec lz.n.SpecImport
         import_spec(spec, result)
+    elseif spec.name then
+        ---@type lz.n.PluginSpec
+        local plugin_spec = vim.tbl_deep_extend("force", { spec.name }, spec.data or {})
+        result[spec.name] = parse(plugin_spec)
+    else
+        error("unable to normalize plugin spec: " .. vim.inspec(spec))
     end
 end
 
