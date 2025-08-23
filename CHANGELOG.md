@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.12.0](https://github.com/nvim-neorocks/lz.n/compare/v2.11.4...v2.12.0) (2025-08-23)
+
+
+### Features
+
+* experimental support for `vim.pack` ([#175](https://github.com/nvim-neorocks/lz.n/issues/175)) ([1271a0f](https://github.com/nvim-neorocks/lz.n/commit/1271a0f54525236f7d43fb26608151c171c0e456))
+
 ## [2.11.4](https://github.com/nvim-neorocks/lz.n/compare/v2.11.3...v2.11.4) (2025-07-14)
 
 
