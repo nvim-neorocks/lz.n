@@ -77,7 +77,15 @@
 --- Whether to lazy-load this plugin. Defaults to `false`.
 ---@field lazy? boolean
 
----@class lz.n.PluginSpec: lz.n.PluginBase,lz.n.PluginSpecHandlers,lz.n.PluginHooks
+---@class lz.n.pack.Spec: vim.pack.Spec
+---@field data lz.n.PluginLoadSpec
+
+---@class lz.n.PackPluginData
+---@field spec lz.n.pack.Spec
+
+---@class lz.n.PluginLoadSpec: lz.n.PluginBase,lz.n.PluginSpecHandlers,lz.n.PluginHooks
+
+---@class lz.n.PluginSpec: lz.n.PluginLoadSpec
 ---
 --- The plugin name (not its main module), e.g. "sweetie.nvim"
 ---@field [1] string
@@ -86,7 +94,7 @@
 ---@field import string spec module to import
 ---@field enabled? boolean|(fun():boolean)
 
----@alias lz.n.Spec lz.n.PluginSpec | lz.n.SpecImport | lz.n.Spec[]
+---@alias lz.n.Spec lz.n.PluginSpec | lz.n.SpecImport | lz.n.Spec[] | lz.n.pack.Spec
 
 ---@class lz.n.Config
 ---
