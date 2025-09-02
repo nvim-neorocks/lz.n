@@ -129,7 +129,7 @@ function M._normalize(spec, result)
         local plugin_spec = vim.tbl_deep_extend("force", { spec.name }, spec.data or {})
         result[spec.name] = parse(plugin_spec)
     else
-        error("unable to normalize plugin spec: " .. vim.inspec(spec))
+        error("unable to normalize plugin spec: " .. vim.inspect(spec))
     end
 end
 
