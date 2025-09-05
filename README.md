@@ -1,11 +1,26 @@
-<!-- markdownlint-disable MD028 -->
-# :sloth: lz.n
-
-[![Neovim][neovim-shield]][neovim-url]
-[![Lua][lua-shield]][lua-url]
-[![LuaRocks][luarocks-shield]][luarocks-url]
-
-A dead simple lazy-loading Lua library for Neovim plugins.
+<!-- markdownlint-disable -->
+<br />
+<div align="center">
+  <a href="https://github.com/nvim-neorocks/lz.n">
+    <img src="./lz-n.svg" alt="lz.n">
+  </a>
+  <p align="center">
+    <br />
+    <a href="./doc/lz.n.txt"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/nvim-neorocks/lz.n/issues/new?assignees=&labels=bug">Report Bug</a>
+    ·
+    <a href="https://github.com/nvim-neorocks/lz.n/issues/new?assignees=&labels=enhancement">Request Feature</a>
+    ·
+    <a href="https://github.com/nvim-neorocks/lz.n/discussions/new?category=q-a">Ask Question</a>
+  </p>
+  <p>
+    <strong>
+      A dead simple lazy-loading library for <a href="https://neovim.io/">Neovim</a> plugins
+    </strong>
+</div>
+<!-- markdownlint-restore -->
 
 It is intended to be used
 
@@ -593,12 +608,3 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 This library is [licensed](./LICENSE) according to GPL version 2
 or (at your option) any later version.
-
-<!-- MARKDOWN LINKS & IMAGES -->
-[neovim-shield]: https://img.shields.io/badge/NeoVim-%2357A143.svg?&style=for-the-badge&logo=neovim&logoColor=white
-[neovim-url]: https://neovim.io/
-[lua-shield]: https://img.shields.io/badge/lua-%232C2D72.svg?style=for-the-badge&logo=lua&logoColor=white
-[lua-url]: https://www.lua.org/
-[luarocks-shield]:
-https://img.shields.io/luarocks/v/neorocks/lz.n?logo=lua&color=purple&style=for-the-badge
-[luarocks-url]: https://luarocks.org/modules/neorocks/lz.n
