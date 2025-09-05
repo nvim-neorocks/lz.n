@@ -9,8 +9,10 @@ A dead simple lazy-loading Lua library for Neovim plugins.
 
 It is intended to be used
 
-- by users of plugin managers that don't provide a convenient API for lazy-loading.
-- by plugin managers, to provide a convenient API for lazy-loading.
+- By users of plugin managers that don't provide a convenient API for lazy-loading
+  (`vim.pack`, `nix`, `paq-nvim`, ...).
+- By plugin managers, to provide a convenient API for lazy-loading
+  (`rocks-lazy.nvim`, `NixVim`, ...).
 
 > [!NOTE]
 >
@@ -318,6 +320,12 @@ require("lz.n").load {
   --- with lz.n's implementation.
   vim.pack.add(plugins, { load = require("lz.n").load })
   ```
+
+  Note: Until [neovim/#35550](https://github.com/neovim/neovim/issues/35550)
+  is resolved, you cannot pass `keys` arguments via `vim.pack`'s `data` field.
+  As a workaround, you prevent `vim.pack` from loading a plugin
+  by setting its `load` option to an empty function, and then calling `lz.n`'s
+  `load` function as usual.
 </details>
 
 
