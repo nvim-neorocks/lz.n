@@ -187,8 +187,12 @@ require("lz.n").load(plugins)
 - `DeferredUIEnter`: Triggered when `load()` is done and after `UIEnter`.
   Can be used as an `event` to lazy-load plugins that are not immediately needed
   for the initial UI[^4].
+- `DeferredPlugin`: Triggered after a particular plugin is fully loaded.
+  The `data` attribute will contain the plugin name. Can be used to run
+  additional setup after a plugin is lazy-loaded outside of its spec[^5].
 
 [^4]: This is equivalent to `lazy.nvim`'s `VeryLazy` event.
+[^5]: This is equivalent to `lazy.nvim`'s `LazyLoad` event.
 
 ### `keymap(<plugin>).set`
 
@@ -305,6 +309,38 @@ require("lz.n").load {
         "dial.nvim",
         -- lazy-load on keys. -- Mode is `n` by default.
         keys = { "<C-a>", { "<C-x>", mode = "n" } },
+    },
+    {
+        "which-key.nvim",
+        event = "DeferredUIEnter",
+        after = function()
+            require("which-key").setup()
+        end,
+    },
+    {
+        "mini.align",
+        lazy = false,
+        after = function()
+            require("mini.align").setup()
+            -- Add additional keymaps to which-key.nvim's menu after it's
+            -- already loaded
+            vim.api.nvim_create_autocmd("User", {
+                pattern = "DeferredPlugin",
+                callback = function(ev)
+                    if ev.data == "which-key.nvim" then
+                        require("which-key").add({
+                            { "ga", desc = "Align text", mode = { "n", "x" } },
+                            {
+                                "gA",
+                                desc = "Align text (preview)",
+                                mode = { "n", "x" },
+                            },
+                        })
+                        return true
+                    end
+                end,
+            }),
+        end,
     },
 }
 ```
@@ -476,9 +512,9 @@ return {
 ```
 
 - `lz.n` will automatically merge any Lua file in `~/.config/nvim/lua/plugins/*.lua`
-  with the main plugin spec[^5].
+  with the main plugin spec[^6].
 
-[^5]: It *does not* merge multiple specs for the same plugin from different files.
+[^6]: It *does not* merge multiple specs for the same plugin from different files.
 
 Example structure:
 
@@ -573,7 +609,7 @@ The function provides two overloads, each suited for different use cases:
     - *Description:* This version should be used when working with `lz.n.Handler`
       instances to maintain referential transparency.
       Each handler has full authority over its internal state, ensuring it
-      remains isolated and unaffected by external influences[^6],
+      remains isolated and unaffected by external influences[^7],
       thereby preventing multiple sources of truth.
 2. **Stateful version:**
     - *Usage:* `trigger_load(plugin_name: string | string[], opts?: lz.n.lookup.Opts)`
@@ -586,7 +622,7 @@ The function provides two overloads, each suited for different use cases:
       to identify an appropriate plugin, and returns the first match.
       You can fine-tune the search process by providing a [`lz.n.lookup.Opts` table](#lookup).
 
-[^6]: Until the handler is instructed to stop tracking a loaded plugin via its `del` function.
+[^7]: Until the handler is instructed to stop tracking a loaded plugin via its `del` function.
 
 #### `lookup`
 

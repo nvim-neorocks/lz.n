@@ -113,4 +113,61 @@ describe("handlers.event", function()
         vim.api.nvim_exec_autocmds("User", { pattern = "DeferredUIEnter", modeline = false })
         assert.spy(spy_load).called(1)
     end)
+    it("DeferredPlugin", function()
+        local i = 0
+        while i < 50 do -- make sure it's not flaky
+            i = i + 1
+            local foo_count, bar_count, baz_count = 0, 0, 0
+            require("lz.n").load({
+                {
+                    "foo",
+                    event = "BufEnter",
+                },
+                {
+                    "bar",
+                    event = "BufReadPost",
+                },
+                {
+                    "baz",
+                    event = "BufReadPre",
+                    after = function()
+                        vim.api.nvim_create_autocmd("User", {
+                            pattern = "DeferredPlugin",
+                            callback = function(ev)
+                                if ev.data == "foo" then
+                                    foo_count = foo_count + 1
+                                    return true
+                                end
+                            end,
+                        })
+                        vim.api.nvim_create_autocmd("User", {
+                            pattern = "DeferredPlugin",
+                            callback = function(ev)
+                                if ev.data == "bar" then
+                                    bar_count = bar_count + 1
+                                    return true
+                                end
+                            end,
+                        })
+                    end,
+                },
+            })
+            vim.api.nvim_create_autocmd("User", {
+                pattern = "DeferredPlugin",
+                callback = function(ev)
+                    if ev.data == "baz" then
+                        baz_count = baz_count + 1
+                        return true
+                    end
+                end,
+            })
+            vim.api.nvim_exec_autocmds("BufReadPre", {})
+            vim.api.nvim_exec_autocmds("BufEnter", {})
+            vim.schedule(function()
+                assert.same(1, foo_count)
+                assert.same(0, bar_count)
+                assert.same(1, baz_count)
+            end)
+        end
+    end)
 end)

@@ -134,6 +134,9 @@ function M.load(plugins, lookup)
             hook("before", plugin)
             M._load(plugin)
             hook("after", plugin)
+            vim.schedule(function()
+                vim.api.nvim_exec_autocmds("User", { pattern = "DeferredPlugin", modeline = false, data = plugin.name })
+            end)
         end
     end
     if plugin_spec_count > 1 then
