@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/lumen-oss/lz.n/compare/v3.0.2...v3.1.0) (2026-08-11)
+
+
+### Features
+
+* add DeferredPlugin event ([#233](https://github.com/lumen-oss/lz.n/issues/233)) ([96d4670](https://github.com/lumen-oss/lz.n/commit/96d467061695a7ed0603d142374f4a3018e51339))
+
 ## [3.0.2](https://github.com/lumen-oss/lz.n/compare/v3.0.1...v3.0.2) (2026-06-23)
 
 
